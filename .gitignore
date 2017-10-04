@@ -289,3 +289,4 @@ __pycache__/
 
 # Visual Studio Code settings
 .vscode/
+build/
