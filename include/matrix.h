@@ -98,7 +98,7 @@ namespace AMatrix {
 			const DataType* first_end = First._data + First.size();
 			for (const DataType* first_row = First._data; first_row < first_end; first_row += NumberOfRows) {
 				for (int k = 0; k < Second.size2(); ++k) {
-					ElementwiseMult<DataType, NumberOfRows>(first_row, Second._data + k * NumberOfColumns, result_row);
+					ElementwiseMult<NumberOfRows>(first_row, Second._data + k * NumberOfColumns, result_row);
 				}
 				result_row += NumberOfRows;
 			}
@@ -111,14 +111,16 @@ namespace AMatrix {
 			return *this;
 		}
 
+	private:
+
+		template<int TSize>
+		inline static void ElementwiseMult(const DataType* __restrict A, const DataType* __restrict B, DataType* C) {
+			for (int i = 0; i < TSize; ++i) {
+				*(C++) += *(A++) * *(B++);
+			}
+		}
 	};
 
-	template<typename DataType, int TSize>
-	inline void ElementwiseMult(const DataType* __restrict A, const DataType* __restrict B, DataType* C) {
-		for (int i = 0; i < TSize; ++i) {
-			*(C++) += *(A++) * *(B++);
-		}
-	}
 	template <typename DataType, int NumberOfRows, int NumberOfColumns>
 	bool operator!=(Matrix<DataType, NumberOfRows, NumberOfColumns> const& First, Matrix<DataType, NumberOfRows, NumberOfColumns> const& Second) {
 		return !(First == Second);
