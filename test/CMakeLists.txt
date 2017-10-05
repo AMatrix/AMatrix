@@ -11,3 +11,6 @@ add_test(MatrixPlusTest run_test_matrix_plus COMMAND run_test_matrix_plus)
 
 add_executable(run_test_matrix_minus  ${PROJECT_SOURCE_DIR}/test/test_matrix_minus.cpp)
 add_test(MatrixMinusTest run_test_matrix_minus COMMAND run_test_matrix_minus)
+
+add_executable(run_test_matrix_product  ${PROJECT_SOURCE_DIR}/test/test_matrix_product.cpp)
+add_test(MatrixProductTest run_test_matrix_product COMMAND run_test_matrix_product)
