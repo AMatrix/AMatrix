@@ -94,11 +94,11 @@ namespace AMatrix {
 		template<int SecondNumberOfColumns>
 		friend inline Matrix<DataType, NumberOfRows, SecondNumberOfColumns> operator*(Matrix const& First, Matrix<DataType, NumberOfColumns, SecondNumberOfColumns> const& Second) {
 			Matrix<DataType, NumberOfRows, SecondNumberOfColumns> result(0.00);
-			DataType* result_row = result._data;
-			const DataType* first_end = First._data + First.size();
-			for (const DataType* first_row = First._data; first_row < first_end; first_row += NumberOfRows) {
+			DataType* result_row = result.data();
+			const DataType* first_end = First.data() + First.size();
+			for (const DataType* first_row = First.data(); first_row < first_end; first_row += NumberOfRows) {
 				for (int k = 0; k < Second.size2(); ++k) {
-					ElementwiseMult<NumberOfRows>(first_row, Second._data + k * NumberOfColumns, result_row);
+					ElementwiseMult<NumberOfRows>(first_row, Second.data() + k * NumberOfColumns, result_row);
 				}
 				result_row += NumberOfRows;
 			}
@@ -111,8 +111,15 @@ namespace AMatrix {
 			return *this;
 		}
 
-	private:
+		DataType* data(){
+			return _data;
+		}
 
+		DataType const* data() const {
+			return _data;
+		}
+
+	private:
 		template<int TSize>
 		inline static void ElementwiseMult(const DataType* __restrict A, const DataType* __restrict B, DataType* C) {
 			for (int i = 0; i < TSize; ++i) {
