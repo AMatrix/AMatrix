@@ -96,11 +96,11 @@ namespace AMatrix {
 			Matrix<DataType, NumberOfRows, SecondNumberOfColumns> result(0.00);
 			DataType* result_row = result.data();
 			const DataType* first_end = First.data() + First.size();
-			for (const DataType* first_row = First.data(); first_row < first_end; first_row += NumberOfRows) {
-				for (int k = 0; k < Second.size2(); ++k) {
-					ElementwiseMult<NumberOfRows>(first_row, Second.data() + k * NumberOfColumns, result_row);
+			for (const DataType* first_row = First.data(); first_row < first_end; first_row += NumberOfColumns) {
+				for (int k = 0; k < Second.size1(); ++k) {
+					ElementwiseMult<NumberOfColumns>(first_row, Second.data() + k * SecondNumberOfColumns, result_row);
 				}
-				result_row += NumberOfRows;
+				result_row += SecondNumberOfColumns;
 			}
 
 			return result;
