@@ -93,15 +93,15 @@ namespace AMatrix {
 
 		template<int SecondNumberOfColumns>
 		friend inline Matrix<DataType, NumberOfRows, SecondNumberOfColumns> operator*(Matrix const& First, Matrix<DataType, NumberOfColumns, SecondNumberOfColumns> const& Second) {
-			Matrix<DataType, NumberOfRows, SecondNumberOfColumns> result(0.00);
-			DataType* result_row = result.data();
-			const DataType* first_end = First.data() + First.size();
-			for (const DataType* first_row = First.data(); first_row < first_end; first_row += NumberOfColumns) {
-				for (int k = 0; k < Second.size1(); ++k) {
-					ElementwiseMult<NumberOfColumns>(first_row, Second.data() + k * SecondNumberOfColumns, result_row);
+			Matrix<DataType, NumberOfRows, SecondNumberOfColumns> result;
+			for(int i = 0 ; i < NumberOfRows ; i++)
+				for(int j = 0 ; j < SecondNumberOfColumns ; j++){
+					DataType temp = DataType();
+					for(int k = 0 ; k < NumberOfColumns ; k++)
+						temp += First(i,k) * Second(k,j);
+					
+					result(i,j) = temp;
 				}
-				result_row += SecondNumberOfColumns;
-			}
 
 			return result;
 		}
