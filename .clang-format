@@ -9,4 +9,6 @@ SortIncludes: false
 AllowAllParametersOfDeclarationOnNextLine: true
 BinPackParameters: true
 AlignAfterOpenBracket: DontAlign
+AllowShortLoopsOnASingleLine: false
+AllowShortIfStatementsOnASingleLine: false
 ...
