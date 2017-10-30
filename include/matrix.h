@@ -7,146 +7,131 @@
 // By Pooyan
 
 namespace AMatrix {
-	template <typename DataType, int NumberOfRows, int NumberOfColumns>
-	class Matrix {
-		DataType _data[NumberOfRows*NumberOfColumns];
-	public:
-		Matrix() {}
-		Matrix(DataType const& InitialValue) {
-			for (int i = 0; i < size(); i++)
-				_data[i] = InitialValue;
-		}
+template <typename DataType, int NumberOfRows, int NumberOfColumns>
+class Matrix {
+    DataType _data[NumberOfRows * NumberOfColumns];
 
-		Matrix(Matrix const& Other) {
-			for (int i = 0; i < size(); i++)
-				_data[i] = Other._data[i];
-		}
+   public:
+    Matrix() {}
+    Matrix(DataType const& InitialValue) {
+        for (int i = 0; i < size(); i++)
+            _data[i] = InitialValue;
+    }
 
-		Matrix(Matrix&& Other) = default;
+    Matrix(Matrix const& Other) {
+        for (int i = 0; i < size(); i++)
+            _data[i] = Other._data[i];
+    }
 
-		template<typename TOtherMatrixType>
-		explicit Matrix(TOtherMatrixType const& Other) {
-			for (int i = 0; i < size1(); i++)
-				for (int j = 0; j < size2(); j++)
-					at(i, j) = Other(i, j);
-		}
+    Matrix(Matrix&& Other) = default;
 
-		Matrix& operator=(Matrix const& Other) {
-			for (int i = 0; i < size(); i++)
-				_data[i] = Other._data[i];
-			return *this;
-		}
+    template <typename TOtherMatrixType>
+    explicit Matrix(TOtherMatrixType const& Other) {
+        for (int i = 0; i < size1(); i++)
+            for (int j = 0; j < size2(); j++)
+                at(i, j) = Other(i, j);
+    }
 
-		DataType& operator()(int i, int j) {
-			return at(i,j);
-		}
+    Matrix& operator=(Matrix const& Other) {
+        for (int i = 0; i < size(); i++)
+            _data[i] = Other._data[i];
+        return *this;
+    }
 
-		DataType const& operator()(int i, int j) const {
-			return at(i, j);
-		}
+    DataType& operator()(int i, int j) { return at(i, j); }
 
-		DataType& at(int i, int j) {
-			return _data[i*NumberOfColumns + j];
-		}
+    DataType const& operator()(int i, int j) const { return at(i, j); }
 
-		DataType const& at(int i, int j) const {
-			return _data[i*NumberOfColumns + j];
-		}
+    DataType& at(int i, int j) { return _data[i * NumberOfColumns + j]; }
 
-		constexpr int size1() const {
-			return NumberOfRows;
-		}
+    DataType const& at(int i, int j) const {
+        return _data[i * NumberOfColumns + j];
+    }
 
-		constexpr int size2() const {
-			return NumberOfColumns;
-		}
+    constexpr int size1() const { return NumberOfRows; }
 
-		constexpr int size() const {
-			return NumberOfRows*NumberOfColumns;
-		}
+    constexpr int size2() const { return NumberOfColumns; }
 
-		friend bool operator==(Matrix const& First, Matrix const& Second) {
-			for (int i = 0; i < First.size(); i++)
-				if (First._data[i] != Second._data[i])
-					return false;
-			return true;
-		}
+    constexpr int size() const { return NumberOfRows * NumberOfColumns; }
 
-		friend Matrix operator+(Matrix const& First, Matrix const& Second) {
-			Matrix result;
-			const DataType* __restrict first_data = First._data;
-			const DataType* __restrict second_data = Second._data;
-			DataType* __restrict result_data = result._data;
-			for (int i = 0; i < First.size(); ++i)
-				*result_data++ = *first_data++ + *second_data++;
+    friend bool operator==(Matrix const& First, Matrix const& Second) {
+        for (int i = 0; i < First.size(); i++)
+            if (First._data[i] != Second._data[i])
+                return false;
+        return true;
+    }
 
-			return result;
-		}
+    friend Matrix operator+(Matrix const& First, Matrix const& Second) {
+        Matrix result;
+        const DataType* __restrict first_data = First._data;
+        const DataType* __restrict second_data = Second._data;
+        DataType* __restrict result_data = result._data;
+        for (int i = 0; i < First.size(); ++i)
+            *result_data++ = *first_data++ + *second_data++;
 
-		friend Matrix operator-(Matrix const& First, Matrix const& Second) {
-			Matrix result;
-			for (int i = 0; i < First.size(); ++i)
-				result._data[i] = First._data[i] - Second._data[i];
+        return result;
+    }
 
-			return result;
-		}
+    friend Matrix operator-(Matrix const& First, Matrix const& Second) {
+        Matrix result;
+        for (int i = 0; i < First.size(); ++i)
+            result._data[i] = First._data[i] - Second._data[i];
 
-		template<int SecondNumberOfColumns>
-		friend inline Matrix<DataType, NumberOfRows, SecondNumberOfColumns> operator*(Matrix const& First, Matrix<DataType, NumberOfColumns, SecondNumberOfColumns> const& Second) {
-			Matrix<DataType, NumberOfRows, SecondNumberOfColumns> result;
-			for(int i = 0 ; i < NumberOfRows ; i++)
-				for(int j = 0 ; j < SecondNumberOfColumns ; j++){
-					DataType temp = DataType();
-					for(int k = 0 ; k < NumberOfColumns ; k++)
-						temp += First(i,k) * Second(k,j);
-					
-					result(i,j) = temp;
-				}
+        return result;
+    }
 
-			return result;
-		}
+    template <int SecondNumberOfColumns>
+    friend inline Matrix<DataType, NumberOfRows, SecondNumberOfColumns>
+    operator*(Matrix const& First,
+        Matrix<DataType, NumberOfColumns, SecondNumberOfColumns> const&
+            Second) {
+        Matrix<DataType, NumberOfRows, SecondNumberOfColumns> result;
+        for (int i = 0; i < NumberOfRows; i++)
+            for (int j = 0; j < SecondNumberOfColumns; j++) {
+                DataType temp = DataType();
+                for (int k = 0; k < NumberOfColumns; k++)
+                    temp += First(i, k) * Second(k, j);
 
+                result(i, j) = temp;
+            }
 
-		Matrix& noalias() {
-			return *this;
-		}
+        return result;
+    }
 
-		DataType* data(){
-			return _data;
-		}
+    Matrix& noalias() { return *this; }
 
-		DataType const* data() const {
-			return _data;
-		}
+    DataType* data() { return _data; }
 
-	private:
-		template<int TSize>
-		inline static void ElementwiseMult(const DataType* __restrict A, const DataType* __restrict B, DataType* C) {
-			for (int i = 0; i < TSize; ++i) {
-				*(C++) += *(A++) * *(B++);
-			}
-		}
-	};
+    DataType const* data() const { return _data; }
 
-	template <typename DataType, int NumberOfRows, int NumberOfColumns>
-	bool operator!=(Matrix<DataType, NumberOfRows, NumberOfColumns> const& First, Matrix<DataType, NumberOfRows, NumberOfColumns> const& Second) {
-		return !(First == Second);
-	}
+   private:
+    template <int TSize>
+    inline static void ElementwiseMult(const DataType* __restrict A,
+        const DataType* __restrict B, DataType* C) {
+        for (int i = 0; i < TSize; ++i) {
+            *(C++) += *(A++) * *(B++);
+        }
+    }
+};
 
-	/// output stream function
-	template <typename DataType, int NumberOfRows, int NumberOfColumns>
-	inline std::ostream& operator << (std::ostream& rOStream,
-		Matrix<DataType, NumberOfRows, NumberOfColumns> const& TheMatrix)
-	{
-		rOStream << "{";
-		for (int i = 0; i < NumberOfRows; i++) {
-			for (int j = 0; j < NumberOfColumns; j++)
-				rOStream << TheMatrix(i, j) << ",";
-			rOStream << std::endl;
+template <typename DataType, int NumberOfRows, int NumberOfColumns>
+bool operator!=(Matrix<DataType, NumberOfRows, NumberOfColumns> const& First,
+    Matrix<DataType, NumberOfRows, NumberOfColumns> const& Second) {
+    return !(First == Second);
+}
 
-		}
-		rOStream << "}";
+/// output stream function
+template <typename DataType, int NumberOfRows, int NumberOfColumns>
+inline std::ostream& operator<<(std::ostream& rOStream,
+    Matrix<DataType, NumberOfRows, NumberOfColumns> const& TheMatrix) {
+    rOStream << "{";
+    for (int i = 0; i < NumberOfRows; i++) {
+        for (int j = 0; j < NumberOfColumns; j++)
+            rOStream << TheMatrix(i, j) << ",";
+        rOStream << std::endl;
+    }
+    rOStream << "}";
 
-		return rOStream;
-	}
-} // mamespace AMatrix
+    return rOStream;
+}
+}  // mamespace AMatrix
