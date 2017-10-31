@@ -76,11 +76,13 @@ std::size_t MeasureMultTime(TMatrixType1& A, TMatrixType2& B) {
 }
 
 void CompareAccessTime(){
-	std::cout << "A[i,j] += i -j\t\t" << MeasureAccessTime(AMatrix::Matrix<double,3,3>(0.00)) << std::endl;
+	AMatrix::Matrix<double,3,3> m_33(0.00);
+	std::cout << "A[i,j] += i -j\t\t" << MeasureAccessTime(m_33) << std::endl;
 }
 
 void CompareAssignTime(){
-	std::cout << "A = B\t\t\t" << MeasureAssignTime(AMatrix::Matrix<double,3,3>(0.00)) << std::endl;
+	AMatrix::Matrix<double,3,3> m_33(0.00);
+	std::cout << "A = B\t\t\t" << MeasureAssignTime(m_33) << std::endl;
 }
 
 
