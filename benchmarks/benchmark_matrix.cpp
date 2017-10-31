@@ -1,20 +1,9 @@
-#include <chrono>
+
 #include <iostream>
 
+#include "timer.h"
 #include "matrix.h"
 //#include "Eigen/Dense"
-
-class Timer {
-    std::chrono::high_resolution_clock::time_point _start;
-
-   public:
-    Timer() : _start(std::chrono::high_resolution_clock::now()) {}
-    std::chrono::milliseconds elapsed() {
-        return std::chrono::duration_cast<std::chrono::milliseconds>(
-            std::chrono::high_resolution_clock::now() - _start);
-    }
-    void reset() { _start = std::chrono::high_resolution_clock::now(); }
-};
 
 template <typename TMatrixType>
 long long MeasureAccessTime(TMatrixType& A) {
