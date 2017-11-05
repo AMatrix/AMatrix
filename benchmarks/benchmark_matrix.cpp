@@ -8,20 +8,39 @@
 #include "Eigen/Dense"
 #endif
 
-template <typename TMatrixType>
-Timer::duration_type MeasureAccessTime(TMatrixType& A) {
-    int repeat_number = 1000000;
-    Timer timer;
-    for (int i_repeat = 0; i_repeat < repeat_number; i_repeat++)
-        for (int i = 0; i < 3; i++)
-            for (int j = 0; j < 3; j++)
-                A(i, j) += i - j;
-    return timer.elapsed().count();
-}
+template<typename TMatrixType, int NumberOfRows, int NumberOfColumns>
+class ComparisonColumn{
+	TMatrixType mA;
+	void initialize(TMatrixType& TheMatrix){
+		for(int i = 0 ; i < NumberOfRows ; i++)
+			for(int j  = 0 ; j < NumberOfColumns ; j++)
+				TheMatrix(i,j) = 0.00;
+	}
+
+public:
+	
+	ComparisonColumn(){
+		initialize(mA);
+	}
+	
+	Timer::duration_type MeasureAccessTime() {
+		int repeat_number = 10000000;
+		Timer timer;
+		for (int i_repeat = 0; i_repeat < repeat_number; i_repeat++)
+			for (int i = 0; i < 3; i++)
+				for (int j = 0; j < 3; j++)
+					mA(i, j) += i - j;
+		return timer.elapsed().count();
+	}
+
+	
+
+};
+
 
 template <typename TMatrixType>
 Timer::duration_type MeasureAssignTime(TMatrixType& A) {
-    int repeat_number = 1000000;
+    int repeat_number = 10000000;
     TMatrixType B = A;
     Timer timer;
     for (int i_repeat = 0; i_repeat < repeat_number; i_repeat++) {
@@ -66,8 +85,10 @@ Timer::duration_type MeasureMultTime(TMatrixType1& A, TMatrixType2& B) {
 }
 
 void CompareAccessTime() {
-    AMatrix::Matrix<double, 3, 3> m_33(0.00);
-    std::cout << "A[i,j] += i -j\t\t" << MeasureAccessTime(m_33) << std::endl;
+    ComparisonColumn<AMatrix::Matrix<double, 3, 3>,3,3> a_matrix_column;
+    ComparisonColumn<Eigen::Matrix<double, 3, 3>,3,3> eigen_column;
+	std::cout << "A[i,j] += i -j\t\t" << a_matrix_column.MeasureAccessTime();
+	std::cout << "\t\t" << eigen_column.MeasureAccessTime() << std::endl;
 }
 
 void CompareAssignTime() {
