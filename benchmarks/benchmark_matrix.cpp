@@ -2,7 +2,10 @@
 #include <iostream>
 
 #include "matrix.h"
-//#include "Eigen/Dense"
+
+#if defined(AMATRIX_COMPARE_WITH_EIGEN)
+#include "Eigen/Dense"
+#endif
 
 class Timer {
 	std::chrono::high_resolution_clock::time_point _start;
