@@ -9,7 +9,7 @@
 #endif
 
 template <typename TMatrixType>
-long long MeasureAccessTime(TMatrixType& A) {
+Timer::duration_type MeasureAccessTime(TMatrixType& A) {
     int repeat_number = 1000000;
     Timer timer;
     for (int i_repeat = 0; i_repeat < repeat_number; i_repeat++)
@@ -20,7 +20,7 @@ long long MeasureAccessTime(TMatrixType& A) {
 }
 
 template <typename TMatrixType>
-std::size_t MeasureAssignTime(TMatrixType& A) {
+Timer::duration_type MeasureAssignTime(TMatrixType& A) {
     int repeat_number = 1000000;
     TMatrixType B = A;
     Timer timer;
@@ -35,7 +35,7 @@ std::size_t MeasureAssignTime(TMatrixType& A) {
 }
 
 template <typename TMatrixType>
-std::size_t MeasureSumTime(TMatrixType& A, TMatrixType& B) {
+Timer::duration_type MeasureSumTime(TMatrixType& A, TMatrixType& B) {
     int repeat_number = 10000;
     TMatrixType C = A;
     TMatrixType D = A;
@@ -49,7 +49,7 @@ std::size_t MeasureSumTime(TMatrixType& A, TMatrixType& B) {
 }
 
 template <typename TMatrixType1, typename TMatrixType2>
-std::size_t MeasureMultTime(TMatrixType1& A, TMatrixType2& B) {
+Timer::duration_type MeasureMultTime(TMatrixType1& A, TMatrixType2& B) {
     int repeat_number = 1000;
     TMatrixType1 C = A;
     TMatrixType1 D = A;
