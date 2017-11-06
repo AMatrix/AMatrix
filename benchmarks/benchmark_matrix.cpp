@@ -79,9 +79,12 @@ Timer::duration_type MeasureMultTime(TMatrixType1& A, TMatrixType2& B) {
 
 void CompareAccessTime() {
     ComparisonColumn<AMatrix::Matrix<double, 3, 3>, 3, 3> a_matrix_column;
-    ComparisonColumn<Eigen::Matrix<double, 3, 3>, 3, 3> eigen_column;
     std::cout << "A[i,j] += i -j\t\t" << a_matrix_column.MeasureAccessTime();
-    std::cout << "\t\t" << eigen_column.MeasureAccessTime() << std::endl;
+#if defined(AMATRIX_COMPARE_WITH_EIGEN)
+    ComparisonColumn<Eigen::Matrix<double, 3, 3>, 3, 3> eigen_column;
+    std::cout << "\t\t" << eigen_column.MeasureAccessTime();
+#endif
+    std::cout << std::endl;
 }
 
 void CompareAssignTime() {
