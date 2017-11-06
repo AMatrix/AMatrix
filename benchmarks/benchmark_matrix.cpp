@@ -1,5 +1,6 @@
 
 #include <iostream>
+#include <cmath>
 
 #include "timer.h"
 #include "matrix.h"
@@ -8,45 +9,81 @@
 #include "Eigen/Dense"
 #endif
 
+template <typename TMatrixType1, typename TMatrixType2>
+bool CheckEqual(TMatrixType1 const& Matrix1, TMatrixType2 const& Matrix2) {
+    for (int i = 0; i < Matrix1.size1(); i++)
+        for (int j = 0; j < Matrix1.size2(); j++)
+            if (Matrix1(i, j) != Matrix2(i, j))
+                return false;
+
+    return true;
+}
+
 template <typename TMatrixType, int NumberOfRows, int NumberOfColumns>
 class ComparisonColumn {
     TMatrixType mA;
     TMatrixType mB;
+    TMatrixType mC;
+
     void initialize(TMatrixType& TheMatrix, double Value) {
         for (int i = 0; i < NumberOfRows; i++)
             for (int j = 0; j < NumberOfColumns; j++)
                 TheMatrix(i, j) = Value;
     }
 
+    void initialize_rotation(TMatrixType& TheMatrix, double AngleInRadian) {
+        AMatrix::Matrix<double, 3, 3> block;
+
+        for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 3; j++)
+				block(i, j) = 0.00;
+				
+        block(0, 0) = std::cos(AngleInRadian);
+        block(0, 1) = -std::sin(AngleInRadian);
+        block(1, 0) = std::sin(AngleInRadian);
+        block(1, 1) = std::cos(AngleInRadian);
+        block(2, 2) = 1.00;
+
+        for (int i = 0; i < NumberOfRows; i++)
+            for (int j = 0; j < NumberOfColumns; j++) {
+                auto block_i = i % 3;
+                auto block_j = j % 3;
+                TheMatrix(i, j) = block(block_i, block_j);
+            }
+    }
+
    public:
     ComparisonColumn() {
-        initialize(mA, 0.01);
-        initialize(mB, 1.00);
+        initialize(mA, 0.00);
+        initialize(mB, 0.00);
+        initialize(mC, 0.00);
     }
+
+    TMatrixType& GetMatrixC() { return mC; }
 
     Timer::duration_type MeasureSumTime() {
         int repeat_number = 10000000;
-        TMatrixType C = mA;
+        initialize(mA, 0.01);
+        initialize(mB, 0.20);
         Timer timer;
         for (int i_repeat = 0; i_repeat < repeat_number; i_repeat++) {
-            C = mA + mB;
-            mB = C;
+            mC = mA + mB;
+            mB = mC;
         }
 
         return timer.elapsed().count();
     }
 
     Timer::duration_type MeasureMultTime() {
-        int repeat_number = 100000000;
-        TMatrixType C = mA;
-        TMatrixType D = mA;
+        int repeat_number = 10000000;
+        initialize_rotation(mA, -0.0001);
+        initialize_rotation(mB, 0.0001);
+        TMatrixType D;
+        initialize(D, 1.00);
         Timer timer;
         for (int i_repeat = 0; i_repeat < repeat_number; i_repeat++) {
-            D = mA;
-            for (int i = 0; i < 1000; i++) {
-                C = D * mB;
-                D = C;
-            }
+            mC = D * mA;
+            D = mC * mB;
         }
 
         return timer.elapsed().count();
@@ -58,7 +95,10 @@ void CompareSumTime() {
     std::cout << "C = A + B\t\t" << a_matrix_column.MeasureSumTime();
 #if defined(AMATRIX_COMPARE_WITH_EIGEN)
     ComparisonColumn<Eigen::Matrix<double, 3, 3>, 3, 3> eigen_column;
-    std::cout << "t\t" << eigen_column.MeasureSumTime();
+    std::cout << "\t\t" << eigen_column.MeasureSumTime();
+    if (!CheckEqual(a_matrix_column.GetMatrixC(), eigen_column.GetMatrixC()))
+        std::cout << "(Failed!)";
+
 #endif
     std::cout << std::endl;
 }
@@ -69,8 +109,12 @@ void CompareMultTime() {
 #if defined(AMATRIX_COMPARE_WITH_EIGEN)
     ComparisonColumn<Eigen::Matrix<double, 3, 3>, 3, 3> eigen_column;
     std::cout << "\t\t" << eigen_column.MeasureMultTime();
+    if (!CheckEqual(a_matrix_column.GetMatrixC(), eigen_column.GetMatrixC()))
+        std::cout << "(Failed!)";
 #endif
     std::cout << std::endl;
+    // std::cout << "AMatrix C = " << a_matrix_column.GetMatrixC() << std::endl;
+    // std::cout << "Eigen C = " << eigen_column.GetMatrixC() << std::endl;
 }
 
 int main() {
