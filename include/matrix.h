@@ -74,8 +74,12 @@ class Matrix {
 
     friend Matrix operator-(Matrix const& First, Matrix const& Second) {
         Matrix result;
+        const DataType* __restrict first_data = First._data;
+        const DataType* __restrict second_data = Second._data;
+        DataType* __restrict result_data = result._data;
         for (int i = 0; i < First.size(); ++i)
-            result._data[i] = First._data[i] - Second._data[i];
+            *result_data++ = *first_data++ - *second_data++;
+
 
         return result;
     }
