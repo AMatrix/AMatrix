@@ -71,8 +71,8 @@ class ComparisonColumn {
         initialize(mB, 0.20);
         Timer timer;
         for (int i_repeat = 0; i_repeat < repeat_number; i_repeat++) {
-            mC = mA + mB;
-            mB = mC;
+            mC.noalias() = mA + mB;
+            mB.noalias() = mC;
         }
 
         return timer.elapsed().count();
@@ -86,14 +86,26 @@ class ComparisonColumn {
         initialize(D, 1.00);
         Timer timer;
         for (int i_repeat = 0; i_repeat < repeat_number; i_repeat++) {
-            mC = D * mA;
-            D = mC * mB;
+            mC.noalias() = D * mA;
+            D.noalias() = mC * mB;
         }
 
         return timer.elapsed().count();
     }
 #if defined(AMATRIX_COMPARE_WITH_UBLAS)
-    Timer::duration_type MeasureProdTime() {
+Timer::duration_type MeasureNoaliasSumTime() {
+    int repeat_number = 10000000;
+    initialize(mA, 0.01);
+    initialize(mB, 0.20);
+    Timer timer;
+    for (int i_repeat = 0; i_repeat < repeat_number; i_repeat++) {
+        boost::numeric::ublas::noalias(mC) = mA + mB;
+        boost::numeric::ublas::noalias(mB) = mC;
+    }
+
+    return timer.elapsed().count();
+}
+Timer::duration_type MeasureProdTime() {
         int repeat_number = 10000000;
         initialize_rotation(mA, -0.0001);
         initialize_rotation(mB, 0.0001);
@@ -101,8 +113,8 @@ class ComparisonColumn {
         initialize(D, 1.00);
         Timer timer;
         for (int i_repeat = 0; i_repeat < repeat_number; i_repeat++) {
-            mC = boost::numeric::ublas::prod(D, mA);
-            D = boost::numeric::ublas::prod(mC, mB);
+            boost::numeric::ublas::noalias(mC) = boost::numeric::ublas::prod(D, mA);
+            boost::numeric::ublas::noalias(D) = boost::numeric::ublas::prod(mC, mB);
         }
 
         return timer.elapsed().count();
@@ -123,7 +135,7 @@ void CompareSumTime() {
 #if defined(AMATRIX_COMPARE_WITH_UBLAS)
     ComparisonColumn<boost::numeric::ublas::bounded_matrix<double, 3, 3>, 3, 3>
         ublas_column;
-    std::cout << "\t\t" << ublas_column.MeasureSumTime();
+    std::cout << "\t\t" << ublas_column.MeasureNoaliasSumTime();
     if (!CheckEqual(a_matrix_column.GetMatrixC(), ublas_column.GetMatrixC()))
         std::cout << "(Failed!)";
 
