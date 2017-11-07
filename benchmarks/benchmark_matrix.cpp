@@ -9,6 +9,10 @@
 #include "Eigen/Dense"
 #endif
 
+#if defined(AMATRIX_COMPARE_WITH_UBLAS)
+#include <boost/numeric/ublas/matrix.hpp>
+#endif
+
 template <typename TMatrixType1, typename TMatrixType2>
 bool CheckEqual(TMatrixType1 const& Matrix1, TMatrixType2 const& Matrix2) {
     for (int i = 0; i < Matrix1.size1(); i++)
@@ -36,8 +40,8 @@ class ComparisonColumn {
 
         for (int i = 0; i < 3; i++)
             for (int j = 0; j < 3; j++)
-				block(i, j) = 0.00;
-				
+                block(i, j) = 0.00;
+
         block(0, 0) = std::cos(AngleInRadian);
         block(0, 1) = -std::sin(AngleInRadian);
         block(1, 0) = std::sin(AngleInRadian);
@@ -88,6 +92,22 @@ class ComparisonColumn {
 
         return timer.elapsed().count();
     }
+#if defined(AMATRIX_COMPARE_WITH_EIGEN)
+    Timer::duration_type MeasureProdTime() {
+        int repeat_number = 10000000;
+        initialize_rotation(mA, -0.0001);
+        initialize_rotation(mB, 0.0001);
+        TMatrixType D;
+        initialize(D, 1.00);
+        Timer timer;
+        for (int i_repeat = 0; i_repeat < repeat_number; i_repeat++) {
+            mC = boost::numeric::ublas::prod(D, mA);
+            D = boost::numeric::ublas::prod(mC, mB);
+        }
+
+        return timer.elapsed().count();
+    }
+#endif
 };
 
 void CompareSumTime() {
@@ -97,6 +117,14 @@ void CompareSumTime() {
     ComparisonColumn<Eigen::Matrix<double, 3, 3>, 3, 3> eigen_column;
     std::cout << "\t\t" << eigen_column.MeasureSumTime();
     if (!CheckEqual(a_matrix_column.GetMatrixC(), eigen_column.GetMatrixC()))
+        std::cout << "(Failed!)";
+
+#endif
+#if defined(AMATRIX_COMPARE_WITH_EIGEN)
+    ComparisonColumn<boost::numeric::ublas::bounded_matrix<double, 3, 3>, 3, 3>
+        ublas_column;
+    std::cout << "\t\t" << ublas_column.MeasureSumTime();
+    if (!CheckEqual(a_matrix_column.GetMatrixC(), ublas_column.GetMatrixC()))
         std::cout << "(Failed!)";
 
 #endif
@@ -111,6 +139,14 @@ void CompareMultTime() {
     std::cout << "\t\t" << eigen_column.MeasureMultTime();
     if (!CheckEqual(a_matrix_column.GetMatrixC(), eigen_column.GetMatrixC()))
         std::cout << "(Failed!)";
+#endif
+#if defined(AMATRIX_COMPARE_WITH_EIGEN)
+    ComparisonColumn<boost::numeric::ublas::bounded_matrix<double, 3, 3>, 3, 3>
+        ublas_column;
+    std::cout << "\t\t" << ublas_column.MeasureProdTime();
+    if (!CheckEqual(a_matrix_column.GetMatrixC(), ublas_column.GetMatrixC()))
+        std::cout << "(Failed!)";
+
 #endif
     std::cout << std::endl;
     // std::cout << "AMatrix C = " << a_matrix_column.GetMatrixC() << std::endl;
