@@ -92,7 +92,7 @@ class ComparisonColumn {
 
         return timer.elapsed().count();
     }
-#if defined(AMATRIX_COMPARE_WITH_EIGEN)
+#if defined(AMATRIX_COMPARE_WITH_UBLAS)
     Timer::duration_type MeasureProdTime() {
         int repeat_number = 10000000;
         initialize_rotation(mA, -0.0001);
@@ -120,7 +120,7 @@ void CompareSumTime() {
         std::cout << "(Failed!)";
 
 #endif
-#if defined(AMATRIX_COMPARE_WITH_EIGEN)
+#if defined(AMATRIX_COMPARE_WITH_UBLAS)
     ComparisonColumn<boost::numeric::ublas::bounded_matrix<double, 3, 3>, 3, 3>
         ublas_column;
     std::cout << "\t\t" << ublas_column.MeasureSumTime();
@@ -140,7 +140,7 @@ void CompareMultTime() {
     if (!CheckEqual(a_matrix_column.GetMatrixC(), eigen_column.GetMatrixC()))
         std::cout << "(Failed!)";
 #endif
-#if defined(AMATRIX_COMPARE_WITH_EIGEN)
+#if defined(AMATRIX_COMPARE_WITH_UBLAS)
     ComparisonColumn<boost::numeric::ublas::bounded_matrix<double, 3, 3>, 3, 3>
         ublas_column;
     std::cout << "\t\t" << ublas_column.MeasureProdTime();
