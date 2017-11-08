@@ -13,7 +13,7 @@ class Matrix {
 
    public:
     Matrix() {}
-    Matrix(DataType const& InitialValue) {
+    explicit Matrix(DataType const& InitialValue) {
         for (int i = 0; i < size(); i++)
             _data[i] = InitialValue;
     }
