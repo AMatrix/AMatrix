@@ -100,7 +100,8 @@ class Matrix {
         return result;
     }
 
-    friend Matrix operator*(DataType const& TheScalar, Matrix const& TheMatrix) {
+    friend Matrix operator*(
+        DataType const& TheScalar, Matrix const& TheMatrix) {
         Matrix result;
         const DataType* __restrict second_data = TheMatrix._data;
         DataType* __restrict result_data = result._data;
@@ -110,7 +111,8 @@ class Matrix {
         return result;
     }
 
-    friend Matrix operator*(Matrix const& TheMatrix, DataType const& TheScalar) {
+    friend Matrix operator*(
+        Matrix const& TheMatrix, DataType const& TheScalar) {
         return TheScalar * TheMatrix;
     }
 
