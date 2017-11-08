@@ -33,7 +33,7 @@ int TestMatrixProduct() {
 	
 	for (int i = 0; i < c_matrix.size1(); i++)
 		for (int j = 0; j < c_matrix.size2(); j++)
-				if(i < NumberOfCulomns)
+				if(static_cast<std::size_t>(i) < NumberOfCulomns)
 					AMATRIX_CHECK_EQUAL(c_matrix(i,j), b_matrix(i,j)*(i+1)*2.33);
 
 	std::cout << "OK" << std::endl;
