@@ -80,15 +80,13 @@ class Matrix {
         for (int i = 0; i < First.size(); ++i)
             *result_data++ = *first_data++ - *second_data++;
 
-
         return result;
     }
 
     template <int SecondNumberOfColumns>
     friend inline Matrix<DataType, NumberOfRows, SecondNumberOfColumns>
-    operator*(Matrix const& First,
-        Matrix<DataType, NumberOfColumns, SecondNumberOfColumns> const&
-            Second) {
+    operator*(Matrix const& First, Matrix<DataType, NumberOfColumns,
+                                       SecondNumberOfColumns> const& Second) {
         Matrix<DataType, NumberOfRows, SecondNumberOfColumns> result;
         for (int i = 0; i < NumberOfRows; i++)
             for (int j = 0; j < SecondNumberOfColumns; j++) {
@@ -100,6 +98,20 @@ class Matrix {
             }
 
         return result;
+    }
+
+    friend Matrix operator*(DataType const& TheScalar, Matrix const& TheMatrix) {
+        Matrix result;
+        const DataType* __restrict second_data = TheMatrix._data;
+        DataType* __restrict result_data = result._data;
+        for (int i = 0; i < TheMatrix.size(); ++i)
+            *result_data++ = TheScalar * (*second_data++);
+
+        return result;
+    }
+
+    friend Matrix operator*(Matrix const& TheMatrix, DataType const& TheScalar) {
+        return TheScalar * TheMatrix;
     }
 
     Matrix& noalias() { return *this; }
