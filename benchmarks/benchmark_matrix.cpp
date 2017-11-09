@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <cmath>
 
@@ -25,6 +24,9 @@ bool CheckEqual(TMatrixType1 const& Matrix1, TMatrixType2 const& Matrix2) {
 
 template <typename TMatrixType, int NumberOfRows, int NumberOfColumns>
 class ComparisonColumn {
+    std::string mColumnName;
+
+   protected:
     TMatrixType mA;
     TMatrixType mB;
     TMatrixType mC;
@@ -57,15 +59,17 @@ class ComparisonColumn {
     }
 
    public:
-    ComparisonColumn() {
+    ComparisonColumn() = delete;
+
+    ComparisonColumn(std::string ColumnName) : mColumnName(ColumnName) {
         initialize(mA, 0.00);
         initialize(mB, 0.00);
         initialize(mC, 0.00);
     }
-
+    std::string const& GetColumnName() { return mColumnName; }
     TMatrixType& GetMatrixC() { return mC; }
 
-    Timer::duration_type MeasureSumTime() {
+    void MeasureSumTime() {
         int repeat_number = 10000000;
         initialize(mA, 0.01);
         initialize(mB, 0.20);
@@ -74,11 +78,11 @@ class ComparisonColumn {
             mC.noalias() = mA + mB;
             mB.noalias() = mC;
         }
-
-        return timer.elapsed().count();
+        auto elapsed = timer.elapsed().count();
+        std::cout << "\t\t" << elapsed;
     }
 
-    Timer::duration_type MeasureMultTime() {
+    void MeasureMultTime() {
         int repeat_number = 10000000;
         initialize_rotation(mA, -0.0001);
         initialize_rotation(mB, 0.0001);
@@ -86,88 +90,136 @@ class ComparisonColumn {
         initialize(D, 1.00);
         Timer timer;
         for (int i_repeat = 0; i_repeat < repeat_number; i_repeat++) {
-            mC.noalias() = D * mA;
-            D.noalias() = mC * mB;
+            mC.noalias() = mA * TMatrixType(D * mA);
+            D.noalias() = mB * TMatrixType(mC * mB);
         }
 
-        return timer.elapsed().count();
+        auto elapsed = timer.elapsed().count();
+        std::cout << "\t\t" << elapsed;
     }
+
 #if defined(AMATRIX_COMPARE_WITH_UBLAS)
-Timer::duration_type MeasureNoaliasSumTime() {
-    int repeat_number = 10000000;
-    initialize(mA, 0.01);
-    initialize(mB, 0.20);
-    Timer timer;
-    for (int i_repeat = 0; i_repeat < repeat_number; i_repeat++) {
-        boost::numeric::ublas::noalias(mC) = mA + mB;
-        boost::numeric::ublas::noalias(mB) = mC;
-    }
 
-    return timer.elapsed().count();
-}
-Timer::duration_type MeasureProdTime() {
-        int repeat_number = 10000000;
-        initialize_rotation(mA, -0.0001);
-        initialize_rotation(mB, 0.0001);
-        TMatrixType D;
-        initialize(D, 1.00);
-        Timer timer;
-        for (int i_repeat = 0; i_repeat < repeat_number; i_repeat++) {
-            boost::numeric::ublas::noalias(mC) = boost::numeric::ublas::prod(D, mA);
-            boost::numeric::ublas::noalias(D) = boost::numeric::ublas::prod(mC, mB);
-        }
-
-        return timer.elapsed().count();
-    }
 #endif
 };
 
-void CompareSumTime() {
-    ComparisonColumn<AMatrix::Matrix<double, 3, 3>, 3, 3> a_matrix_column;
-    std::cout << "C = A + B\t\t" << a_matrix_column.MeasureSumTime();
-#if defined(AMATRIX_COMPARE_WITH_EIGEN)
-    ComparisonColumn<Eigen::Matrix<double, 3, 3>, 3, 3> eigen_column;
-    std::cout << "\t\t" << eigen_column.MeasureSumTime();
-    if (!CheckEqual(a_matrix_column.GetMatrixC(), eigen_column.GetMatrixC()))
-        std::cout << "(Failed!)";
+template <typename TMatrixType, int NumberOfRows, int NumberOfColumns>
+class UblasComparisonColumn
+    : public ComparisonColumn<TMatrixType, NumberOfRows, NumberOfColumns> {
+   public:
+    using BsaeType =
+        ComparisonColumn<TMatrixType, NumberOfRows, NumberOfColumns>;
 
+    UblasComparisonColumn(std::string ColumnName)
+        : ComparisonColumn<TMatrixType, NumberOfRows, NumberOfColumns>(
+              ColumnName) {}
+
+    void MeasureSumTime() {
+        int repeat_number = 10000000;
+        BsaeType::initialize(BsaeType::mA, 0.01);
+        BsaeType::initialize(BsaeType::mB, 0.20);
+        Timer timer;
+        for (int i_repeat = 0; i_repeat < repeat_number; i_repeat++) {
+            boost::numeric::ublas::noalias(BsaeType::mC) =
+                BsaeType::mA + BsaeType::mB;
+            boost::numeric::ublas::noalias(BsaeType::mB) = BsaeType::mC;
+        }
+
+        auto elapsed = timer.elapsed().count();
+        std::cout << "\t\t" << elapsed;
+    }
+    void MeasureMultTime() {
+        using namespace boost::numeric::ublas;
+        int repeat_number = 10000000;
+        BsaeType::initialize_rotation(BsaeType::mA, -0.0001);
+        BsaeType::initialize_rotation(BsaeType::mB, 0.0001);
+        TMatrixType D;
+        BsaeType::initialize(D, 1.00);
+        Timer timer;
+        for (int i_repeat = 0; i_repeat < repeat_number; i_repeat++) {
+            noalias(BsaeType::mC) = prod(BsaeType::mA, TMatrixType(prod(D, BsaeType::mA)));
+            noalias(D) = prod(BsaeType::mB, TMatrixType(prod(BsaeType::mC, BsaeType::mB)));
+        }
+
+        auto elapsed = timer.elapsed().count();
+        std::cout << "\t\t" << elapsed;
+    }
+};
+
+template <typename TMatrixType, int NumberOfRows, int NumberOfColumns>
+class EmptyComparisonColumn
+    : public ComparisonColumn<TMatrixType, NumberOfRows, NumberOfColumns> {
+   public:
+    EmptyComparisonColumn(std::string ColumnName)
+        : ComparisonColumn<TMatrixType, NumberOfRows, NumberOfColumns>("") {}
+    void MeasureSumTime() {}
+    void MeasureMultTime() {}
+};
+
+template <int NumberOfRows, int NumberOfColumns>
+class BenchmarkMatrix {
+    ComparisonColumn<AMatrix::Matrix<double, NumberOfRows, NumberOfColumns>,
+        NumberOfRows, NumberOfColumns>
+        mAMatrixColumn;
+#if defined(AMATRIX_COMPARE_WITH_EIGEN)
+    ComparisonColumn<Eigen::Matrix<double, NumberOfRows, NumberOfColumns>,
+        NumberOfRows, NumberOfColumns>
+        mEigenColumn;
+#elif
+    EmptyComparisonColumn<Eigen::Matrix<double, NumberOfRows, NumberOfColumns>,
+        NumberOfRows, NumberOfColumns>
+        mEigenColumn;
 #endif
 #if defined(AMATRIX_COMPARE_WITH_UBLAS)
-    ComparisonColumn<boost::numeric::ublas::bounded_matrix<double, 3, 3>, 3, 3>
-        ublas_column;
-    std::cout << "\t\t" << ublas_column.MeasureNoaliasSumTime();
-    if (!CheckEqual(a_matrix_column.GetMatrixC(), ublas_column.GetMatrixC()))
-        std::cout << "(Failed!)";
-
+    UblasComparisonColumn<boost::numeric::ublas::bounded_matrix<double,
+                              NumberOfRows, NumberOfColumns>,
+        NumberOfRows, NumberOfColumns>
+        mUblasColumn;
+#elif
+    EmptyComparisonColumn<boost::numeric::ublas::bounded_matrix<double,
+                              NumberOfRows, NumberOfColumns>,
+        NumberOfRows, NumberOfColumns>
+        mUblasColumn;
 #endif
-    std::cout << std::endl;
-}
+   public:
+    BenchmarkMatrix()
+        : mAMatrixColumn("AMatrix"),
+          mEigenColumn("Eigen"),
+          mUblasColumn("Ublas") {
+        std::cout << "Benchmark[" << NumberOfRows << "," << NumberOfColumns
+                  << "]";
+        std::cout << "\t\t" << mAMatrixColumn.GetColumnName();
+        std::cout << "\t\t" << mEigenColumn.GetColumnName();
+        std::cout << "\t\t" << mUblasColumn.GetColumnName();
+        std::cout << std::endl;
+    }
 
-void CompareMultTime() {
-    ComparisonColumn<AMatrix::Matrix<double, 3, 3>, 3, 3> a_matrix_column;
-    std::cout << "C = A * B\t\t" << a_matrix_column.MeasureMultTime();
-#if defined(AMATRIX_COMPARE_WITH_EIGEN)
-    ComparisonColumn<Eigen::Matrix<double, 3, 3>, 3, 3> eigen_column;
-    std::cout << "\t\t" << eigen_column.MeasureMultTime();
-    if (!CheckEqual(a_matrix_column.GetMatrixC(), eigen_column.GetMatrixC()))
-        std::cout << "(Failed!)";
-#endif
-#if defined(AMATRIX_COMPARE_WITH_UBLAS)
-    ComparisonColumn<boost::numeric::ublas::bounded_matrix<double, 3, 3>, 3, 3>
-        ublas_column;
-    std::cout << "\t\t" << ublas_column.MeasureProdTime();
-    if (!CheckEqual(a_matrix_column.GetMatrixC(), ublas_column.GetMatrixC()))
-        std::cout << "(Failed!)";
+    void Run() {
+        std::cout << "C = A + B";
+        mAMatrixColumn.MeasureSumTime();
+        mEigenColumn.MeasureSumTime();
+        mUblasColumn.MeasureSumTime();
+        std::cout << std::endl;
 
-#endif
-    std::cout << std::endl;
-    // std::cout << "AMatrix C = " << a_matrix_column.GetMatrixC() << std::endl;
-    // std::cout << "Eigen C = " << eigen_column.GetMatrixC() << std::endl;
-}
+        std::cout << "C = A * B";
+        mAMatrixColumn.MeasureMultTime();
+        mEigenColumn.MeasureMultTime();
+        mUblasColumn.MeasureMultTime();
+        std::cout << std::endl;        
+        
+        std::cout << std::endl;
+    }
+};
 
 int main() {
-    std::cout << "operation\t\tAMatrix\t\tEigen\t\tUblas\t\tAtlas" << std::endl;
-    CompareSumTime();
-    CompareMultTime();
+    BenchmarkMatrix<3, 3> benchmark_3_3;
+    benchmark_3_3.Run();
+
+    BenchmarkMatrix<4, 4> benchmark_4_4;
+    benchmark_4_4.Run();
+
+    BenchmarkMatrix<6, 6> benchmark_6_6;
+    benchmark_6_6.Run();
+   
     return 0;
 }
