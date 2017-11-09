@@ -197,9 +197,10 @@ class EmptyComparisonColumn
    public:
     EmptyComparisonColumn(std::string ColumnName)
         : ComparisonColumn<TMatrixType, NumberOfRows, NumberOfColumns>("") {}
-    void MeasureSumTime() {}
-    void MeasureABAMultTime() {}
-
+    void MeasureSumTime() {std::cout << "\t\t";}
+    void MeasureMultTime() {std::cout << "\t\t";}
+    void MeasureABAMultTime() {std::cout << "\t\t";}
+    
     template <typename TMatrixType2>
     bool CheckResult(TMatrixType2 const& Reference) {
         return true;
@@ -215,8 +216,8 @@ class BenchmarkMatrix {
     ComparisonColumn<Eigen::Matrix<double, NumberOfRows, NumberOfColumns>,
         NumberOfRows, NumberOfColumns>
         mEigenColumn;
-#elif
-    EmptyComparisonColumn<Eigen::Matrix<double, NumberOfRows, NumberOfColumns>,
+#else
+    EmptyComparisonColumn<AMatrix::Matrix<double, NumberOfRows, NumberOfColumns>,
         NumberOfRows, NumberOfColumns>
         mEigenColumn;
 #endif
@@ -225,8 +226,8 @@ class BenchmarkMatrix {
                               NumberOfRows, NumberOfColumns>,
         NumberOfRows, NumberOfColumns>
         mUblasColumn;
-#elif
-    EmptyComparisonColumn<boost::numeric::ublas::bounded_matrix<double,
+#else
+    EmptyComparisonColumn<AMatrix::Matrix<double,
                               NumberOfRows, NumberOfColumns>,
         NumberOfRows, NumberOfColumns>
         mUblasColumn;
