@@ -8,6 +8,26 @@
 
 namespace AMatrix {
 
+// Transpose matrix
+template <typename TMatrixType>
+class TransposeMatrix : public TMatrixType{
+    TMatrixType const& mOriginal;
+
+public:
+    using value_type = typename TMatrixType::value_type;
+    TransposeMatrix() = delete;
+
+    TransposeMatrix(TMatrixType const& Original) : mOriginal(Original) {}
+
+    inline typename TMatrixType::value_type operator()(
+        std::size_t i, std::size_t j) const {
+        return mOriginal(j, i);
+    }
+
+    inline constexpr std::size_t size1() const { return mOriginal.size2(); }
+    inline constexpr std::size_t size2() const { return mOriginal.size1(); }
+};
+
 template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
 class Matrix {
     TDataType _data[TSize1 * TSize2];
@@ -111,12 +131,20 @@ class Matrix {
 
     Matrix& noalias() { return *this; }
 
+    TransposeMatrix<Matrix> transpose() { // Eigen benchmark
+        return TransposeMatrix<Matrix>(*this);
+    }
+    
+
+    TransposeMatrix<Matrix> Transpose() {
+        return TransposeMatrix<Matrix>(*this);
+    }
+
     TDataType* data() { return _data; }
 
     TDataType const* data() const { return _data; }
 };
 
-// Zero matrix
 template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
 class ZeroMatrix {
    public:
@@ -131,30 +159,6 @@ class ZeroMatrix {
     inline constexpr std::size_t size1() const { return TSize1; }
     inline constexpr std::size_t size2() const { return TSize2; }
 };
-
-// Zero matrix
-template <typename TMatrixType>
-class TransposeMatrix {
-    TMatrixType const& mOriginal;
-
-   public:
-    TransposeMatrix() = delete;
-
-    TransposeMatrix(TMatrixType const& Original) : mOriginal(Original) {}
-
-    inline typename TMatrixType::value_type operator()(
-        std::size_t i, std::size_t j) const {
-        return mOriginal(j, i);
-    }
-
-    inline std::size_t size1() const { return mOriginal.size2(); }
-    inline std::size_t size2() const { return mOriginal.size1(); }
-};
-
-template <typename TMatrixType>
-TransposeMatrix<TMatrixType> Transpose(TMatrixType const& OriginalMatrix) {
-    return TransposeMatrix<TMatrixType>(OriginalMatrix);
-}
 
 template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
 Matrix<TDataType, TSize1, TSize2> operator+(
@@ -196,6 +200,23 @@ inline Matrix<TDataType, TSize1, SecondNumberOfColumns> operator*(
         for (std::size_t j = 0; j < SecondNumberOfColumns; j++) {
             TDataType temp = TDataType();
             for (std::size_t k = 0; k < TSize2; k++)
+                temp += First(i, k) * Second(k, j);
+
+            result(i, j) = temp;
+        }
+
+    return result;
+}
+
+template <typename TMatrixType1, typename TMatrixType2>
+inline Matrix<typename TMatrixType1::value_type, TMatrixType1::size1(), TMatrixType2::size2()> operator*(
+    TMatrixType1 const& First,
+    TMatrixType2 const& Second) {
+    Matrix<typename TMatrixType1::value_type, TMatrixType1::size1(), TMatrixType2::size2()> result;
+    for (std::size_t i = 0; i < TMatrixType1::size1(); i++)
+        for (std::size_t j = 0; j < TMatrixType2::size2(); j++) {
+            typename TMatrixType1::value_type temp = typename TMatrixType1::value_type();
+            for (std::size_t k = 0; k < TMatrixType1::size2(); k++)
                 temp += First(i, k) * Second(k, j);
 
             result(i, j) = temp;
