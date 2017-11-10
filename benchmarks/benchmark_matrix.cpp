@@ -12,38 +12,39 @@
 #include <boost/numeric/ublas/matrix.hpp>
 #endif
 
-template <typename TMatrixType, int NumberOfRows, int NumberOfColumns>
+template <typename TMatrixType, std::size_t NumberOfRows, std::size_t NumberOfColumns>
 class ComparisonColumn {
-    std::string mColumnName;
 
    protected:
+    static constexpr std::size_t mRepeat = static_cast<std::size_t>(1e8/(NumberOfRows*NumberOfColumns));
     TMatrixType mA;
     TMatrixType mB;
     TMatrixType mResult;
-
+    std::string mColumnName;
+    
     void initialize(TMatrixType& TheMatrix) {
-        for (int i = 0; i < NumberOfRows; i++)
-            for (int j = 0; j < NumberOfColumns; j++)
-                TheMatrix(i, j) = j + 1;
+        for (std::size_t i = 0; i < NumberOfRows; i++)
+            for (std::size_t j = 0; j < NumberOfColumns; j++)
+                TheMatrix(i, j) = j + 1.00;
     }
 
     void initializeInverse(TMatrixType& TheMatrix) {
-        for (int i = 0; i < NumberOfRows; i++)
-            for (int j = 0; j < NumberOfColumns; j++)
+        for (std::size_t i = 0; i < NumberOfRows; i++)
+            for (std::size_t j = 0; j < NumberOfColumns; j++)
                 TheMatrix(i, j) = 1.00 / (i + 1);
     }
 
     void initialize(TMatrixType& TheMatrix, double Value) {
-        for (int i = 0; i < NumberOfRows; i++)
-            for (int j = 0; j < NumberOfColumns; j++)
+        for (std::size_t i = 0; i < NumberOfRows; i++)
+            for (std::size_t j = 0; j < NumberOfColumns; j++)
                 TheMatrix(i, j) = Value;
     }
 
     void initialize_rotation(TMatrixType& TheMatrix, double AngleInRadian) {
         AMatrix::Matrix<double, 3, 3> block;
 
-        for (int i = 0; i < 3; i++)
-            for (int j = 0; j < 3; j++)
+        for (std::size_t i = 0; i < 3; i++)
+            for (std::size_t j = 0; j < 3; j++)
                 block(i, j) = 0.00;
 
         block(0, 0) = std::cos(AngleInRadian);
@@ -52,8 +53,8 @@ class ComparisonColumn {
         block(1, 1) = std::cos(AngleInRadian);
         block(2, 2) = 1.00;
 
-        for (int i = 0; i < NumberOfRows; i++)
-            for (int j = 0; j < NumberOfColumns; j++) {
+        for (std::size_t i = 0; i < NumberOfRows; i++)
+            for (std::size_t j = 0; j < NumberOfColumns; j++) {
                 auto block_i = i % 3;
                 auto block_j = j % 3;
                 TheMatrix(i, j) = block(block_i, block_j);
@@ -73,8 +74,8 @@ class ComparisonColumn {
 
     template <typename TMatrixType2>
     bool CheckResult(TMatrixType2 const& Reference) {
-        for (int i = 0; i < NumberOfRows; i++)
-            for (int j = 0; j < NumberOfColumns; j++)
+        for (std::size_t i = 0; i < NumberOfRows; i++)
+            for (std::size_t j = 0; j < NumberOfColumns; j++)
                 if (mResult(i, j) != Reference(i, j))
                     return false;
 
@@ -82,11 +83,10 @@ class ComparisonColumn {
     }
 
     void MeasureSumTime() {
-        int repeat_number = 10000000;
         initialize(mA, 0.01);
         initialize(mB, 0.20);
         Timer timer;
-        for (int i_repeat = 0; i_repeat < repeat_number; i_repeat++) {
+        for (std::size_t i_repeat = 0; i_repeat < mRepeat; i_repeat++) {
             mResult.noalias() = mA + mB;
             mB.noalias() = mResult;
         }
@@ -95,13 +95,12 @@ class ComparisonColumn {
     }
 
     void MeasureMultTime() {
-        int repeat_number = 10000000;
         initialize(mA);
         initializeInverse(mB);
         TMatrixType D;
         initializeInverse(D);
         Timer timer;
-        for (int i_repeat = 0; i_repeat < repeat_number; i_repeat++) {
+        for (std::size_t i_repeat = 0; i_repeat < mRepeat; i_repeat++) {
             mResult.noalias() = D * mA;
             D.noalias() = mB;
         }
@@ -111,13 +110,12 @@ class ComparisonColumn {
     }
 
     void MeasureABAMultTime() {
-        int repeat_number = 10000000;
         initialize(mA);
         initializeInverse(mB);
         TMatrixType D;
         initializeInverse(D);
         Timer timer;
-        for (int i_repeat = 0; i_repeat < repeat_number; i_repeat++) {
+        for (std::size_t i_repeat = 0; i_repeat < mRepeat; i_repeat++) {
             mResult.noalias() = mA * TMatrixType(D * mA);
             D.noalias() = mB;
         }
@@ -131,7 +129,7 @@ class ComparisonColumn {
 #endif
 };
 
-template <typename TMatrixType, int NumberOfRows, int NumberOfColumns>
+template <typename TMatrixType, std::size_t NumberOfRows, std::size_t NumberOfColumns>
 class UblasComparisonColumn
     : public ComparisonColumn<TMatrixType, NumberOfRows, NumberOfColumns> {
    public:
@@ -143,11 +141,10 @@ class UblasComparisonColumn
               ColumnName) {}
 
     void MeasureSumTime() {
-        int repeat_number = 10000000;
         BaseType::initialize(BaseType::mA, 0.01);
         BaseType::initialize(BaseType::mB, 0.20);
         Timer timer;
-        for (int i_repeat = 0; i_repeat < repeat_number; i_repeat++) {
+        for (std::size_t i_repeat = 0; i_repeat < BaseType::mRepeat; i_repeat++) {
             boost::numeric::ublas::noalias(BaseType::mResult) =
                 BaseType::mA + BaseType::mB;
             boost::numeric::ublas::noalias(BaseType::mB) = BaseType::mResult;
@@ -158,13 +155,12 @@ class UblasComparisonColumn
     }
     void MeasureMultTime() {
         using namespace boost::numeric::ublas;
-        int repeat_number = 10000000;
         BaseType::initialize(BaseType::mA);
         BaseType::initializeInverse(BaseType::mB);
         TMatrixType D;
         BaseType::initializeInverse(D);
         Timer timer;
-        for (int i_repeat = 0; i_repeat < repeat_number; i_repeat++) {
+        for (std::size_t i_repeat = 0; i_repeat < BaseType::mRepeat; i_repeat++) {
             noalias(BaseType::mResult) = prod(D, BaseType::mA);
             noalias(D) = BaseType::mB;
         }
@@ -174,13 +170,12 @@ class UblasComparisonColumn
     }
     void MeasureABAMultTime() {
         using namespace boost::numeric::ublas;
-        int repeat_number = 10000000;
         BaseType::initialize(BaseType::mA);
         BaseType::initializeInverse(BaseType::mB);
         TMatrixType D;
         BaseType::initializeInverse(D);
         Timer timer;
-        for (int i_repeat = 0; i_repeat < repeat_number; i_repeat++) {
+        for (std::size_t i_repeat = 0; i_repeat < mRepeat; i_repeat++) {
             noalias(BaseType::mResult) =
                 prod(BaseType::mA, TMatrixType(prod(D, BaseType::mA)));
             noalias(D) = BaseType::mB;
@@ -191,7 +186,7 @@ class UblasComparisonColumn
     }
 };
 
-template <typename TMatrixType, int NumberOfRows, int NumberOfColumns>
+template <typename TMatrixType, std::size_t NumberOfRows, std::size_t NumberOfColumns>
 class EmptyComparisonColumn
     : public ComparisonColumn<TMatrixType, NumberOfRows, NumberOfColumns> {
    public:
@@ -207,7 +202,7 @@ class EmptyComparisonColumn
     }
 };
 
-template <int NumberOfRows, int NumberOfColumns>
+template <std::size_t NumberOfRows, std::size_t NumberOfColumns>
 class BenchmarkMatrix {
     ComparisonColumn<AMatrix::Matrix<double, NumberOfRows, NumberOfColumns>,
         NumberOfRows, NumberOfColumns>
@@ -245,6 +240,7 @@ class BenchmarkMatrix {
         std::cout << std::endl;
     }
 
+    ~BenchmarkMatrix() = default;
     void Run() {
         std::cout << "C = A + B";
         mAMatrixColumn.MeasureSumTime();
