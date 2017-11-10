@@ -107,15 +107,6 @@ class Matrix {
     DataType* data() { return _data; }
 
     DataType const* data() const { return _data; }
-
-   private:
-    template <std::size_t TSize>
-    inline static void ElementwiseMult(const DataType* __restrict A,
-        const DataType* __restrict B, DataType* C) {
-        for (std::size_t i = 0; i < TSize; ++i) {
-            *(C++) += *(A++) * *(B++);
-        }
-    }
 };
 
 template <typename DataType, std::size_t NumberOfRows,
