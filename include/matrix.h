@@ -64,7 +64,6 @@ class Matrix {
     }
 
     Matrix& operator+=(Matrix const& Other) {
-
         for(int i = 0 ; i < size1() ; i++)
             for(int j = 0 ; j < size2() ; j++)
                 at(i,j) += Other(i,j);
@@ -72,6 +71,15 @@ class Matrix {
         return *this;
     }
 
+    Matrix& operator-=(Matrix const& Other) {
+
+        for(int i = 0 ; i < size1() ; i++)
+            for(int j = 0 ; j < size2() ; j++)
+                at(i,j) -= Other(i,j);
+
+        return *this;
+    }
+        
     friend Matrix operator+(Matrix const& First, Matrix const& Second) {
         Matrix result;
         for(int i = 0 ; i < First.size1() ; i++)
