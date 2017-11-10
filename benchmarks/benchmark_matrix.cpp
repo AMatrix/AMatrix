@@ -35,40 +35,13 @@ class ComparisonColumn {
                 TheMatrix(i, j) = 1.00 / (i + 1);
     }
 
-    void initialize(TMatrixType& TheMatrix, double Value) {
-        for (std::size_t i = 0; i < NumberOfRows; i++)
-            for (std::size_t j = 0; j < NumberOfColumns; j++)
-                TheMatrix(i, j) = Value;
-    }
-
-    void initialize_rotation(TMatrixType& TheMatrix, double AngleInRadian) {
-        AMatrix::Matrix<double, 3, 3> block;
-
-        for (std::size_t i = 0; i < 3; i++)
-            for (std::size_t j = 0; j < 3; j++)
-                block(i, j) = 0.00;
-
-        block(0, 0) = std::cos(AngleInRadian);
-        block(0, 1) = -std::sin(AngleInRadian);
-        block(1, 0) = std::sin(AngleInRadian);
-        block(1, 1) = std::cos(AngleInRadian);
-        block(2, 2) = 1.00;
-
-        for (std::size_t i = 0; i < NumberOfRows; i++)
-            for (std::size_t j = 0; j < NumberOfColumns; j++) {
-                auto block_i = i % 3;
-                auto block_j = j % 3;
-                TheMatrix(i, j) = block(block_i, block_j);
-            }
-    }
-
    public:
     ComparisonColumn() = delete;
 
     ComparisonColumn(std::string ColumnName) : mColumnName(ColumnName) {
-        initialize(mA, 0.00);
-        initialize(mB, 0.00);
-        initialize(mResult, 0.00);
+        initialize(mA);
+        initialize(mB);
+        initialize(mResult);
     }
     std::string const& GetColumnName() { return mColumnName; }
     TMatrixType& GetResult() { return mResult; }
@@ -84,8 +57,8 @@ class ComparisonColumn {
     }
 
     void MeasureSumTime() {
-        initialize(mA, 0.01);
-        initialize(mB, 0.20);
+        initialize(mA);
+        initialize(mB);
         Timer timer;
         for (std::size_t i_repeat = 0; i_repeat < mRepeat; i_repeat++) {
             mResult.noalias() = mA + mB;
@@ -124,10 +97,6 @@ class ComparisonColumn {
         auto elapsed = timer.elapsed().count();
         std::cout << "\t\t" << elapsed;
     }
-
-#if defined(AMATRIX_COMPARE_WITH_UBLAS)
-
-#endif
 };
 
 template <typename TMatrixType, std::size_t NumberOfRows,
@@ -143,8 +112,8 @@ class UblasComparisonColumn
               ColumnName) {}
 
     void MeasureSumTime() {
-        BaseType::initialize(BaseType::mA, 0.01);
-        BaseType::initialize(BaseType::mB, 0.20);
+        BaseType::initialize(BaseType::mA);
+        BaseType::initialize(BaseType::mB);
         Timer timer;
         for (std::size_t i_repeat = 0; i_repeat < BaseType::mRepeat;
              i_repeat++) {
