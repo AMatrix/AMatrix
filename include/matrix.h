@@ -33,7 +33,15 @@ class Matrix {
                 at(i, j) = Other(i, j);
     }
 
-    Matrix& operator=(Matrix const& Other) {
+   template <typename TOtherMatrixType>
+     Matrix& operator=(TOtherMatrixType const& Other) {
+        for (std::size_t i = 0; i < size1(); i++)
+            for (std::size_t j = 0; j < size2(); j++)
+                at(i, j) = Other(i, j);
+        return *this;
+    }
+
+     Matrix& operator=(Matrix const& Other) {
         for (std::size_t i = 0; i < size(); i++)
             _data[i] = Other._data[i];
         return *this;
