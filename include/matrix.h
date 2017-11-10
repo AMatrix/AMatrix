@@ -99,7 +99,7 @@ class Matrix {
         Matrix result;
         for (int i = 0; i < First.size1(); i++)
             for (int j = 0; j < First.size2(); j++)
-                result(i, j) = First(i, j) + Second(i, j);
+                result(i, j) = First(i, j) - Second(i, j);
 
         return result;
     }
