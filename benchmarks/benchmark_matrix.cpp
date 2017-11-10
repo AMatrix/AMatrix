@@ -12,16 +12,17 @@
 #include <boost/numeric/ublas/matrix.hpp>
 #endif
 
-template <typename TMatrixType, std::size_t NumberOfRows, std::size_t NumberOfColumns>
+template <typename TMatrixType, std::size_t NumberOfRows,
+    std::size_t NumberOfColumns>
 class ComparisonColumn {
-
    protected:
-    static constexpr std::size_t mRepeat = static_cast<std::size_t>(1e8/(NumberOfRows*NumberOfColumns));
+    static constexpr std::size_t mRepeat =
+        static_cast<std::size_t>(1e8 / (NumberOfRows * NumberOfColumns));
     TMatrixType mA;
     TMatrixType mB;
     TMatrixType mResult;
     std::string mColumnName;
-    
+
     void initialize(TMatrixType& TheMatrix) {
         for (std::size_t i = 0; i < NumberOfRows; i++)
             for (std::size_t j = 0; j < NumberOfColumns; j++)
@@ -129,7 +130,8 @@ class ComparisonColumn {
 #endif
 };
 
-template <typename TMatrixType, std::size_t NumberOfRows, std::size_t NumberOfColumns>
+template <typename TMatrixType, std::size_t NumberOfRows,
+    std::size_t NumberOfColumns>
 class UblasComparisonColumn
     : public ComparisonColumn<TMatrixType, NumberOfRows, NumberOfColumns> {
    public:
@@ -144,7 +146,8 @@ class UblasComparisonColumn
         BaseType::initialize(BaseType::mA, 0.01);
         BaseType::initialize(BaseType::mB, 0.20);
         Timer timer;
-        for (std::size_t i_repeat = 0; i_repeat < BaseType::mRepeat; i_repeat++) {
+        for (std::size_t i_repeat = 0; i_repeat < BaseType::mRepeat;
+             i_repeat++) {
             boost::numeric::ublas::noalias(BaseType::mResult) =
                 BaseType::mA + BaseType::mB;
             boost::numeric::ublas::noalias(BaseType::mB) = BaseType::mResult;
@@ -160,7 +163,8 @@ class UblasComparisonColumn
         TMatrixType D;
         BaseType::initializeInverse(D);
         Timer timer;
-        for (std::size_t i_repeat = 0; i_repeat < BaseType::mRepeat; i_repeat++) {
+        for (std::size_t i_repeat = 0; i_repeat < BaseType::mRepeat;
+             i_repeat++) {
             noalias(BaseType::mResult) = prod(D, BaseType::mA);
             noalias(D) = BaseType::mB;
         }
@@ -175,7 +179,8 @@ class UblasComparisonColumn
         TMatrixType D;
         BaseType::initializeInverse(D);
         Timer timer;
-        for (std::size_t i_repeat = 0; i_repeat < BaseType::mRepeat; i_repeat++) {
+        for (std::size_t i_repeat = 0; i_repeat < BaseType::mRepeat;
+             i_repeat++) {
             noalias(BaseType::mResult) =
                 prod(BaseType::mA, TMatrixType(prod(D, BaseType::mA)));
             noalias(D) = BaseType::mB;
@@ -186,16 +191,17 @@ class UblasComparisonColumn
     }
 };
 
-template <typename TMatrixType, std::size_t NumberOfRows, std::size_t NumberOfColumns>
+template <typename TMatrixType, std::size_t NumberOfRows,
+    std::size_t NumberOfColumns>
 class EmptyComparisonColumn
     : public ComparisonColumn<TMatrixType, NumberOfRows, NumberOfColumns> {
    public:
     EmptyComparisonColumn(std::string ColumnName)
         : ComparisonColumn<TMatrixType, NumberOfRows, NumberOfColumns>("") {}
-    void MeasureSumTime() {std::cout << "\t\t";}
-    void MeasureMultTime() {std::cout << "\t\t";}
-    void MeasureABAMultTime() {std::cout << "\t\t";}
-    
+    void MeasureSumTime() { std::cout << "\t\t"; }
+    void MeasureMultTime() { std::cout << "\t\t"; }
+    void MeasureABAMultTime() { std::cout << "\t\t"; }
+
     template <typename TMatrixType2>
     bool CheckResult(TMatrixType2 const& Reference) {
         return true;
@@ -212,8 +218,9 @@ class BenchmarkMatrix {
         NumberOfRows, NumberOfColumns>
         mEigenColumn;
 #else
-    EmptyComparisonColumn<AMatrix::Matrix<double, NumberOfRows, NumberOfColumns>,
-        NumberOfRows, NumberOfColumns>
+    EmptyComparisonColumn<
+        AMatrix::Matrix<double, NumberOfRows, NumberOfColumns>, NumberOfRows,
+        NumberOfColumns>
         mEigenColumn;
 #endif
 #if defined(AMATRIX_COMPARE_WITH_UBLAS)
@@ -222,9 +229,9 @@ class BenchmarkMatrix {
         NumberOfRows, NumberOfColumns>
         mUblasColumn;
 #else
-    EmptyComparisonColumn<AMatrix::Matrix<double,
-                              NumberOfRows, NumberOfColumns>,
-        NumberOfRows, NumberOfColumns>
+    EmptyComparisonColumn<
+        AMatrix::Matrix<double, NumberOfRows, NumberOfColumns>, NumberOfRows,
+        NumberOfColumns>
         mUblasColumn;
 #endif
    public:

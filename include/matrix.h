@@ -7,7 +7,8 @@
 // By Pooyan
 
 namespace AMatrix {
-template <typename DataType, std::size_t NumberOfRows, std::size_t NumberOfColumns>
+template <typename DataType, std::size_t NumberOfRows,
+    std::size_t NumberOfColumns>
 class Matrix {
     DataType _data[NumberOfRows * NumberOfColumns];
 
@@ -38,13 +39,17 @@ class Matrix {
         return *this;
     }
 
-    Matrix& operator=(Matrix && Other) = default;
+    Matrix& operator=(Matrix&& Other) = default;
 
     DataType& operator()(std::size_t i, std::size_t j) { return at(i, j); }
 
-    DataType const& operator()(std::size_t i, std::size_t j) const { return at(i, j); }
+    DataType const& operator()(std::size_t i, std::size_t j) const {
+        return at(i, j);
+    }
 
-    DataType& at(std::size_t i, std::size_t j) { return _data[i * NumberOfColumns + j]; }
+    DataType& at(std::size_t i, std::size_t j) {
+        return _data[i * NumberOfColumns + j];
+    }
 
     DataType const& at(std::size_t i, std::size_t j) const {
         return _data[i * NumberOfColumns + j];
@@ -54,7 +59,9 @@ class Matrix {
 
     constexpr std::size_t size2() const { return NumberOfColumns; }
 
-    constexpr std::size_t size() const { return NumberOfRows * NumberOfColumns; }
+    constexpr std::size_t size() const {
+        return NumberOfRows * NumberOfColumns;
+    }
 
     friend bool operator==(Matrix const& First, Matrix const& Second) {
         for (std::size_t i = 0; i < First.size(); i++)
@@ -64,36 +71,35 @@ class Matrix {
     }
 
     Matrix& operator+=(Matrix const& Other) {
-        for(int i = 0 ; i < size1() ; i++)
-            for(int j = 0 ; j < size2() ; j++)
-                at(i,j) += Other(i,j);
+        for (int i = 0; i < size1(); i++)
+            for (int j = 0; j < size2(); j++)
+                at(i, j) += Other(i, j);
 
         return *this;
     }
 
     Matrix& operator-=(Matrix const& Other) {
-
-        for(int i = 0 ; i < size1() ; i++)
-            for(int j = 0 ; j < size2() ; j++)
-                at(i,j) -= Other(i,j);
+        for (int i = 0; i < size1(); i++)
+            for (int j = 0; j < size2(); j++)
+                at(i, j) -= Other(i, j);
 
         return *this;
     }
-        
+
     friend Matrix operator+(Matrix const& First, Matrix const& Second) {
         Matrix result;
-        for(int i = 0 ; i < First.size1() ; i++)
-            for(int j = 0 ; j < First.size2() ; j++)
-                result(i,j) = First(i,j) + Second(i,j);
+        for (int i = 0; i < First.size1(); i++)
+            for (int j = 0; j < First.size2(); j++)
+                result(i, j) = First(i, j) + Second(i, j);
 
         return result;
     }
 
     friend Matrix operator-(Matrix const& First, Matrix const& Second) {
         Matrix result;
-        for(int i = 0 ; i < First.size1() ; i++)
-            for(int j = 0 ; j < First.size2() ; j++)
-                result(i,j) = First(i,j) + Second(i,j);
+        for (int i = 0; i < First.size1(); i++)
+            for (int j = 0; j < First.size2(); j++)
+                result(i, j) = First(i, j) + Second(i, j);
 
         return result;
     }
@@ -147,14 +153,16 @@ class Matrix {
     }
 };
 
-template <typename DataType, std::size_t NumberOfRows, std::size_t NumberOfColumns>
+template <typename DataType, std::size_t NumberOfRows,
+    std::size_t NumberOfColumns>
 bool operator!=(Matrix<DataType, NumberOfRows, NumberOfColumns> const& First,
     Matrix<DataType, NumberOfRows, NumberOfColumns> const& Second) {
     return !(First == Second);
 }
 
 /// output stream function
-template <typename DataType, std::size_t NumberOfRows, std::size_t NumberOfColumns>
+template <typename DataType, std::size_t NumberOfRows,
+    std::size_t NumberOfColumns>
 inline std::ostream& operator<<(std::ostream& rOStream,
     Matrix<DataType, NumberOfRows, NumberOfColumns> const& TheMatrix) {
     rOStream << "{";
