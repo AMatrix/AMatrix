@@ -175,7 +175,7 @@ class UblasComparisonColumn
         TMatrixType D;
         BaseType::initializeInverse(D);
         Timer timer;
-        for (std::size_t i_repeat = 0; i_repeat < mRepeat; i_repeat++) {
+        for (std::size_t i_repeat = 0; i_repeat < BaseType::mRepeat; i_repeat++) {
             noalias(BaseType::mResult) =
                 prod(BaseType::mA, TMatrixType(prod(D, BaseType::mA)));
             noalias(D) = BaseType::mB;
