@@ -2,5 +2,4 @@
     if (a != b) {                                                \
         std::cout << a << " is not equal to " << b << std::endl; \
         return 1;                                                \
-    \
-}
+    }
