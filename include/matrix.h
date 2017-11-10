@@ -7,9 +7,8 @@
 // By Pooyan
 
 namespace AMatrix {
-    
-template <typename TDataType, std::size_t TSize1,
-    std::size_t TSize2>
+
+template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
 class Matrix {
     TDataType _data[TSize1 * TSize2];
 
@@ -60,9 +59,7 @@ class Matrix {
 
     constexpr std::size_t size2() const { return TSize2; }
 
-    constexpr std::size_t size() const {
-        return TSize1 * TSize2;
-    }
+    constexpr std::size_t size() const { return TSize1 * TSize2; }
 
     friend bool operator==(Matrix const& First, Matrix const& Second) {
         for (std::size_t i = 0; i < First.size(); i++)
@@ -111,35 +108,22 @@ class Matrix {
 };
 
 //utility to set to zero the matrix
-template<typename TData, std::size_t TSize1,
-    std::size_t TSize2>
-class ZeroMatrix
-{
-public:
+template <typename TData, std::size_t TSize1, std::size_t TSize2>
+class ZeroMatrix {
+   public:
     typedef TData TDataType;
 
-    ZeroMatrix()
-    {}
+    ZeroMatrix() {}
 
-    inline TDataType operator()(std::size_t i, std::size_t j) const
-    {
+    inline TDataType operator()(std::size_t i, std::size_t j) const {
         return 0.0;
     }
 
-    inline constexpr std::size_t size1() const
-    {
-        return TSize1;
-    }
-    inline constexpr std::size_t size2() const
-    {
-        return TSize2;
-    }
-
+    inline constexpr std::size_t size1() const { return TSize1; }
+    inline constexpr std::size_t size2() const { return TSize2; }
 };
 
-
-template <typename TDataType, std::size_t TSize1,
-    std::size_t TSize2>
+template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
 Matrix<TDataType, TSize1, TSize2> operator+(
     Matrix<TDataType, TSize1, TSize2> const& First,
     Matrix<TDataType, TSize1, TSize2> const& Second) {
@@ -151,8 +135,7 @@ Matrix<TDataType, TSize1, TSize2> operator+(
     return result;
 }
 
-template <typename TDataType, std::size_t TSize1,
-    std::size_t TSize2>
+template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
 Matrix<TDataType, TSize1, TSize2> operator-(
     Matrix<TDataType, TSize1, TSize2> const& First,
     Matrix<TDataType, TSize1, TSize2> const& Second) {
@@ -164,15 +147,14 @@ Matrix<TDataType, TSize1, TSize2> operator-(
     return result;
 }
 
-template <typename TDataType, std::size_t TSize1,
-    std::size_t TSize2>
+template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
 bool operator!=(Matrix<TDataType, TSize1, TSize2> const& First,
     Matrix<TDataType, TSize1, TSize2> const& Second) {
     return !(First == Second);
 }
 
-template <typename TDataType, std::size_t TSize1,
-    std::size_t TSize2, std::size_t SecondNumberOfColumns>
+template <typename TDataType, std::size_t TSize1, std::size_t TSize2,
+    std::size_t SecondNumberOfColumns>
 inline Matrix<TDataType, TSize1, SecondNumberOfColumns> operator*(
     Matrix<TDataType, TSize1, TSize2> const& First,
     Matrix<TDataType, TSize2, SecondNumberOfColumns> const& Second) {
@@ -190,8 +172,7 @@ inline Matrix<TDataType, TSize1, SecondNumberOfColumns> operator*(
 }
 
 /// output stream function
-template <typename TDataType, std::size_t TSize1,
-    std::size_t TSize2>
+template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
 inline std::ostream& operator<<(std::ostream& rOStream,
     Matrix<TDataType, TSize1, TSize2> const& TheMatrix) {
     rOStream << "{";
