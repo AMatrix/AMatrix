@@ -6,10 +6,22 @@
 
 
 
-template<std::size_t NumberOfRows, std::size_t NumberOfCulomns>
+template<std::size_t TSize1, std::size_t TSize2>
+std::size_t TestZeroMatrixAssign() {
+	AMatrix::Matrix<double, TSize1,TSize2> a_matrix;
+	a_matrix = AMatrix::ZeroMatrix<double, TSize1, TSize2>();
+	
+	for (std::size_t i = 0; i < a_matrix.size1(); i++)
+		for (std::size_t j = 0; j < a_matrix.size2(); j++)
+			AMATRIX_CHECK_EQUAL(a_matrix(i,j), 0.00);
+
+	return 0; // not failed
+}
+
+template<std::size_t TSize1, std::size_t TSize2>
 std::size_t TestMatrixAssign() {
-	AMatrix::Matrix<double, NumberOfRows,NumberOfCulomns> a_matrix;
-	AMatrix::Matrix<double, NumberOfRows,NumberOfCulomns> b_matrix;
+	AMatrix::Matrix<double, TSize1,TSize2> a_matrix;
+	AMatrix::Matrix<double, TSize1,TSize2> b_matrix;
 	for (std::size_t i = 0; i < a_matrix.size1(); i++)
 		for (std::size_t j = 0; j < a_matrix.size2(); j++)
 			a_matrix(i, j) =  2.33 * i - 4.52 * j;
@@ -27,6 +39,19 @@ std::size_t TestMatrixAssign() {
 int main()
 {
 	std::size_t number_of_failed_tests = 0;
+	number_of_failed_tests += TestZeroMatrixAssign<1,1>();
+
+	number_of_failed_tests += TestZeroMatrixAssign<1,2>();
+	number_of_failed_tests += TestZeroMatrixAssign<2,1>();
+	number_of_failed_tests += TestZeroMatrixAssign<2,2>();
+
+	number_of_failed_tests += TestZeroMatrixAssign<3,1>();
+	number_of_failed_tests += TestZeroMatrixAssign<3,2>();
+	number_of_failed_tests += TestZeroMatrixAssign<3,3>();
+	number_of_failed_tests += TestZeroMatrixAssign<1,3>();
+	number_of_failed_tests += TestZeroMatrixAssign<2,3>();
+	number_of_failed_tests += TestZeroMatrixAssign<3,3>();
+
 	number_of_failed_tests += TestMatrixAssign<1,1>();
 
 	number_of_failed_tests += TestMatrixAssign<1,2>();
