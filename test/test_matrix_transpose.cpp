@@ -11,7 +11,7 @@ std::size_t TestMatrixTranspose() {
 		for (std::size_t j = 0; j < a_matrix.size2(); j++)
 			a_matrix(i, j) =  b++;
 
-	auto b_matrix = AMatrix::Transpose(a_matrix);
+	auto b_matrix = a_matrix.Transpose();
 	
 	for (std::size_t i = 0; i < a_matrix.size1(); i++)
 		for (std::size_t j = 0; j < a_matrix.size2(); j++){
