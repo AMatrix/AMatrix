@@ -82,8 +82,7 @@ class ComparisonColumn {
         auto elapsed = timer.elapsed().count();
         std::cout << "\t\t" << elapsed;
     }
-
-    void MeasureABAMultTime() {
+   void MeasureABAMultTime() {
         initialize(mA);
         initializeInverse(mB);
         TMatrixType D;
@@ -91,6 +90,21 @@ class ComparisonColumn {
         Timer timer;
         for (std::size_t i_repeat = 0; i_repeat < mRepeat; i_repeat++) {
             mResult.noalias() = mA * TMatrixType(D * mA);
+            D.noalias() = mB;
+        }
+
+        auto elapsed = timer.elapsed().count();
+        std::cout << "\t\t" << elapsed;
+    }
+
+    void MeasureATransposeBAMultTime() {
+        initialize(mA);
+        initializeInverse(mB);
+        TMatrixType D;
+        initializeInverse(D);
+        Timer timer;
+        for (std::size_t i_repeat = 0; i_repeat < mRepeat; i_repeat++) {
+            mResult.noalias() = mA.transpose() * TMatrixType(D * mA);
             D.noalias() = mB;
         }
 
@@ -158,6 +172,23 @@ class UblasComparisonColumn
         auto elapsed = timer.elapsed().count();
         std::cout << "\t\t" << elapsed;
     }
+   void MeasureATransposeBAMultTime() {
+        using namespace boost::numeric::ublas;
+        BaseType::initialize(BaseType::mA);
+        BaseType::initializeInverse(BaseType::mB);
+        TMatrixType D;
+        BaseType::initializeInverse(D);
+        Timer timer;
+        for (std::size_t i_repeat = 0; i_repeat < BaseType::mRepeat;
+             i_repeat++) {
+            noalias(BaseType::mResult) =
+                prod(trans(BaseType::mA), TMatrixType(prod(D, BaseType::mA)));
+            noalias(D) = BaseType::mB;
+        }
+
+        auto elapsed = timer.elapsed().count();
+        std::cout << "\t\t" << elapsed;
+    }
 };
 
 template <typename TMatrixType, std::size_t NumberOfRows,
@@ -170,6 +201,7 @@ class EmptyComparisonColumn
     void MeasureSumTime() { std::cout << "\t\t"; }
     void MeasureMultTime() { std::cout << "\t\t"; }
     void MeasureABAMultTime() { std::cout << "\t\t"; }
+    void MeasureATransposeBAMultTime() { std::cout << "\t\t"; }
 
     template <typename TMatrixType2>
     bool CheckResult(TMatrixType2 const& Reference) {
@@ -244,6 +276,16 @@ class BenchmarkMatrix {
         if (!mEigenColumn.CheckResult(mAMatrixColumn.GetResult()))
             std::cout << "(Failed!)";
         mUblasColumn.MeasureABAMultTime();
+        if (!mUblasColumn.CheckResult(mAMatrixColumn.GetResult()))
+            std::cout << "(Failed!)";
+        std::cout << std::endl;
+
+        std::cout << "C = A^T * B * A";
+        mAMatrixColumn.MeasureATransposeBAMultTime();
+        mEigenColumn.MeasureATransposeBAMultTime();
+        if (!mEigenColumn.CheckResult(mAMatrixColumn.GetResult()))
+            std::cout << "(Failed!)";
+        mUblasColumn.MeasureATransposeBAMultTime();
         if (!mUblasColumn.CheckResult(mAMatrixColumn.GetResult()))
             std::cout << "(Failed!)";
         std::cout << std::endl;
