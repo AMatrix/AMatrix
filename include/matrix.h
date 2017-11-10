@@ -7,14 +7,15 @@
 // By Pooyan
 
 namespace AMatrix {
-template <typename DataType, std::size_t NumberOfRows,
+    
+template <typename TDataType, std::size_t NumberOfRows,
     std::size_t NumberOfColumns>
 class Matrix {
-    DataType _data[NumberOfRows * NumberOfColumns];
+    TDataType _data[NumberOfRows * NumberOfColumns];
 
    public:
     Matrix() {}
-    explicit Matrix(DataType const& InitialValue) {
+    explicit Matrix(TDataType const& InitialValue) {
         for (std::size_t i = 0; i < size(); i++)
             _data[i] = InitialValue;
     }
@@ -41,17 +42,17 @@ class Matrix {
 
     Matrix& operator=(Matrix&& Other) = default;
 
-    DataType& operator()(std::size_t i, std::size_t j) { return at(i, j); }
+    TDataType& operator()(std::size_t i, std::size_t j) { return at(i, j); }
 
-    DataType const& operator()(std::size_t i, std::size_t j) const {
+    TDataType const& operator()(std::size_t i, std::size_t j) const {
         return at(i, j);
     }
 
-    DataType& at(std::size_t i, std::size_t j) {
+    TDataType& at(std::size_t i, std::size_t j) {
         return _data[i * NumberOfColumns + j];
     }
 
-    DataType const& at(std::size_t i, std::size_t j) const {
+    TDataType const& at(std::size_t i, std::size_t j) const {
         return _data[i * NumberOfColumns + j];
     }
 
@@ -71,26 +72,26 @@ class Matrix {
     }
 
     Matrix& operator+=(Matrix const& Other) {
-        for (int i = 0; i < size1(); i++)
-            for (int j = 0; j < size2(); j++)
+        for (std::size_t i = 0; i < size1(); i++)
+            for (std::size_t j = 0; j < size2(); j++)
                 at(i, j) += Other(i, j);
 
         return *this;
     }
 
     Matrix& operator-=(Matrix const& Other) {
-        for (int i = 0; i < size1(); i++)
-            for (int j = 0; j < size2(); j++)
+        for (std::size_t i = 0; i < size1(); i++)
+            for (std::size_t j = 0; j < size2(); j++)
                 at(i, j) -= Other(i, j);
 
         return *this;
     }
 
     friend Matrix operator*(
-        DataType const& TheScalar, Matrix const& TheMatrix) {
+        TDataType const& TheScalar, Matrix const& TheMatrix) {
         Matrix result;
-        const DataType* __restrict second_data = TheMatrix._data;
-        DataType* __restrict result_data = result._data;
+        const TDataType* __restrict second_data = TheMatrix._data;
+        TDataType* __restrict result_data = result._data;
         for (std::size_t i = 0; i < TheMatrix.size(); ++i)
             *result_data++ = TheScalar * (*second_data++);
 
@@ -98,59 +99,87 @@ class Matrix {
     }
 
     friend Matrix operator*(
-        Matrix const& TheMatrix, DataType const& TheScalar) {
+        Matrix const& TheMatrix, TDataType const& TheScalar) {
         return TheScalar * TheMatrix;
     }
 
     Matrix& noalias() { return *this; }
 
-    DataType* data() { return _data; }
+    TDataType* data() { return _data; }
 
-    DataType const* data() const { return _data; }
+    TDataType const* data() const { return _data; }
 };
 
-template <typename DataType, std::size_t NumberOfRows,
+//utility to set to zero the matrix
+template<typename TData, std::size_t TSize1,
+    std::size_t TSize2>
+class ZeroMatrix
+{
+public:
+    typedef TData TDataType;
+
+    ZeroMatrix()
+    {}
+
+    inline TDataType operator()(std::size_t i, std::size_t j) const
+    {
+        return 0.0;
+    }
+
+    inline constexpr std::size_t size1() const
+    {
+        return TSize1;
+    }
+    inline constexpr std::size_t size2() const
+    {
+        return TSize2;
+    }
+
+};
+
+
+template <typename TDataType, std::size_t NumberOfRows,
     std::size_t NumberOfColumns>
-Matrix<DataType, NumberOfRows, NumberOfColumns> operator+(
-    Matrix<DataType, NumberOfRows, NumberOfColumns> const& First,
-    Matrix<DataType, NumberOfRows, NumberOfColumns> const& Second) {
-    Matrix<DataType, NumberOfRows, NumberOfColumns> result;
-    for (int i = 0; i < First.size1(); i++)
-        for (int j = 0; j < First.size2(); j++)
+Matrix<TDataType, NumberOfRows, NumberOfColumns> operator+(
+    Matrix<TDataType, NumberOfRows, NumberOfColumns> const& First,
+    Matrix<TDataType, NumberOfRows, NumberOfColumns> const& Second) {
+    Matrix<TDataType, NumberOfRows, NumberOfColumns> result;
+    for (std::size_t i = 0; i < First.size1(); i++)
+        for (std::size_t j = 0; j < First.size2(); j++)
             result(i, j) = First(i, j) + Second(i, j);
 
     return result;
 }
 
-template <typename DataType, std::size_t NumberOfRows,
+template <typename TDataType, std::size_t NumberOfRows,
     std::size_t NumberOfColumns>
-Matrix<DataType, NumberOfRows, NumberOfColumns> operator-(
-    Matrix<DataType, NumberOfRows, NumberOfColumns> const& First,
-    Matrix<DataType, NumberOfRows, NumberOfColumns> const& Second) {
-    Matrix<DataType, NumberOfRows, NumberOfColumns> result;
-    for (int i = 0; i < First.size1(); i++)
-        for (int j = 0; j < First.size2(); j++)
+Matrix<TDataType, NumberOfRows, NumberOfColumns> operator-(
+    Matrix<TDataType, NumberOfRows, NumberOfColumns> const& First,
+    Matrix<TDataType, NumberOfRows, NumberOfColumns> const& Second) {
+    Matrix<TDataType, NumberOfRows, NumberOfColumns> result;
+    for (std::size_t i = 0; i < First.size1(); i++)
+        for (std::size_t j = 0; j < First.size2(); j++)
             result(i, j) = First(i, j) - Second(i, j);
 
     return result;
 }
 
-template <typename DataType, std::size_t NumberOfRows,
+template <typename TDataType, std::size_t NumberOfRows,
     std::size_t NumberOfColumns>
-bool operator!=(Matrix<DataType, NumberOfRows, NumberOfColumns> const& First,
-    Matrix<DataType, NumberOfRows, NumberOfColumns> const& Second) {
+bool operator!=(Matrix<TDataType, NumberOfRows, NumberOfColumns> const& First,
+    Matrix<TDataType, NumberOfRows, NumberOfColumns> const& Second) {
     return !(First == Second);
 }
 
-template <typename DataType, std::size_t NumberOfRows,
+template <typename TDataType, std::size_t NumberOfRows,
     std::size_t NumberOfColumns, std::size_t SecondNumberOfColumns>
-inline Matrix<DataType, NumberOfRows, SecondNumberOfColumns> operator*(
-    Matrix<DataType, NumberOfRows, NumberOfColumns> const& First,
-    Matrix<DataType, NumberOfColumns, SecondNumberOfColumns> const& Second) {
-    Matrix<DataType, NumberOfRows, SecondNumberOfColumns> result;
+inline Matrix<TDataType, NumberOfRows, SecondNumberOfColumns> operator*(
+    Matrix<TDataType, NumberOfRows, NumberOfColumns> const& First,
+    Matrix<TDataType, NumberOfColumns, SecondNumberOfColumns> const& Second) {
+    Matrix<TDataType, NumberOfRows, SecondNumberOfColumns> result;
     for (std::size_t i = 0; i < NumberOfRows; i++)
         for (std::size_t j = 0; j < SecondNumberOfColumns; j++) {
-            DataType temp = DataType();
+            TDataType temp = TDataType();
             for (std::size_t k = 0; k < NumberOfColumns; k++)
                 temp += First(i, k) * Second(k, j);
 
@@ -161,10 +190,10 @@ inline Matrix<DataType, NumberOfRows, SecondNumberOfColumns> operator*(
 }
 
 /// output stream function
-template <typename DataType, std::size_t NumberOfRows,
+template <typename TDataType, std::size_t NumberOfRows,
     std::size_t NumberOfColumns>
 inline std::ostream& operator<<(std::ostream& rOStream,
-    Matrix<DataType, NumberOfRows, NumberOfColumns> const& TheMatrix) {
+    Matrix<TDataType, NumberOfRows, NumberOfColumns> const& TheMatrix) {
     rOStream << "{";
     for (std::size_t i = 0; i < NumberOfRows; i++) {
         for (std::size_t j = 0; j < NumberOfColumns; j++)
