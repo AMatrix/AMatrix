@@ -4,23 +4,23 @@
 #include "checks.h"
 
 template<std::size_t NumberOfRows, std::size_t NumberOfCulomns>
-int TestMatrixAcess() {
+std::size_t TestMatrixAcess() {
 	AMatrix::Matrix<double, NumberOfRows,NumberOfCulomns> a_matrix;
-	for (int i = 0; i < a_matrix.size1(); i++)
-		for (int j = 0; j < a_matrix.size2(); j++)
+	for (std::size_t i = 0; i < a_matrix.size1(); i++)
+		for (std::size_t j = 0; j < a_matrix.size2(); j++)
 			a_matrix(i, j) =  2.33 * i - 4.52 * j;
 	
-	for (int i = 0; i < a_matrix.size1(); i++)
-		for (int j = 0; j < a_matrix.size2(); j++)
+	for (std::size_t i = 0; i < a_matrix.size1(); i++)
+		for (std::size_t j = 0; j < a_matrix.size2(); j++){
 			AMATRIX_CHECK_EQUAL(a_matrix(i,j), 2.33 * i - 4.52 * j);
-
+		}
 	return 0; // not failed
 }
 
 
 int main()
 {
-	int number_of_failed_tests = 0;
+	std::size_t number_of_failed_tests = 0;
 	number_of_failed_tests += TestMatrixAcess<1,1>();
 
 	number_of_failed_tests += TestMatrixAcess<1,2>();

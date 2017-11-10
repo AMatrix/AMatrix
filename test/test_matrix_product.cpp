@@ -4,18 +4,18 @@
 #include "checks.h"
 
 template <std::size_t NumberOfRows, std::size_t NumberOfCulomns>
-int TestMatrixScalarProduct() {
+std::size_t TestMatrixScalarProduct() {
     AMatrix::Matrix<double, NumberOfRows, NumberOfCulomns> a_matrix;
     AMatrix::Matrix<double, NumberOfRows, NumberOfCulomns> b_matrix;
-    for (int i = 0; i < a_matrix.size1(); i++)
-        for (int j = 0; j < a_matrix.size2(); j++)
+    for (std::size_t i = 0; i < a_matrix.size1(); i++)
+        for (std::size_t j = 0; j < a_matrix.size2(); j++)
             a_matrix(i, j) = 2.33 * i - 4.52 * j;
 
     b_matrix = 1.3 * a_matrix * 0.34;
     b_matrix = 2 * b_matrix;
 
-    for (int i = 0; i < a_matrix.size1(); i++)
-        for (int j = 0; j < a_matrix.size2(); j++)
+    for (std::size_t i = 0; i < a_matrix.size1(); i++)
+        for (std::size_t j = 0; j < a_matrix.size2(); j++)
             AMATRIX_CHECK_EQUAL(b_matrix(i, j), 2 * 1.3 * (2.33 * i - 4.52 * j) * 0.34);
 
     return 0;  // not failed
@@ -23,28 +23,28 @@ int TestMatrixScalarProduct() {
 
 template <std::size_t NumberOfRows, std::size_t NumberOfCulomns,
     std::size_t NumberOfSecondRows>
-int TestMatrixProduct() {
+std::size_t TestMatrixProduct() {
     std::cout << "Testing A(" << NumberOfRows << "," << NumberOfCulomns
               << ") X B(" << NumberOfCulomns << "," << NumberOfSecondRows
               << ") ";
     AMatrix::Matrix<double, NumberOfRows, NumberOfCulomns> a_matrix;
     AMatrix::Matrix<double, NumberOfCulomns, NumberOfSecondRows> b_matrix;
     AMatrix::Matrix<double, NumberOfRows, NumberOfSecondRows> c_matrix;
-    for (int i = 0; i < a_matrix.size1(); i++)
-        for (int j = 0; j < a_matrix.size2(); j++)
+    for (std::size_t i = 0; i < a_matrix.size1(); i++)
+        for (std::size_t j = 0; j < a_matrix.size2(); j++)
             if (i == j)
                 a_matrix(i, j) = 2.33 * (i + 1);
             else
                 a_matrix(i, j) = 0.00;
 
-    for (int i = 0; i < b_matrix.size1(); i++)
-        for (int j = 0; j < b_matrix.size2(); j++)
+    for (std::size_t i = 0; i < b_matrix.size1(); i++)
+        for (std::size_t j = 0; j < b_matrix.size2(); j++)
             b_matrix(i, j) = i + j + 1;
 
     c_matrix = a_matrix * b_matrix;
 
-    for (int i = 0; i < c_matrix.size1(); i++)
-        for (int j = 0; j < c_matrix.size2(); j++)
+    for (std::size_t i = 0; i < c_matrix.size1(); i++)
+        for (std::size_t j = 0; j < c_matrix.size2(); j++)
             if (static_cast<std::size_t>(i) < NumberOfCulomns)
                 AMATRIX_CHECK_EQUAL(
                     c_matrix(i, j), b_matrix(i, j) * (i + 1) * 2.33);
@@ -54,7 +54,7 @@ int TestMatrixProduct() {
 }
 
 int main() {
-    int number_of_failed_tests = 0;
+    std::size_t number_of_failed_tests = 0;
 
     // scalar product test
     number_of_failed_tests += TestMatrixScalarProduct<1, 1>();

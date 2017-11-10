@@ -7,19 +7,19 @@
 
 
 template<std::size_t NumberOfRows, std::size_t NumberOfCulomns>
-int TestMatrixMinus() {
+std::size_t TestMatrixMinus() {
 	AMatrix::Matrix<double, NumberOfRows,NumberOfCulomns> a_matrix;
 	AMatrix::Matrix<double, NumberOfRows,NumberOfCulomns> b_matrix;
 	AMatrix::Matrix<double, NumberOfRows,NumberOfCulomns> c_matrix;
-	for (int i = 0; i < a_matrix.size1(); i++)
-		for (int j = 0; j < a_matrix.size2(); j++)
+	for (std::size_t i = 0; i < a_matrix.size1(); i++)
+		for (std::size_t j = 0; j < a_matrix.size2(); j++)
 			a_matrix(i, j) =  2.33 * i - 4.52 * j;
 
 	b_matrix = a_matrix;
 	c_matrix = a_matrix - b_matrix;
 	
-	for (int i = 0; i < a_matrix.size1(); i++)
-		for (int j = 0; j < a_matrix.size2(); j++)
+	for (std::size_t i = 0; i < a_matrix.size1(); i++)
+		for (std::size_t j = 0; j < a_matrix.size2(); j++)
 			AMATRIX_CHECK_EQUAL(c_matrix(i,j), 0.00);
 
 	return 0; // not failed
@@ -28,7 +28,7 @@ int TestMatrixMinus() {
 
 int main()
 {
-	int number_of_failed_tests = 0;
+	std::size_t number_of_failed_tests = 0;
 	number_of_failed_tests += TestMatrixMinus<1,1>();
 
 	number_of_failed_tests += TestMatrixMinus<1,2>();
