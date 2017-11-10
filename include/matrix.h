@@ -83,11 +83,9 @@ class Matrix {
 
     friend Matrix operator-(Matrix const& First, Matrix const& Second) {
         Matrix result;
-        const DataType* __restrict first_data = First._data;
-        const DataType* __restrict second_data = Second._data;
-        DataType* __restrict result_data = result._data;
-        for (std::size_t i = 0; i < First.size(); ++i)
-            *result_data++ = *first_data++ - *second_data++;
+        for(int i = 0 ; i < First.size1() ; i++)
+            for(int j = 0 ; j < First.size2() ; j++)
+                result(i,j) = First(i,j) + Second(i,j);
 
         return result;
     }
