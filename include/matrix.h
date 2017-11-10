@@ -86,23 +86,6 @@ class Matrix {
         return *this;
     }
 
-    template <std::size_t SecondNumberOfColumns>
-    friend inline Matrix<DataType, NumberOfRows, SecondNumberOfColumns>
-    operator*(Matrix const& First, Matrix<DataType, NumberOfColumns,
-                                       SecondNumberOfColumns> const& Second) {
-        Matrix<DataType, NumberOfRows, SecondNumberOfColumns> result;
-        for (std::size_t i = 0; i < NumberOfRows; i++)
-            for (std::size_t j = 0; j < SecondNumberOfColumns; j++) {
-                DataType temp = DataType();
-                for (std::size_t k = 0; k < NumberOfColumns; k++)
-                    temp += First(i, k) * Second(k, j);
-
-                result(i, j) = temp;
-            }
-
-        return result;
-    }
-
     friend Matrix operator*(
         DataType const& TheScalar, Matrix const& TheMatrix) {
         Matrix result;
@@ -137,31 +120,53 @@ class Matrix {
 
 template <typename DataType, std::size_t NumberOfRows,
     std::size_t NumberOfColumns>
-    Matrix<DataType, NumberOfRows, NumberOfColumns> operator+(Matrix<DataType, NumberOfRows, NumberOfColumns> const& First, Matrix<DataType, NumberOfRows, NumberOfColumns> const& Second) {
-        Matrix<DataType, NumberOfRows, NumberOfColumns> result;
-        for (int i = 0; i < First.size1(); i++)
-            for (int j = 0; j < First.size2(); j++)
-                result(i, j) = First(i, j) + Second(i, j);
+Matrix<DataType, NumberOfRows, NumberOfColumns> operator+(
+    Matrix<DataType, NumberOfRows, NumberOfColumns> const& First,
+    Matrix<DataType, NumberOfRows, NumberOfColumns> const& Second) {
+    Matrix<DataType, NumberOfRows, NumberOfColumns> result;
+    for (int i = 0; i < First.size1(); i++)
+        for (int j = 0; j < First.size2(); j++)
+            result(i, j) = First(i, j) + Second(i, j);
 
-        return result;
-    }
+    return result;
+}
 
 template <typename DataType, std::size_t NumberOfRows,
     std::size_t NumberOfColumns>
-        Matrix<DataType, NumberOfRows, NumberOfColumns> operator-(Matrix<DataType, NumberOfRows, NumberOfColumns> const& First, Matrix<DataType, NumberOfRows, NumberOfColumns> const& Second) {
-        Matrix<DataType, NumberOfRows, NumberOfColumns> result;
-        for (int i = 0; i < First.size1(); i++)
-            for (int j = 0; j < First.size2(); j++)
-                result(i, j) = First(i, j) - Second(i, j);
+Matrix<DataType, NumberOfRows, NumberOfColumns> operator-(
+    Matrix<DataType, NumberOfRows, NumberOfColumns> const& First,
+    Matrix<DataType, NumberOfRows, NumberOfColumns> const& Second) {
+    Matrix<DataType, NumberOfRows, NumberOfColumns> result;
+    for (int i = 0; i < First.size1(); i++)
+        for (int j = 0; j < First.size2(); j++)
+            result(i, j) = First(i, j) - Second(i, j);
 
-        return result;
-    }
+    return result;
+}
 
 template <typename DataType, std::size_t NumberOfRows,
     std::size_t NumberOfColumns>
 bool operator!=(Matrix<DataType, NumberOfRows, NumberOfColumns> const& First,
     Matrix<DataType, NumberOfRows, NumberOfColumns> const& Second) {
     return !(First == Second);
+}
+
+template <typename DataType, std::size_t NumberOfRows,
+    std::size_t NumberOfColumns, std::size_t SecondNumberOfColumns>
+inline Matrix<DataType, NumberOfRows, SecondNumberOfColumns> operator*(
+    Matrix<DataType, NumberOfRows, NumberOfColumns> const& First,
+    Matrix<DataType, NumberOfColumns, SecondNumberOfColumns> const& Second) {
+    Matrix<DataType, NumberOfRows, SecondNumberOfColumns> result;
+    for (std::size_t i = 0; i < NumberOfRows; i++)
+        for (std::size_t j = 0; j < SecondNumberOfColumns; j++) {
+            DataType temp = DataType();
+            for (std::size_t k = 0; k < NumberOfColumns; k++)
+                temp += First(i, k) * Second(k, j);
+
+            result(i, j) = temp;
+        }
+
+    return result;
 }
 
 /// output stream function
@@ -179,4 +184,4 @@ inline std::ostream& operator<<(std::ostream& rOStream,
 
     return rOStream;
 }
-}  // mamespace AMatrix
+}  // namespace AMatrix
