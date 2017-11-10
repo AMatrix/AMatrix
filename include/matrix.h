@@ -12,7 +12,8 @@ template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
 class Matrix {
     TDataType _data[TSize1 * TSize2];
 
-   public:
+public:
+    using value_type = TDataType;
     Matrix() {}
     explicit Matrix(TDataType const& InitialValue) {
         for (std::size_t i = 0; i < size(); i++)
@@ -33,15 +34,15 @@ class Matrix {
                 at(i, j) = Other(i, j);
     }
 
-   template <typename TOtherMatrixType>
-     Matrix& operator=(TOtherMatrixType const& Other) {
+    template <typename TOtherMatrixType>
+    Matrix& operator=(TOtherMatrixType const& Other) {
         for (std::size_t i = 0; i < size1(); i++)
             for (std::size_t j = 0; j < size2(); j++)
                 at(i, j) = Other(i, j);
         return *this;
     }
 
-     Matrix& operator=(Matrix const& Other) {
+    Matrix& operator=(Matrix const& Other) {
         for (std::size_t i = 0; i < size(); i++)
             _data[i] = Other._data[i];
         return *this;
@@ -116,10 +117,10 @@ class Matrix {
 };
 
 // Zero matrix
-template <typename TData, std::size_t TSize1, std::size_t TSize2>
+template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
 class ZeroMatrix {
    public:
-    typedef TData TDataType;
+    using data_type = TDataType;
 
     ZeroMatrix() {}
 
@@ -129,6 +130,24 @@ class ZeroMatrix {
 
     inline constexpr std::size_t size1() const { return TSize1; }
     inline constexpr std::size_t size2() const { return TSize2; }
+};
+
+// Zero matrix
+template <typename TMatrixType>
+class TransposeMatrix {
+    TMatrixType const& mOriginal;
+
+   public:
+    TransposeMatrix() = delete;
+
+    TransposeMatrix(TMatrixType const& Original) : mOriginal(Original) {}
+
+    inline typename TMatrixType::value_type operator()(std::size_t i, std::size_t j) const {
+        return mOriginal(j, i);
+    }
+
+    inline std::size_t size1() const { return mOriginal.size2(); }
+    inline std::size_t size2() const { return mOriginal.size1(); }
 };
 
 template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
