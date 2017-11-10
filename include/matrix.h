@@ -107,7 +107,7 @@ class Matrix {
     TDataType const* data() const { return _data; }
 };
 
-//utility to set to zero the matrix
+// Zero matrix
 template <typename TData, std::size_t TSize1, std::size_t TSize2>
 class ZeroMatrix {
    public:
