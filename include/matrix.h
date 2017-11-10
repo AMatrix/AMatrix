@@ -12,7 +12,7 @@ template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
 class Matrix {
     TDataType _data[TSize1 * TSize2];
 
-public:
+   public:
     using value_type = TDataType;
     Matrix() {}
     explicit Matrix(TDataType const& InitialValue) {
@@ -142,13 +142,19 @@ class TransposeMatrix {
 
     TransposeMatrix(TMatrixType const& Original) : mOriginal(Original) {}
 
-    inline typename TMatrixType::value_type operator()(std::size_t i, std::size_t j) const {
+    inline typename TMatrixType::value_type operator()(
+        std::size_t i, std::size_t j) const {
         return mOriginal(j, i);
     }
 
     inline std::size_t size1() const { return mOriginal.size2(); }
     inline std::size_t size2() const { return mOriginal.size1(); }
 };
+
+template <typename TMatrixType>
+TransposeMatrix<TMatrixType> Transpose(TMatrixType const& OriginalMatrix) {
+    return TransposeMatrix<TMatrixType>(OriginalMatrix);
+}
 
 template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
 Matrix<TDataType, TSize1, TSize2> operator+(
