@@ -86,24 +86,6 @@ class Matrix {
         return *this;
     }
 
-    friend Matrix operator+(Matrix const& First, Matrix const& Second) {
-        Matrix result;
-        for (int i = 0; i < First.size1(); i++)
-            for (int j = 0; j < First.size2(); j++)
-                result(i, j) = First(i, j) + Second(i, j);
-
-        return result;
-    }
-
-    friend Matrix operator-(Matrix const& First, Matrix const& Second) {
-        Matrix result;
-        for (int i = 0; i < First.size1(); i++)
-            for (int j = 0; j < First.size2(); j++)
-                result(i, j) = First(i, j) - Second(i, j);
-
-        return result;
-    }
-
     template <std::size_t SecondNumberOfColumns>
     friend inline Matrix<DataType, NumberOfRows, SecondNumberOfColumns>
     operator*(Matrix const& First, Matrix<DataType, NumberOfColumns,
@@ -152,6 +134,28 @@ class Matrix {
         }
     }
 };
+
+template <typename DataType, std::size_t NumberOfRows,
+    std::size_t NumberOfColumns>
+    Matrix<DataType, NumberOfRows, NumberOfColumns> operator+(Matrix<DataType, NumberOfRows, NumberOfColumns> const& First, Matrix<DataType, NumberOfRows, NumberOfColumns> const& Second) {
+        Matrix<DataType, NumberOfRows, NumberOfColumns> result;
+        for (int i = 0; i < First.size1(); i++)
+            for (int j = 0; j < First.size2(); j++)
+                result(i, j) = First(i, j) + Second(i, j);
+
+        return result;
+    }
+
+template <typename DataType, std::size_t NumberOfRows,
+    std::size_t NumberOfColumns>
+        Matrix<DataType, NumberOfRows, NumberOfColumns> operator-(Matrix<DataType, NumberOfRows, NumberOfColumns> const& First, Matrix<DataType, NumberOfRows, NumberOfColumns> const& Second) {
+        Matrix<DataType, NumberOfRows, NumberOfColumns> result;
+        for (int i = 0; i < First.size1(); i++)
+            for (int j = 0; j < First.size2(); j++)
+                result(i, j) = First(i, j) - Second(i, j);
+
+        return result;
+    }
 
 template <typename DataType, std::size_t NumberOfRows,
     std::size_t NumberOfColumns>
