@@ -4,16 +4,14 @@
 #include <array>
 
 // A matrix Library to be simple and fast
-// By Pooyan
 
 namespace AMatrix {
-
-// Transpose matrix
+    
 template <typename TMatrixType>
-class TransposeMatrix : public TMatrixType{
+class TransposeMatrix : public TMatrixType {
     TMatrixType const& mOriginal;
 
-public:
+   public:
     using value_type = typename TMatrixType::value_type;
     TransposeMatrix() = delete;
 
@@ -24,8 +22,8 @@ public:
         return mOriginal(j, i);
     }
 
-    inline constexpr std::size_t size1() const { return mOriginal.size2(); }
-    inline constexpr std::size_t size2() const { return mOriginal.size1(); }
+    inline static constexpr std::size_t size1() { return TMatrixType::size2(); }
+    inline static constexpr std::size_t size2() { return TMatrixType::size1(); }
 };
 
 template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
@@ -84,11 +82,11 @@ class Matrix {
         return _data[i * TSize2 + j];
     }
 
-    constexpr std::size_t size1() const { return TSize1; }
+    static constexpr std::size_t size1() { return TSize1; }
 
-    constexpr std::size_t size2() const { return TSize2; }
+    static constexpr std::size_t size2() { return TSize2; }
 
-    constexpr std::size_t size() const { return TSize1 * TSize2; }
+    static constexpr std::size_t size() { return TSize1 * TSize2; }
 
     friend bool operator==(Matrix const& First, Matrix const& Second) {
         for (std::size_t i = 0; i < First.size(); i++)
@@ -131,10 +129,9 @@ class Matrix {
 
     Matrix& noalias() { return *this; }
 
-    TransposeMatrix<Matrix> transpose() { // Eigen benchmark
+    TransposeMatrix<Matrix> transpose() {  // Eigen benchmark
         return TransposeMatrix<Matrix>(*this);
     }
-    
 
     TransposeMatrix<Matrix> Transpose() {
         return TransposeMatrix<Matrix>(*this);
@@ -209,13 +206,16 @@ inline Matrix<TDataType, TSize1, SecondNumberOfColumns> operator*(
 }
 
 template <typename TMatrixType1, typename TMatrixType2>
-inline Matrix<typename TMatrixType1::value_type, TMatrixType1::size1(), TMatrixType2::size2()> operator*(
-    TMatrixType1 const& First,
-    TMatrixType2 const& Second) {
-    Matrix<typename TMatrixType1::value_type, TMatrixType1::size1(), TMatrixType2::size2()> result;
+inline Matrix<typename TMatrixType1::value_type, TMatrixType1::size1(),
+    TMatrixType2::size2()>
+operator*(TMatrixType1 const& First, TMatrixType2 const& Second) {
+    Matrix<typename TMatrixType1::value_type, TMatrixType1::size1(),
+        TMatrixType2::size2()>
+        result;
     for (std::size_t i = 0; i < TMatrixType1::size1(); i++)
         for (std::size_t j = 0; j < TMatrixType2::size2(); j++) {
-            typename TMatrixType1::value_type temp = typename TMatrixType1::value_type();
+            typename TMatrixType1::value_type temp =
+                typename TMatrixType1::value_type();
             for (std::size_t k = 0; k < TMatrixType1::size2(); k++)
                 temp += First(i, k) * Second(k, j);
 
