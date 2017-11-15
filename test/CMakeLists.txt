@@ -17,3 +17,11 @@ add_test(MatrixProductTest run_test_matrix_product COMMAND run_test_matrix_produ
 
 add_executable(run_test_matrix_transpose  ${PROJECT_SOURCE_DIR}/test/test_matrix_transpose.cpp)
 add_test(MatrixTransposetTest run_test_matrix_transpose COMMAND run_test_matrix_transpose)
+
+install(
+  TARGETS 
+    run_test_matrix_access  run_test_matrix_assign  run_test_matrix_plus
+    run_test_matrix_minus   run_test_matrix_product run_test_matrix_transpose
+  DESTINATION  
+    "${PROJECT_SOURCE_DIR}/build" 
+  )
