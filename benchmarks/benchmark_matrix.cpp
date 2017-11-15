@@ -48,10 +48,13 @@ class ComparisonColumn {
 
     template <typename TMatrixType2>
     bool CheckResult(TMatrixType2 const& Reference) {
+        constexpr double tolerance = 1e-12;
         for (std::size_t i = 0; i < NumberOfRows; i++)
             for (std::size_t j = 0; j < NumberOfColumns; j++)
-                if (mResult(i, j) != Reference(i, j))
+                if (std::abs(mResult(i, j) != Reference(i, j)) > tolerance){
+                    std::cout << mResult(i, j) << " != " << Reference(i, j) ;
                     return false;
+                }
 
         return true;
     }
