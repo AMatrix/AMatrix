@@ -25,4 +25,4 @@ endif()
 
 add_executable(run_benchmark_matrix ${PROJECT_SOURCE_DIR}/benchmarks/benchmark_matrix.cpp)
 
-install(TARGETS run_benchmark_matrix DESTINATION "${PROJECT_SOURCE_DIR}/build" )
+install(TARGETS run_benchmark_matrix DESTINATION "${PROJECT_SOURCE_DIR}/bin" )

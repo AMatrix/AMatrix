@@ -23,5 +23,5 @@ install(
     run_test_matrix_access  run_test_matrix_assign  run_test_matrix_plus
     run_test_matrix_minus   run_test_matrix_product run_test_matrix_transpose
   DESTINATION  
-    "${PROJECT_SOURCE_DIR}/build" 
+    "${PROJECT_SOURCE_DIR}/bin" 
   )
