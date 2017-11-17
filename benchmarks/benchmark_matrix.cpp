@@ -116,9 +116,11 @@ class ComparisonColumn {
     }
 };
 
+#if defined(AMATRIX_COMPARE_WITH_UBLAS)
 template <typename TMatrixType, std::size_t NumberOfRows,
     std::size_t NumberOfColumns>
-class UblasComparisonColumn
+
+    class UblasComparisonColumn
     : public ComparisonColumn<TMatrixType, NumberOfRows, NumberOfColumns> {
    public:
     using BaseType =
@@ -193,6 +195,7 @@ class UblasComparisonColumn
         std::cout << "\t\t" << elapsed;
     }
 };
+#endif
 
 template <typename TMatrixType, std::size_t NumberOfRows,
     std::size_t NumberOfColumns>
