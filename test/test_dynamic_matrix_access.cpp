@@ -20,16 +20,16 @@ int main() {
     std::size_t number_of_failed_tests = 0;
     number_of_failed_tests += TestDynamicMatrixAcess(1, 1);
 
-    number_of_failed_tests += TestDynamicMatrixAcess(1,2);
-    number_of_failed_tests += TestDynamicMatrixAcess(2,1);
-    number_of_failed_tests += TestDynamicMatrixAcess(2,2);
+    number_of_failed_tests += TestDynamicMatrixAcess(1, 2);
+    number_of_failed_tests += TestDynamicMatrixAcess(2, 1);
+    number_of_failed_tests += TestDynamicMatrixAcess(2, 2);
 
-    number_of_failed_tests += TestDynamicMatrixAcess(3,1);
-    number_of_failed_tests += TestDynamicMatrixAcess(3,2);
-    number_of_failed_tests += TestDynamicMatrixAcess(3,3);
-    number_of_failed_tests += TestDynamicMatrixAcess(1,3);
-    number_of_failed_tests += TestDynamicMatrixAcess(2,3);
-    number_of_failed_tests += TestDynamicMatrixAcess(3,3);
+    number_of_failed_tests += TestDynamicMatrixAcess(3, 1);
+    number_of_failed_tests += TestDynamicMatrixAcess(3, 2);
+    number_of_failed_tests += TestDynamicMatrixAcess(3, 3);
+    number_of_failed_tests += TestDynamicMatrixAcess(1, 3);
+    number_of_failed_tests += TestDynamicMatrixAcess(2, 3);
+    number_of_failed_tests += TestDynamicMatrixAcess(3, 3);
 
     std::cout << number_of_failed_tests << "tests failed" << std::endl;
 
