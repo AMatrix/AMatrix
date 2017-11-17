@@ -6,7 +6,7 @@
 // A matrix Library to be simple and fast
 
 namespace AMatrix {
-    
+
 template <typename TMatrixType>
 class TransposeMatrix : public TMatrixType {
     TMatrixType const& mOriginal;
@@ -150,10 +150,13 @@ class Matrix<TDataType, 0, 0> {
 
    public:
     using value_type = TDataType;
-    Matrix(std::size_t TheSize1, std::size_t TheSize2) : _size1(TheSize1), _size2(TheSize2)  {
+    Matrix(std::size_t TheSize1, std::size_t TheSize2)
+        : _size1(TheSize1), _size2(TheSize2) {
         _data = new TDataType[size()];
     }
-    explicit Matrix(std::size_t TheSize1, std::size_t TheSize2, TDataType const& InitialValue) : _size1(TheSize1), _size2(TheSize2) {
+    explicit Matrix(std::size_t TheSize1, std::size_t TheSize2,
+        TDataType const& InitialValue)
+        : _size1(TheSize1), _size2(TheSize2) {
         _data = new TDataType[size()];
         for (std::size_t i = 0; i < size(); i++)
             _data[i] = InitialValue;
@@ -167,24 +170,25 @@ class Matrix<TDataType, 0, 0> {
 
     Matrix(Matrix&& Other) = default;
 
-    ~Matrix(){
-        if(_data)
-            delete [] _data;
+    ~Matrix() {
+        if (_data)
+            delete[] _data;
     }
 
     template <typename TOtherMatrixType>
-    explicit Matrix(TOtherMatrixType const& Other) : _size1(Other.size1()), _size2(Other.size2()) {
-         _data = new TDataType[size()];
-       for (std::size_t i = 0; i < size1(); i++)
+    explicit Matrix(TOtherMatrixType const& Other)
+        : _size1(Other.size1()), _size2(Other.size2()) {
+        _data = new TDataType[size()];
+        for (std::size_t i = 0; i < size1(); i++)
             for (std::size_t j = 0; j < size2(); j++)
                 at(i, j) = Other(i, j);
     }
 
     template <typename TOtherMatrixType>
     Matrix& operator=(TOtherMatrixType const& Other) {
-        std::size_t new_size =  Other.size1() * Other.size2();
-        if(size() != new_size){
-            delete [] _data;
+        std::size_t new_size = Other.size1() * Other.size2();
+        if (size() != new_size) {
+            delete[] _data;
             _data = new TDataType[new_size];
         }
         _size1 = Other.size1();
@@ -197,9 +201,9 @@ class Matrix<TDataType, 0, 0> {
     }
 
     Matrix& operator=(Matrix const& Other) {
-        std::size_t new_size =  Other.size1() * Other.size2();
-        if(size() != new_size){
-            delete [] _data;
+        std::size_t new_size = Other.size1() * Other.size2();
+        if (size() != new_size) {
+            delete[] _data;
             _data = new TDataType[new_size];
         }
         _size1 = Other.size1();
@@ -233,8 +237,9 @@ class Matrix<TDataType, 0, 0> {
     std::size_t size() const { return _size1 * _size2; }
 
     friend bool operator==(Matrix const& First, Matrix const& Second) {
-        if((First.size1() != Second.size1()) || (First.size2() != Second.size2()))
-            return false
+        if ((First.size1() != Second.size1()) ||
+            (First.size2() != Second.size2()))
+            return false;
         for (std::size_t i = 0; i < First.size(); i++)
             if (First._data[i] != Second._data[i])
                 return false;
