@@ -219,18 +219,18 @@ class Matrix<TDataType, 0, 0> {
     }
 
     TDataType& at(std::size_t i, std::size_t j) {
-        return _data[i * TSize2 + j];
+        return _data[i * size2() + j];
     }
 
     TDataType const& at(std::size_t i, std::size_t j) const {
-        return _data[i * TSize2 + j];
+        return _data[i * size2() + j];
     }
 
-    std::size_t size1() { return TSize1; }
+    std::size_t size1() const { return _size1; }
 
-    std::size_t size2() { return TSize2; }
+    std::size_t size2() const { return _size2; }
 
-    std::size_t size() { return TSize1 * TSize2; }
+    std::size_t size() const { return _size1 * _size2; }
 
     friend bool operator==(Matrix const& First, Matrix const& Second) {
         if((First.size1() != Second.size1()) || (First.size2() != Second.size2()))
