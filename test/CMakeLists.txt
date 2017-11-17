@@ -18,6 +18,9 @@ add_test(MatrixProductTest run_test_matrix_product COMMAND run_test_matrix_produ
 add_executable(run_test_matrix_transpose  ${PROJECT_SOURCE_DIR}/test/test_matrix_transpose.cpp)
 add_test(MatrixTransposetTest run_test_matrix_transpose COMMAND run_test_matrix_transpose)
 
+add_executable(run_test_dynamic_matrix_access ${PROJECT_SOURCE_DIR}/test/test_dynamic_matrix_access.cpp)
+add_test(DynamicMatrixAcessTest run_test_dynamic_matrix_access COMMAND run_test_dynamic_matrix_access)
+
 install(
   TARGETS 
     run_test_matrix_access  run_test_matrix_assign  run_test_matrix_plus

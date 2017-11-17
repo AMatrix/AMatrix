@@ -3,25 +3,18 @@
 #include "matrix.h"
 #include "checks.h"
 
-template <typename TMatrixType>
-std::size_t TestThisMatrixAcess(TMatrixType& ThisMatrix) {
-    for (std::size_t i = 0; i < ThisMatrix.size1(); i++)
-        for (std::size_t j = 0; j < ThisMatrix.size2(); j++)
-            ThisMatrix(i, j) = 2.33 * i - 4.52 * j;
-
-    for (std::size_t i = 0; i < ThisMatrix.size1(); i++)
-        for (std::size_t j = 0; j < ThisMatrix.size2(); j++) {
-            AMATRIX_CHECK_EQUAL(ThisMatrix(i, j), 2.33 * i - 4.52 * j);
-        }
-    return 0;  // not failed
-}
-
 template <std::size_t TSize1, std::size_t TSize2>
 std::size_t TestMatrixAcess() {
     AMatrix::Matrix<double, TSize1, TSize2> a_matrix;
-    AMatrix::Matrix<double, 0, 0> a_dynamic_matrix(TSize1, TSize2);
-    return TestThisMatrixAcess(a_matrix) +
-           TestThisMatrixAcess(a_dynamic_matrix);
+    for (std::size_t i = 0; i < a_matrix.size1(); i++)
+        for (std::size_t j = 0; j < a_matrix.size2(); j++)
+            a_matrix(i, j) = 2.33 * i - 4.52 * j;
+
+    for (std::size_t i = 0; i < a_matrix.size1(); i++)
+        for (std::size_t j = 0; j < a_matrix.size2(); j++) {
+            AMATRIX_CHECK_EQUAL(a_matrix(i, j), 2.33 * i - 4.52 * j);
+        }
+    return 0;  // not failed
 }
 
 int main() {
