@@ -275,13 +275,13 @@ class Matrix<TDataType, 0, 0> {
 
     Matrix& noalias() { return *this; }
 
-    TransposeMatrix<Matrix> transpose() {  // Eigen benchmark
-        return TransposeMatrix<Matrix>(*this);
-    }
+    // TransposeMatrix<Matrix> transpose() {  // Eigen benchmark
+    //     return TransposeMatrix<Matrix>(*this);
+    // }
 
-    TransposeMatrix<Matrix> Transpose() {
-        return TransposeMatrix<Matrix>(*this);
-    }
+    // TransposeMatrix<Matrix> Transpose() {
+    //     return TransposeMatrix<Matrix>(*this);
+    // }
 
     TDataType* data() { return _data; }
 
