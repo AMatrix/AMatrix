@@ -3,11 +3,11 @@
 #include "matrix.h"
 #include "checks.h"
 
-template <std::size_t NumberOfRows, std::size_t NumberOfCulomns>
+template <std::size_t TSize1, std::size_t TSize2>
 std::size_t TestMatrixPlus() {
-    AMatrix::Matrix<double, NumberOfRows, NumberOfCulomns> a_matrix;
-    AMatrix::Matrix<double, NumberOfRows, NumberOfCulomns> b_matrix;
-    AMatrix::Matrix<double, NumberOfRows, NumberOfCulomns> c_matrix;
+    AMatrix::Matrix<double, TSize1, TSize2> a_matrix;
+    AMatrix::Matrix<double, TSize1, TSize2> b_matrix;
+    AMatrix::Matrix<double, TSize1, TSize2> c_matrix;
     for (std::size_t i = 0; i < a_matrix.size1(); i++)
         for (std::size_t j = 0; j < a_matrix.size2(); j++)
             a_matrix(i, j) = 2.33 * i - 4.52 * j;
@@ -22,10 +22,10 @@ std::size_t TestMatrixPlus() {
     return 0;  // not failed
 }
 
-template <std::size_t NumberOfRows, std::size_t NumberOfCulomns>
+template <std::size_t TSize1, std::size_t TSize2>
 std::size_t TestMatrixPlusEqual() {
-    AMatrix::Matrix<double, NumberOfRows, NumberOfCulomns> a_matrix;
-    AMatrix::Matrix<double, NumberOfRows, NumberOfCulomns> b_matrix;
+    AMatrix::Matrix<double, TSize1, TSize2> a_matrix;
+    AMatrix::Matrix<double, TSize1, TSize2> b_matrix;
     for (std::size_t i = 0; i < a_matrix.size1(); i++)
         for (std::size_t j = 0; j < a_matrix.size2(); j++)
             a_matrix(i, j) = 2.33 * i - 4.52 * j;
