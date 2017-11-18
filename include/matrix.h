@@ -168,7 +168,9 @@ class Matrix<TDataType, 0, 0> {
             _data[i] = Other._data[i];
     }
 
-    Matrix(Matrix&& Other) = default;
+    Matrix(Matrix&& Other) : _size1(Other.size1()), _size2(Other.size2()), _data(Other._data){
+        Other._data = nullptr;
+    }
 
     ~Matrix() {
         if (_data)
