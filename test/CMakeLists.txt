@@ -21,10 +21,14 @@ add_test(MatrixTransposetTest run_test_matrix_transpose COMMAND run_test_matrix_
 add_executable(run_test_dynamic_matrix_access ${PROJECT_SOURCE_DIR}/test/test_dynamic_matrix_access.cpp)
 add_test(DynamicMatrixAcessTest run_test_dynamic_matrix_access COMMAND run_test_dynamic_matrix_access)
 
+add_executable(run_test_dynamic_matrix_assign ${PROJECT_SOURCE_DIR}/test/test_dynamic_matrix_assign.cpp)
+add_test(DynamicMatrixAssignTest run_test_dynamic_matrix_assign COMMAND run_test_dynamic_matrix_assign)
+
 install(
   TARGETS 
     run_test_matrix_access  run_test_matrix_assign  run_test_matrix_plus
     run_test_matrix_minus   run_test_matrix_product run_test_matrix_transpose
+    run_test_dynamic_matrix_access run_test_dynamic_matrix_assign
   DESTINATION  
     "${PROJECT_SOURCE_DIR}/bin" 
   )
