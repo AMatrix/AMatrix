@@ -3,10 +3,9 @@
 #include "matrix.h"
 #include "checks.h"
 
-template <std::size_t NumberOfRows, std::size_t NumberOfCulomns>
-std::size_t TestMatrixScalarProduct() {
-    AMatrix::Matrix<double, 0, 0> a_matrix(NumberOfRows, NumberOfCulomns);
-    AMatrix::Matrix<double, 0, 0> b_matrix(NumberOfRows, NumberOfCulomns);
+std::size_t TestMatrixScalarProduct(std::size_t Size1, std::size_t Size2) {
+    AMatrix::Matrix<double, 0, 0> a_matrix(Size1, Size2);
+    AMatrix::Matrix<double, 0, 0> b_matrix(Size1, Size2);
     for (std::size_t i = 0; i < a_matrix.size1(); i++)
         for (std::size_t j = 0; j < a_matrix.size2(); j++)
             a_matrix(i, j) = 2.33 * i - 4.52 * j;
@@ -21,15 +20,14 @@ std::size_t TestMatrixScalarProduct() {
     return 0;  // not failed
 }
 
-template <std::size_t NumberOfRows, std::size_t NumberOfCulomns,
-    std::size_t NumberOfSecondRows>
-std::size_t TestMatrixProduct() {
-    std::cout << "Testing A(" << NumberOfRows << "," << NumberOfCulomns
-              << ") X B(" << NumberOfCulomns << "," << NumberOfSecondRows
+std::size_t TestMatrixProduct(std::size_t Size1, std::size_t Size2,
+    std::size_t SecondSize1) {
+    std::cout << "Testing A(" << Size1 << "," << Size2
+              << ") X B(" << Size2 << "," << SecondSize1
               << ") ";
-    AMatrix::Matrix<double, 0, 0> a_matrix(NumberOfRows, NumberOfCulomns);
-    AMatrix::Matrix<double, 0, 0> b_matrix(NumberOfCulomns, NumberOfSecondRows);
-    AMatrix::Matrix<double, 0, 0> c_matrix(NumberOfRows, NumberOfSecondRows);
+    AMatrix::Matrix<double, 0, 0> a_matrix(Size1, Size2);
+    AMatrix::Matrix<double, 0, 0> b_matrix(Size2, SecondSize1);
+    AMatrix::Matrix<double, 0, 0> c_matrix(Size1, SecondSize1);
     for (std::size_t i = 0; i < a_matrix.size1(); i++)
         for (std::size_t j = 0; j < a_matrix.size2(); j++)
             if (i == j)
@@ -45,7 +43,7 @@ std::size_t TestMatrixProduct() {
 
     for (std::size_t i = 0; i < c_matrix.size1(); i++)
         for (std::size_t j = 0; j < c_matrix.size2(); j++)
-            if (static_cast<std::size_t>(i) < NumberOfCulomns)
+            if (static_cast<std::size_t>(i) < Size2)
                 AMATRIX_CHECK_EQUAL(
                     c_matrix(i, j), b_matrix(i, j) * (i + 1) * 2.33);
 
@@ -57,58 +55,55 @@ int main() {
     std::size_t number_of_failed_tests = 0;
 
     // scalar product test
-    number_of_failed_tests += TestMatrixScalarProduct<1, 1>();
+    number_of_failed_tests += TestMatrixScalarProduct(1,1);
 
-    number_of_failed_tests += TestMatrixScalarProduct<1, 2>();
-    number_of_failed_tests += TestMatrixScalarProduct<2, 1>();
-    number_of_failed_tests += TestMatrixScalarProduct<2, 2>();
+    number_of_failed_tests += TestMatrixScalarProduct(1,2);
+    number_of_failed_tests += TestMatrixScalarProduct(2,1);
+    number_of_failed_tests += TestMatrixScalarProduct(2,2);
 
-    number_of_failed_tests += TestMatrixScalarProduct<3, 1>();
-    number_of_failed_tests += TestMatrixScalarProduct<3, 2>();
-    number_of_failed_tests += TestMatrixScalarProduct<3, 3>();
-    number_of_failed_tests += TestMatrixScalarProduct<1, 3>();
-    number_of_failed_tests += TestMatrixScalarProduct<2, 3>();
-    number_of_failed_tests += TestMatrixScalarProduct<3, 3>();
+    number_of_failed_tests += TestMatrixScalarProduct(3,1);
+    number_of_failed_tests += TestMatrixScalarProduct(3,2);
+    number_of_failed_tests += TestMatrixScalarProduct(3,3);
+    number_of_failed_tests += TestMatrixScalarProduct(1,3);
+    number_of_failed_tests += TestMatrixScalarProduct(2,3);
 
     // matrix product test
-    number_of_failed_tests += TestMatrixProduct<1, 1, 1>();
+    number_of_failed_tests += TestMatrixProduct(1,1,1);
 
-    number_of_failed_tests += TestMatrixProduct<1, 1, 2>();
-    number_of_failed_tests += TestMatrixProduct<2, 1, 1>();
-    number_of_failed_tests += TestMatrixProduct<2, 1, 2>();
+    number_of_failed_tests += TestMatrixProduct(1,1,2);
+    number_of_failed_tests += TestMatrixProduct(2,1,1);
+    number_of_failed_tests += TestMatrixProduct(2,1,2);
 
-    number_of_failed_tests += TestMatrixProduct<3, 1, 1>();
-    number_of_failed_tests += TestMatrixProduct<3, 1, 2>();
-    number_of_failed_tests += TestMatrixProduct<3, 1, 3>();
-    number_of_failed_tests += TestMatrixProduct<1, 1, 3>();
-    number_of_failed_tests += TestMatrixProduct<2, 1, 3>();
-    number_of_failed_tests += TestMatrixProduct<3, 1, 3>();
+    number_of_failed_tests += TestMatrixProduct(3,1,1);
+    number_of_failed_tests += TestMatrixProduct(3,1,2);
+    number_of_failed_tests += TestMatrixProduct(3,1,3);
+    number_of_failed_tests += TestMatrixProduct(1,1,3);
+    number_of_failed_tests += TestMatrixProduct(2,1,3);
 
-    number_of_failed_tests += TestMatrixProduct<1, 2, 1>();
+    number_of_failed_tests += TestMatrixProduct(1,2,1);
 
-    number_of_failed_tests += TestMatrixProduct<1, 2, 2>();
-    number_of_failed_tests += TestMatrixProduct<2, 2, 1>();
-    number_of_failed_tests += TestMatrixProduct<2, 2, 2>();
+    number_of_failed_tests += TestMatrixProduct(1,2,2);
+    number_of_failed_tests += TestMatrixProduct(2,2,1);
+    number_of_failed_tests += TestMatrixProduct(2,2,2);
 
-    number_of_failed_tests += TestMatrixProduct<3, 2, 1>();
-    number_of_failed_tests += TestMatrixProduct<3, 2, 2>();
-    number_of_failed_tests += TestMatrixProduct<3, 2, 3>();
-    number_of_failed_tests += TestMatrixProduct<1, 2, 3>();
-    number_of_failed_tests += TestMatrixProduct<2, 2, 3>();
-    number_of_failed_tests += TestMatrixProduct<3, 2, 3>();
+    number_of_failed_tests += TestMatrixProduct(3,2,1);
+    number_of_failed_tests += TestMatrixProduct(3,2,2);
+    number_of_failed_tests += TestMatrixProduct(3,2,3);
+    number_of_failed_tests += TestMatrixProduct(1,2,3);
+    number_of_failed_tests += TestMatrixProduct(2,2,3);
+    number_of_failed_tests += TestMatrixProduct(3,2,3);
 
-    number_of_failed_tests += TestMatrixProduct<1, 3, 1>();
+    number_of_failed_tests += TestMatrixProduct(1,3,1);
 
-    number_of_failed_tests += TestMatrixProduct<1, 3, 2>();
-    number_of_failed_tests += TestMatrixProduct<2, 3, 1>();
-    number_of_failed_tests += TestMatrixProduct<2, 3, 2>();
+    number_of_failed_tests += TestMatrixProduct(1,3,2);
+    number_of_failed_tests += TestMatrixProduct(2,3,1);
+    number_of_failed_tests += TestMatrixProduct(2,3,2);
 
-    number_of_failed_tests += TestMatrixProduct<3, 3, 1>();
-    number_of_failed_tests += TestMatrixProduct<3, 3, 2>();
-    number_of_failed_tests += TestMatrixProduct<3, 3, 3>();
-    number_of_failed_tests += TestMatrixProduct<1, 3, 3>();
-    number_of_failed_tests += TestMatrixProduct<2, 3, 3>();
-    number_of_failed_tests += TestMatrixProduct<3, 3, 3>();
+    number_of_failed_tests += TestMatrixProduct(3,3,1);
+    number_of_failed_tests += TestMatrixProduct(3,3,2);
+    number_of_failed_tests += TestMatrixProduct(3,3,3);
+    number_of_failed_tests += TestMatrixProduct(1,3,3);
+    number_of_failed_tests += TestMatrixProduct(2,3,3);
 
     std::cout << number_of_failed_tests << " tests failed" << std::endl;
 
