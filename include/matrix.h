@@ -274,7 +274,7 @@ class Matrix<TDataType, 0, 0> {
 
     friend Matrix operator*(
         TDataType const& TheScalar, Matrix const& TheMatrix) {
-        Matrix result;
+        Matrix result(TheMatrix.size1(),TheMatrix.size2());
         const TDataType* __restrict second_data = TheMatrix._data;
         TDataType* __restrict result_data = result._data;
         for (std::size_t i = 0; i < TheMatrix.size(); ++i)
@@ -382,6 +382,23 @@ inline Matrix<TDataType, TSize1, SecondNumberOfColumns> operator*(
         for (std::size_t j = 0; j < SecondNumberOfColumns; j++) {
             TDataType temp = TDataType();
             for (std::size_t k = 0; k < TSize2; k++)
+                temp += First(i, k) * Second(k, j);
+
+            result(i, j) = temp;
+        }
+
+    return result;
+}
+
+template <typename TDataType>
+inline Matrix<TDataType, 0, 0> operator*(
+    Matrix<TDataType, 0, 0> const& First,
+    Matrix<TDataType, 0, 0> const& Second) {
+    Matrix<TDataType, 0, 0> result(First.size1(),Second.size2());
+    for (std::size_t i = 0; i < First.size1(); i++)
+        for (std::size_t j = 0; j < Second.size2(); j++) {
+            TDataType temp = TDataType();
+            for (std::size_t k = 0; k < First.size2(); k++)
                 temp += First(i, k) * Second(k, j);
 
             result(i, j) = temp;
