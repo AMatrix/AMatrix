@@ -168,7 +168,8 @@ class Matrix<TDataType, 0, 0> {
             _data[i] = Other._data[i];
     }
 
-    Matrix(Matrix&& Other) : _size1(Other.size1()), _size2(Other.size2()), _data(Other._data){
+    Matrix(Matrix&& Other)
+        : _size1(Other.size1()), _size2(Other.size2()), _data(Other._data) {
         Other._data = nullptr;
     }
 
@@ -216,7 +217,14 @@ class Matrix<TDataType, 0, 0> {
         return *this;
     }
 
-    Matrix& operator=(Matrix&& Other) = default;
+    Matrix& operator=(Matrix&& Other) {
+        _size1 = Other.size1();
+        _size2 = Other.size2();
+        _data = Other._data;
+        Other._data = nullptr;
+
+        return *this;
+    }
 
     TDataType& operator()(std::size_t i, std::size_t j) { return at(i, j); }
 
