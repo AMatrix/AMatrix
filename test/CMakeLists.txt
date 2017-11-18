@@ -27,11 +27,18 @@ add_test(DynamicMatrixAssignTest run_test_dynamic_matrix_assign COMMAND run_test
 add_executable(run_test_dynamic_matrix_minus ${PROJECT_SOURCE_DIR}/test/test_dynamic_matrix_minus.cpp)
 add_test(DynamicMatrixMinusTest run_test_dynamic_matrix_minus COMMAND run_test_dynamic_matrix_minus)
 
+add_executable(run_test_dynamic_matrix_plus ${PROJECT_SOURCE_DIR}/test/test_dynamic_matrix_plus.cpp)
+add_test(DynamicMatrixPlusTest run_test_dynamic_matrix_plus COMMAND run_test_dynamic_matrix_plus)
+
+add_executable(run_test_dynamic_matrix_product ${PROJECT_SOURCE_DIR}/test/test_dynamic_matrix_product.cpp)
+add_test(DynamicMatrixProductTest run_test_dynamic_matrix_product COMMAND run_test_dynamic_matrix_product)
+
 install(
   TARGETS 
     run_test_matrix_access  run_test_matrix_assign  run_test_matrix_plus
     run_test_matrix_minus   run_test_matrix_product run_test_matrix_transpose
     run_test_dynamic_matrix_access run_test_dynamic_matrix_assign run_test_dynamic_matrix_minus
+    run_test_dynamic_matrix_plus
   DESTINATION  
     "${PROJECT_SOURCE_DIR}/bin" 
   )
