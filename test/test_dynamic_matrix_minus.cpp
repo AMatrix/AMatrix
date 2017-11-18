@@ -3,10 +3,10 @@
 #include "matrix.h"
 #include "checks.h"
 
-std::size_t TestMatrixMinus(std::size_t NumberOfRows, std::size_t NumberOfCulomns) {
-    AMatrix::Matrix<double, 0, 0> a_matrix(NumberOfRows, NumberOfCulomns);
-    AMatrix::Matrix<double, 0, 0> b_matrix(NumberOfRows, NumberOfCulomns);
-    AMatrix::Matrix<double, 0, 0> c_matrix(NumberOfRows, NumberOfCulomns);
+std::size_t TestMatrixMinus(std::size_t Size1, std::size_t Size2) {
+    AMatrix::Matrix<double, 0, 0> a_matrix(Size1, Size2);
+    AMatrix::Matrix<double, 0, 0> b_matrix(Size1, Size2);
+    AMatrix::Matrix<double, 0, 0> c_matrix(Size1, Size2);
     for (std::size_t i = 0; i < a_matrix.size1(); i++)
         for (std::size_t j = 0; j < a_matrix.size2(); j++)
             a_matrix(i, j) = 2.33 * i - 4.52 * j;
@@ -21,9 +21,9 @@ std::size_t TestMatrixMinus(std::size_t NumberOfRows, std::size_t NumberOfCulomn
     return 0;  // not failed
 }
 
-std::size_t TestMatrixMinusEqual(std::size_t NumberOfRows, std::size_t NumberOfCulomns) {
-    AMatrix::Matrix<double, 0, 0> a_matrix(NumberOfRows, NumberOfCulomns);
-    AMatrix::Matrix<double, 0, 0> b_matrix(NumberOfRows, NumberOfCulomns);
+std::size_t TestMatrixMinusEqual(std::size_t Size1, std::size_t Size2) {
+    AMatrix::Matrix<double, 0, 0> a_matrix(Size1, Size2);
+    AMatrix::Matrix<double, 0, 0> b_matrix(Size1, Size2);
     for (std::size_t i = 0; i < a_matrix.size1(); i++)
         for (std::size_t j = 0; j < a_matrix.size2(); j++)
             a_matrix(i, j) = 2.33 * i - 4.52 * j;
