@@ -7,23 +7,48 @@
 
 namespace AMatrix {
 
-template <typename TMatrixType>
-class TransposeMatrix : public TMatrixType {
-    TMatrixType const& mOriginal;
+template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
+class Matrix;
+template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
+class TransposeMatrix : public Matrix<TDataType, TSize1, TSize2> {
+    Matrix<TDataType, TSize1, TSize2> const& mOriginal;
 
    public:
-    using value_type = typename TMatrixType::value_type;
+    using value_type = TDataType;
     TransposeMatrix() = delete;
 
-    TransposeMatrix(TMatrixType const& Original) : mOriginal(Original) {}
+    TransposeMatrix(Matrix<TDataType, TSize1, TSize2> const& Original)
+        : mOriginal(Original) {}
 
-    inline typename TMatrixType::value_type operator()(
-        std::size_t i, std::size_t j) const {
+    inline value_type const& operator()(std::size_t i, std::size_t j) const {
         return mOriginal(j, i);
     }
 
-    inline static constexpr std::size_t size1() { return TMatrixType::size2(); }
-    inline static constexpr std::size_t size2() { return TMatrixType::size1(); }
+    inline static constexpr std::size_t size1() {
+        return Matrix<TDataType, TSize1, TSize2>::size2();
+    }
+    inline static constexpr std::size_t size2() {
+        return Matrix<TDataType, TSize1, TSize2>::size1();
+    }
+};
+
+template <typename TDataType>
+class TransposeMatrix<TDataType, 0, 0> {
+    Matrix<TDataType, 0, 0> const& mOriginal;
+
+   public:
+    using value_type = TDataType;
+    TransposeMatrix() = delete;
+
+    TransposeMatrix(Matrix<TDataType, 0, 0> const& Original)
+        : mOriginal(Original) {}
+
+    inline value_type const& operator()(std::size_t i, std::size_t j) const {
+        return mOriginal(j, i);
+    }
+
+    inline std::size_t size1() { return TMatrixType.size2(); }
+    inline std::size_t size2() { return TMatrixType.size1(); }
 };
 
 template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
@@ -129,12 +154,12 @@ class Matrix {
 
     Matrix& noalias() { return *this; }
 
-    TransposeMatrix<Matrix> transpose() {  // Eigen benchmark
-        return TransposeMatrix<Matrix>(*this);
+    TransposeMatrix<TDataType, TSize1, TSize2> transpose() {  // Eigen benchmark
+        return TransposeMatrix<TDataType, TSize1, TSize2>(*this);
     }
 
-    TransposeMatrix<Matrix> Transpose() {
-        return TransposeMatrix<Matrix>(*this);
+    TransposeMatrix<TDataType, TSize1, TSize2> Transpose() {
+        return TransposeMatrix<TDataType, TSize1, TSize2>(*this);
     }
 
     TDataType* data() { return _data; }
@@ -274,7 +299,7 @@ class Matrix<TDataType, 0, 0> {
 
     friend Matrix operator*(
         TDataType const& TheScalar, Matrix const& TheMatrix) {
-        Matrix result(TheMatrix.size1(),TheMatrix.size2());
+        Matrix result(TheMatrix.size1(), TheMatrix.size2());
         const TDataType* __restrict second_data = TheMatrix._data;
         TDataType* __restrict result_data = result._data;
         for (std::size_t i = 0; i < TheMatrix.size(); ++i)
@@ -290,13 +315,13 @@ class Matrix<TDataType, 0, 0> {
 
     Matrix& noalias() { return *this; }
 
-    // TransposeMatrix<Matrix> transpose() {  // Eigen benchmark
-    //     return TransposeMatrix<Matrix>(*this);
-    // }
+    TransposeMatrix<TDataType, 0, 0> transpose() {  // Eigen benchmark
+        return TransposeMatrix<TDataType, 0, 0>(*this);
+    }
 
-    // TransposeMatrix<Matrix> Transpose() {
-    //     return TransposeMatrix<Matrix>(*this);
-    // }
+    TransposeMatrix<TDataType, 0, 0> Transpose() {
+        return TransposeMatrix<TDataType, 0, 0>(*this);
+    }
 
     TDataType* data() { return _data; }
 
@@ -343,8 +368,7 @@ Matrix<TDataType, TSize1, TSize2> operator-(
 }
 
 template <typename TDataType>
-Matrix<TDataType, 0, 0> operator+(
-    Matrix<TDataType, 0, 0> const& First,
+Matrix<TDataType, 0, 0> operator+(Matrix<TDataType, 0, 0> const& First,
     Matrix<TDataType, 0, 0> const& Second) {
     Matrix<TDataType, 0, 0> result(First.size1(), First.size2());
     for (std::size_t i = 0; i < First.size1(); i++)
@@ -355,8 +379,7 @@ Matrix<TDataType, 0, 0> operator+(
 }
 
 template <typename TDataType>
-Matrix<TDataType, 0, 0> operator-(
-    Matrix<TDataType, 0, 0> const& First,
+Matrix<TDataType, 0, 0> operator-(Matrix<TDataType, 0, 0> const& First,
     Matrix<TDataType, 0, 0> const& Second) {
     Matrix<TDataType, 0, 0> result(First.size1(), First.size2());
     for (std::size_t i = 0; i < First.size1(); i++)
@@ -391,10 +414,9 @@ inline Matrix<TDataType, TSize1, SecondNumberOfColumns> operator*(
 }
 
 template <typename TDataType>
-inline Matrix<TDataType, 0, 0> operator*(
-    Matrix<TDataType, 0, 0> const& First,
+inline Matrix<TDataType, 0, 0> operator*(Matrix<TDataType, 0, 0> const& First,
     Matrix<TDataType, 0, 0> const& Second) {
-    Matrix<TDataType, 0, 0> result(First.size1(),Second.size2());
+    Matrix<TDataType, 0, 0> result(First.size1(), Second.size2());
     for (std::size_t i = 0; i < First.size1(); i++)
         for (std::size_t j = 0; j < Second.size2(); j++) {
             TDataType temp = TDataType();
