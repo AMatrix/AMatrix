@@ -33,6 +33,9 @@ add_test(DynamicMatrixPlusTest run_test_dynamic_matrix_plus COMMAND run_test_dyn
 add_executable(run_test_dynamic_matrix_product ${PROJECT_SOURCE_DIR}/test/test_dynamic_matrix_product.cpp)
 add_test(DynamicMatrixProductTest run_test_dynamic_matrix_product COMMAND run_test_dynamic_matrix_product)
 
+add_executable(run_test_dynamic_matrix_transpose ${PROJECT_SOURCE_DIR}/test/test_dynamic_matrix_transpose.cpp)
+add_test(DynamicMatrixTransposeTest run_test_dynamic_matrix_transpose COMMAND run_test_dynamic_matrix_transpose)
+
 install(
   TARGETS 
     run_test_matrix_access  run_test_matrix_assign  run_test_matrix_plus
