@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "matrix.h"
 #include "checks.h"
 

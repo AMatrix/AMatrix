@@ -1,6 +1,6 @@
 #pragma once
 
-#include <algorithm>
+#include <iostream>
 
 // A matrix Library to be simple and fast
 
