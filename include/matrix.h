@@ -1,8 +1,8 @@
 #pragma once
 
-#include <iostream>
-
 // A matrix Library to be simple and fast
+
+#include "matrix_expression.h"
 
 namespace AMatrix {
 
