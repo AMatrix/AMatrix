@@ -47,8 +47,8 @@ class TransposeMatrix<TDataType, 0, 0> {
         return mOriginal(j, i);
     }
 
-    inline std::size_t size1() { return TMatrixType.size2(); }
-    inline std::size_t size2() { return TMatrixType.size1(); }
+    inline std::size_t size1() { return mOriginal.size2(); }
+    inline std::size_t size2() { return mOriginal.size1(); }
 };
 
 template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
