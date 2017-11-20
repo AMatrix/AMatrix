@@ -243,6 +243,9 @@ class Matrix<TDataType, 0, 0> {
     }
 
     Matrix& operator=(Matrix&& Other) {
+        if (_data)
+            delete[] _data;
+        
         _size1 = Other.size1();
         _size2 = Other.size2();
         _data = Other._data;
