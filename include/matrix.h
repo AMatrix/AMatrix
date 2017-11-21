@@ -51,46 +51,44 @@ class TransposeMatrix<TDataType, 0, 0> {
 };
 
 template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
-class Matrix {
+class MatrixStorage {
     TDataType _data[TSize1 * TSize2];
-
-   public:
-    using value_type = TDataType;
-    Matrix() {}
-    explicit Matrix(TDataType const& InitialValue) {
+    public:
+    MatrixStorage() {}
+    explicit MatrixStorage(TDataType const& InitialValue) {
         for (std::size_t i = 0; i < size(); i++)
             _data[i] = InitialValue;
     }
 
-    Matrix(Matrix const& Other) {
+    MatrixStorage(MatrixStorage const& Other) {
         for (std::size_t i = 0; i < size(); i++)
             _data[i] = Other._data[i];
     }
 
-    Matrix(Matrix&& Other) = default;
+    MatrixStorage(MatrixStorage&& Other) = default;
 
     template <typename TOtherMatrixType>
-    explicit Matrix(TOtherMatrixType const& Other) {
+    explicit MatrixStorage(TOtherMatrixType const& Other) {
         for (std::size_t i = 0; i < size1(); i++)
             for (std::size_t j = 0; j < size2(); j++)
                 at(i, j) = Other(i, j);
     }
 
     template <typename TOtherMatrixType>
-    Matrix& operator=(TOtherMatrixType const& Other) {
+    MatrixStorage& operator=(TOtherMatrixType const& Other) {
         for (std::size_t i = 0; i < size1(); i++)
             for (std::size_t j = 0; j < size2(); j++)
                 at(i, j) = Other(i, j);
         return *this;
     }
 
-    Matrix& operator=(Matrix const& Other) {
+    MatrixStorage& operator=(MatrixStorage const& Other) {
         for (std::size_t i = 0; i < size(); i++)
             _data[i] = Other._data[i];
         return *this;
     }
 
-    Matrix& operator=(Matrix&& Other) = default;
+    MatrixStorage& operator=(MatrixStorage&& Other) = default;
 
     TDataType& operator()(std::size_t i, std::size_t j) { return at(i, j); }
 
@@ -111,6 +109,45 @@ class Matrix {
     static constexpr std::size_t size2() { return TSize2; }
 
     static constexpr std::size_t size() { return TSize1 * TSize2; }
+
+    TDataType* data() { return _data; }
+
+    TDataType const* data() const { return _data; }
+};
+
+template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
+class Matrix : public MatrixStorage<TDataType, TSize1, TSize2> {
+   public:
+    using value_type = TDataType;
+    using base_type = MatrixStorage<TDataType, TSize1, TSize2>;
+    Matrix() {}
+    explicit Matrix(TDataType const& InitialValue) :  base_type(InitalValue) { }
+
+    Matrix(Matrix const& Other) : base_type(Other) {
+        for (std::size_t i = 0; i < size(); i++)
+            _data[i] = Other._data[i];
+    }
+
+    Matrix(Matrix&& Other) : base_type(Other){}
+
+    template <typename TOtherMatrixType>
+    explicit Matrix(TOtherMatrixType const& Other) : base_type(Other){}
+ 
+    template <typename TOtherMatrixType>
+    Matrix& operator=(TOtherMatrixType const& Other) {
+        base_type::operator=(Other);
+        return *this;
+    }
+
+    Matrix& operator=(Matrix const& Other){
+        base_type::operator=(Other);
+        return *this;
+    }
+
+    Matrix& operator=(Matrix&& Other) {
+        base_type::operator=(Other);
+          return *this;
+  }
 
     friend bool operator==(Matrix const& First, Matrix const& Second) {
         for (std::size_t i = 0; i < First.size(); i++)
@@ -138,8 +175,8 @@ class Matrix {
     friend Matrix operator*(
         TDataType const& TheScalar, Matrix const& TheMatrix) {
         Matrix result;
-        const TDataType* __restrict second_data = TheMatrix._data;
-        TDataType* __restrict result_data = result._data;
+        const TDataType* __restrict second_data = TheMatrix.data();
+        TDataType* __restrict result_data = result.data();
         for (std::size_t i = 0; i < TheMatrix.size(); ++i)
             *result_data++ = TheScalar * (*second_data++);
 
@@ -160,10 +197,6 @@ class Matrix {
     TransposeMatrix<TDataType, TSize1, TSize2> Transpose() {
         return TransposeMatrix<TDataType, TSize1, TSize2>(*this);
     }
-
-    TDataType* data() { return _data; }
-
-    TDataType const* data() const { return _data; }
 };
 
 template <typename TDataType>
