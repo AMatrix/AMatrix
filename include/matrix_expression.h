@@ -9,11 +9,11 @@ template <typename TMatrixType, std::size_t TSize1, std::size_t TSize2>
 class MatrixExpression {
     TMatrixType& derived() { return *static_cast<TMatrixType*>(this); }
     TMatrixType const& derived() const {
-        return *static_cast<TMatrixType*>(this);
+        return *static_cast<const TMatrixType* const>(this);
     }
 
    public:
-    using value_type = typename TMatrixType::value_type;
+    // using value_type = TMatrixType::value_type;
     MatrixExpression() {}
 
     MatrixExpression(MatrixExpression const& Other) = default;
@@ -24,11 +24,11 @@ class MatrixExpression {
 
     MatrixExpression& operator=(MatrixExpression&& Other) = default;
 
-    value_type& operator()(std::size_t i, std::size_t j) { return derived().at(i, j); }
+    // value_type& operator()(std::size_t i, std::size_t j) { return derived().at(i, j); }
 
-    value_type const& operator()(std::size_t i, std::size_t j) const {
-        return derived().at(i, j);
-    }
+    // value_type const& operator()(std::size_t i, std::size_t j) const {
+    //     return derived().at(i, j);
+    // }
 
     static constexpr std::size_t size1() { return TSize1; }
 
@@ -46,17 +46,17 @@ class MatrixExpression {
     TMatrixType& operator+=(MatrixExpression const& Other) {
         for (std::size_t i = 0; i < size1(); i++)
             for (std::size_t j = 0; j < size2(); j++)
-                derived().at(i, j) += Other(i, j);
+                derived().at(i, j) += Other.derived()(i, j);
 
-        return *this;
+        return derived();
     }
 
     TMatrixType& operator-=(MatrixExpression const& Other) {
         for (std::size_t i = 0; i < size1(); i++)
             for (std::size_t j = 0; j < size2(); j++)
-                derived().at(i, j) -= Other(i, j);
+                derived().at(i, j) -= Other.derived()(i, j);
 
-        return *this;
+        return derived();
     }
 
     // friend Matrix operator*(
