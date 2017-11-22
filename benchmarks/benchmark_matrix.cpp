@@ -90,10 +90,10 @@ class ComparisonColumn {
     }
     void MeasureABAMultTime() {
         AMATRIX_MEASURE_ABC_OPERATION(C.noalias() = A * TMatrixType(D * A); D.noalias() = B;)
-        }
+    }
 
     void MeasureATransposeBAMultTime() {
-         AMATRIX_MEASURE_ABC_OPERATION(C.noalias() = A.transpose() * TMatrixType(D * A); D.noalias() = B;)
+        AMATRIX_MEASURE_ABC_OPERATION(C.noalias() = A.transpose() * TMatrixType(D * A); D.noalias() = B;)
     }
 };
 
@@ -105,6 +105,8 @@ class DynamicComparisonColumn {
     TMatrixType A;
     TMatrixType B;
     TMatrixType C;
+    TMatrixType D;
+
     std::string mColumnName;
 
     void initialize(TMatrixType& TheMatrix) {
@@ -125,10 +127,12 @@ class DynamicComparisonColumn {
     DynamicComparisonColumn(std::string ColumnName)
         : A(NumberOfRows, NumberOfColumns),
           B(NumberOfRows, NumberOfColumns),
-          C(NumberOfRows, NumberOfColumns) {
+          C(NumberOfRows, NumberOfColumns),
+          D(NumberOfRows, NumberOfColumns) {
         initialize(A);
         initialize(B);
         initialize(C);
+        initialize(D);
     }
 
     std::string const& GetColumnName() { return mColumnName; }
@@ -148,59 +152,18 @@ class DynamicComparisonColumn {
     }
 
     void MeasureSumTime() {
-        initialize(A);
-        initialize(B);
-        Timer timer;
-        for (std::size_t i_repeat = 0; i_repeat < mRepeat; i_repeat++) {
-            C.noalias() = A + B;
-            B.noalias() = C;
-        }
-        auto elapsed = timer.elapsed().count();
-        std::cout << "\t\t" << elapsed;
+        AMATRIX_MEASURE_ABC_OPERATION(C.noalias() = A + B; B.noalias() = C;)
     }
 
     void MeasureMultTime() {
-        initialize(A);
-        initializeInverse(B);
-        TMatrixType D(NumberOfRows, NumberOfColumns);
-        initializeInverse(D);
-        Timer timer;
-        for (std::size_t i_repeat = 0; i_repeat < mRepeat; i_repeat++) {
-            C.noalias() = D * A;
-            D.noalias() = B;
-        }
-
-        auto elapsed = timer.elapsed().count();
-        std::cout << "\t\t" << elapsed;
+        AMATRIX_MEASURE_ABC_OPERATION(C.noalias() = D * A; D.noalias() = B;)
     }
     void MeasureABAMultTime() {
-        initialize(A);
-        initializeInverse(B);
-        TMatrixType D(NumberOfRows, NumberOfColumns);
-        initializeInverse(D);
-        Timer timer;
-        for (std::size_t i_repeat = 0; i_repeat < mRepeat; i_repeat++) {
-            C.noalias() = A * TMatrixType(D * A);
-            D.noalias() = B;
-        }
-
-        auto elapsed = timer.elapsed().count();
-        std::cout << "\t\t" << elapsed;
+        AMATRIX_MEASURE_ABC_OPERATION(C.noalias() = A * TMatrixType(D * A); D.noalias() = B;)
     }
 
     void MeasureATransposeBAMultTime() {
-        initialize(A);
-        initializeInverse(B);
-        TMatrixType D(NumberOfRows, NumberOfColumns);
-        initializeInverse(D);
-        Timer timer;
-        for (std::size_t i_repeat = 0; i_repeat < mRepeat; i_repeat++) {
-            C.noalias() = A.transpose() * TMatrixType(D * A);
-            D.noalias() = B;
-        }
-
-        auto elapsed = timer.elapsed().count();
-        std::cout << "\t\t" << elapsed;
+        AMATRIX_MEASURE_ABC_OPERATION(C.noalias() = A.transpose() * TMatrixType(D * A); D.noalias() = B;)
     }
 };
 
@@ -219,14 +182,15 @@ class UblasComparisonColumn
               ColumnName) {}
 
     void MeasureSumTime() {
+        using namespace boost::numeric::ublas;
         BaseType::initialize(BaseType::A);
         BaseType::initialize(BaseType::B);
         Timer timer;
         for (std::size_t i_repeat = 0; i_repeat < BaseType::mRepeat;
              i_repeat++) {
-            boost::numeric::ublas::noalias(BaseType::C) =
+            noalias(BaseType::C) =
                 BaseType::A + BaseType::B;
-            boost::numeric::ublas::noalias(BaseType::B) = BaseType::C;
+            noalias(BaseType::B) = BaseType::C;
         }
 
         auto elapsed = timer.elapsed().count();
