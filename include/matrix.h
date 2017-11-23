@@ -120,13 +120,14 @@ class Matrix : public MatrixStorage<TDataType, TSize1, TSize2> {
    public:
     using value_type = TDataType;
     using base_type = MatrixStorage<TDataType, TSize1, TSize2>;
-    Matrix() {}
-    explicit Matrix(TDataType const& InitialValue) :  base_type(InitalValue) { }
+    using base_type::size1;
+    using base_type::size2;
+    using base_type::at;
 
-    Matrix(Matrix const& Other) : base_type(Other) {
-        for (std::size_t i = 0; i < size(); i++)
-            _data[i] = Other._data[i];
-    }
+    Matrix() {}
+    explicit Matrix(TDataType const& InitialValue) :  base_type(InitialValue) { }
+
+    Matrix(Matrix const& Other) : base_type(Other) {}
 
     Matrix(Matrix&& Other) : base_type(Other){}
 
