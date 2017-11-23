@@ -53,7 +53,8 @@ class TransposeMatrix<TDataType, 0, 0> {
 template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
 class MatrixStorage {
     TDataType _data[TSize1 * TSize2];
-    public:
+
+   public:
     MatrixStorage() {}
     explicit MatrixStorage(TDataType const& InitialValue) {
         for (std::size_t i = 0; i < size(); i++)
@@ -125,30 +126,30 @@ class Matrix : public MatrixStorage<TDataType, TSize1, TSize2> {
     using base_type::at;
 
     Matrix() {}
-    explicit Matrix(TDataType const& InitialValue) :  base_type(InitialValue) { }
+    explicit Matrix(TDataType const& InitialValue) : base_type(InitialValue) {}
 
     Matrix(Matrix const& Other) : base_type(Other) {}
 
-    Matrix(Matrix&& Other) : base_type(Other){}
+    Matrix(Matrix&& Other) : base_type(Other) {}
 
     template <typename TOtherMatrixType>
-    explicit Matrix(TOtherMatrixType const& Other) : base_type(Other){}
- 
+    explicit Matrix(TOtherMatrixType const& Other) : base_type(Other) {}
+
     template <typename TOtherMatrixType>
     Matrix& operator=(TOtherMatrixType const& Other) {
         base_type::operator=(Other);
         return *this;
     }
 
-    Matrix& operator=(Matrix const& Other){
+    Matrix& operator=(Matrix const& Other) {
         base_type::operator=(Other);
         return *this;
     }
 
     Matrix& operator=(Matrix&& Other) {
         base_type::operator=(Other);
-          return *this;
-  }
+        return *this;
+    }
 
     friend bool operator==(Matrix const& First, Matrix const& Second) {
         for (std::size_t i = 0; i < First.size(); i++)
@@ -278,7 +279,7 @@ class Matrix<TDataType, 0, 0> {
     Matrix& operator=(Matrix&& Other) {
         if (_data)
             delete[] _data;
-        
+
         _size1 = Other.size1();
         _size2 = Other.size2();
         _data = Other._data;
