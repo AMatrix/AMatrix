@@ -33,12 +33,12 @@
     auto elapsed = timer.elapsed().count();                          \
     std::cout << "\t\t" << elapsed;
 
-template <typename TMatrixType, std::size_t NumberOfRows,
-    std::size_t NumberOfColumns>
+template <typename TMatrixType, std::size_t TSize1,
+    std::size_t TSize2>
 class ComparisonColumn {
    protected:
     static constexpr std::size_t mRepeat =
-        static_cast<std::size_t>(1e8 / (NumberOfRows * NumberOfColumns));
+        static_cast<std::size_t>(1e8 / (TSize1 * TSize2));
     TMatrixType A;
     TMatrixType B;
     TMatrixType C;
@@ -46,14 +46,14 @@ class ComparisonColumn {
     std::string mColumnName;
 
     void initialize(TMatrixType& TheMatrix) {
-        for (std::size_t i = 0; i < NumberOfRows; i++)
-            for (std::size_t j = 0; j < NumberOfColumns; j++)
+        for (std::size_t i = 0; i < TSize1; i++)
+            for (std::size_t j = 0; j < TSize2; j++)
                 TheMatrix(i, j) = j + 1.00;
     }
 
     void initializeInverse(TMatrixType& TheMatrix) {
-        for (std::size_t i = 0; i < NumberOfRows; i++)
-            for (std::size_t j = 0; j < NumberOfColumns; j++)
+        for (std::size_t i = 0; i < TSize1; i++)
+            for (std::size_t j = 0; j < TSize2; j++)
                 TheMatrix(i, j) = 1.00 / (i + 1);
     }
 
@@ -71,8 +71,8 @@ class ComparisonColumn {
     template <typename TMatrixType2>
     bool CheckResult(TMatrixType2 const& Reference) {
         constexpr double tolerance = 1e-12;
-        for (std::size_t i = 0; i < NumberOfRows; i++)
-            for (std::size_t j = 0; j < NumberOfColumns; j++)
+        for (std::size_t i = 0; i < TSize1; i++)
+            for (std::size_t j = 0; j < TSize2; j++)
                 if (std::abs(C(i, j) != Reference(i, j)) > tolerance) {
                     std::cout << " " << C(i, j) << " != " << Reference(i, j);
                     return false;
@@ -97,11 +97,11 @@ class ComparisonColumn {
     }
 };
 
-template <typename TMatrixType, std::size_t NumberOfRows,
-    std::size_t NumberOfColumns>
+template <typename TMatrixType, std::size_t TSize1,
+    std::size_t TSize2>
 class DynamicComparisonColumn {
     static constexpr std::size_t mRepeat =
-        static_cast<std::size_t>(1e8 / (NumberOfRows * NumberOfColumns));
+        static_cast<std::size_t>(1e8 / (TSize1 * TSize2));
     TMatrixType A;
     TMatrixType B;
     TMatrixType C;
@@ -110,14 +110,14 @@ class DynamicComparisonColumn {
     std::string mColumnName;
 
     void initialize(TMatrixType& TheMatrix) {
-        for (std::size_t i = 0; i < NumberOfRows; i++)
-            for (std::size_t j = 0; j < NumberOfColumns; j++)
+        for (std::size_t i = 0; i < TSize1; i++)
+            for (std::size_t j = 0; j < TSize2; j++)
                 TheMatrix(i, j) = j + 1.00;
     }
 
     void initializeInverse(TMatrixType& TheMatrix) {
-        for (std::size_t i = 0; i < NumberOfRows; i++)
-            for (std::size_t j = 0; j < NumberOfColumns; j++)
+        for (std::size_t i = 0; i < TSize1; i++)
+            for (std::size_t j = 0; j < TSize2; j++)
                 TheMatrix(i, j) = 1.00 / (i + 1);
     }
 
@@ -125,10 +125,10 @@ class DynamicComparisonColumn {
     DynamicComparisonColumn() = delete;
 
     DynamicComparisonColumn(std::string ColumnName)
-        : A(NumberOfRows, NumberOfColumns),
-          B(NumberOfRows, NumberOfColumns),
-          C(NumberOfRows, NumberOfColumns),
-          D(NumberOfRows, NumberOfColumns) {
+        : A(TSize1, TSize2),
+          B(TSize1, TSize2),
+          C(TSize1, TSize2),
+          D(TSize1, TSize2) {
         initialize(A);
         initialize(B);
         initialize(C);
@@ -141,8 +141,8 @@ class DynamicComparisonColumn {
     template <typename TMatrixType2>
     bool CheckResult(TMatrixType2 const& Reference) {
         constexpr double tolerance = 1e-12;
-        for (std::size_t i = 0; i < NumberOfRows; i++)
-            for (std::size_t j = 0; j < NumberOfColumns; j++)
+        for (std::size_t i = 0; i < TSize1; i++)
+            for (std::size_t j = 0; j < TSize2; j++)
                 if (std::abs(C(i, j) != Reference(i, j)) > tolerance) {
                     std::cout << C(i, j) << " != " << Reference(i, j);
                     return false;
@@ -168,17 +168,17 @@ class DynamicComparisonColumn {
 };
 
 #if defined(AMATRIX_COMPARE_WITH_UBLAS)
-template <typename TMatrixType, std::size_t NumberOfRows,
-    std::size_t NumberOfColumns>
+template <typename TMatrixType, std::size_t TSize1,
+    std::size_t TSize2>
 
 class UblasComparisonColumn
-    : public ComparisonColumn<TMatrixType, NumberOfRows, NumberOfColumns> {
+    : public ComparisonColumn<TMatrixType, TSize1, TSize2> {
    public:
     using BaseType =
-        ComparisonColumn<TMatrixType, NumberOfRows, NumberOfColumns>;
+        ComparisonColumn<TMatrixType, TSize1, TSize2>;
 
     UblasComparisonColumn(std::string ColumnName)
-        : ComparisonColumn<TMatrixType, NumberOfRows, NumberOfColumns>(
+        : ComparisonColumn<TMatrixType, TSize1, TSize2>(
               ColumnName) {}
 
     void MeasureSumTime() {
@@ -249,13 +249,13 @@ class UblasComparisonColumn
 };
 #endif
 
-template <typename TMatrixType, std::size_t NumberOfRows,
-    std::size_t NumberOfColumns>
+template <typename TMatrixType, std::size_t TSize1,
+    std::size_t TSize2>
 class EmptyComparisonColumn
-    : public ComparisonColumn<TMatrixType, NumberOfRows, NumberOfColumns> {
+    : public ComparisonColumn<TMatrixType, TSize1, TSize2> {
    public:
     EmptyComparisonColumn(std::string ColumnName)
-        : ComparisonColumn<TMatrixType, NumberOfRows, NumberOfColumns>("") {}
+        : ComparisonColumn<TMatrixType, TSize1, TSize2>("") {}
     void MeasureSumTime() { std::cout << "\t\t"; }
     void MeasureMultTime() { std::cout << "\t\t"; }
     void MeasureABAMultTime() { std::cout << "\t\t"; }
@@ -267,30 +267,30 @@ class EmptyComparisonColumn
     }
 };
 
-template <std::size_t NumberOfRows, std::size_t NumberOfColumns>
+template <std::size_t TSize1, std::size_t TSize2>
 class BenchmarkMatrix {
-    ComparisonColumn<AMatrix::Matrix<double, NumberOfRows, NumberOfColumns>,
-        NumberOfRows, NumberOfColumns>
+    ComparisonColumn<AMatrix::Matrix<double, TSize1, TSize2>,
+        TSize1, TSize2>
         mAMatrixColumn;
 #if defined(AMATRIX_COMPARE_WITH_EIGEN)
-    ComparisonColumn<Eigen::Matrix<double, NumberOfRows, NumberOfColumns>,
-        NumberOfRows, NumberOfColumns>
+    ComparisonColumn<Eigen::Matrix<double, TSize1, TSize2>,
+        TSize1, TSize2>
         mEigenColumn;
 #else
     EmptyComparisonColumn<
-        AMatrix::Matrix<double, NumberOfRows, NumberOfColumns>, NumberOfRows,
-        NumberOfColumns>
+        AMatrix::Matrix<double, TSize1, TSize2>, TSize1,
+        TSize2>
         mEigenColumn;
 #endif
 #if defined(AMATRIX_COMPARE_WITH_UBLAS)
     UblasComparisonColumn<boost::numeric::ublas::bounded_matrix<double,
-                              NumberOfRows, NumberOfColumns>,
-        NumberOfRows, NumberOfColumns>
+                              TSize1, TSize2>,
+        TSize1, TSize2>
         mUblasColumn;
 #else
     EmptyComparisonColumn<
-        AMatrix::Matrix<double, NumberOfRows, NumberOfColumns>, NumberOfRows,
-        NumberOfColumns>
+        AMatrix::Matrix<double, TSize1, TSize2>, TSize1,
+        TSize2>
         mUblasColumn;
 #endif
    public:
@@ -298,7 +298,7 @@ class BenchmarkMatrix {
         : mAMatrixColumn("AMatrix"),
           mEigenColumn("Eigen"),
           mUblasColumn("Ublas") {
-        std::cout << "Benchmark[" << NumberOfRows << "," << NumberOfColumns
+        std::cout << "Benchmark[" << TSize1 << "," << TSize2
                   << "]";
         std::cout << "\t\t" << mAMatrixColumn.GetColumnName();
         std::cout << "\t\t" << mEigenColumn.GetColumnName();
@@ -355,31 +355,31 @@ class BenchmarkMatrix {
     }
 };
 
-template <std::size_t NumberOfRows, std::size_t NumberOfColumns>
+template <std::size_t TSize1, std::size_t TSize2>
 class BenchmarkDynamicMatrix {
-    DynamicComparisonColumn<AMatrix::Matrix<double, 0, 0>, NumberOfRows,
-        NumberOfColumns>
+    DynamicComparisonColumn<AMatrix::Matrix<double, 0, 0>, TSize1,
+        TSize2>
         mAMatrixColumn;
 #if defined(AMATRIX_COMPARE_WITH_EIGEN)
     DynamicComparisonColumn<
-        Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>, NumberOfRows,
-        NumberOfColumns>
+        Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>, TSize1,
+        TSize2>
         mEigenColumn;
 #else
     EmptyComparisonColumn<
-        AMatrix::Matrix<double, NumberOfRows, NumberOfColumns>, NumberOfRows,
-        NumberOfColumns>
+        AMatrix::Matrix<double, TSize1, TSize2>, TSize1,
+        TSize2>
         mEigenColumn;
 #endif
 #if defined(AMATRIX_COMPARE_WITH_UBLAS)
     UblasComparisonColumn<boost::numeric::ublas::bounded_matrix<double,
-                              NumberOfRows, NumberOfColumns>,
-        NumberOfRows, NumberOfColumns>
+                              TSize1, TSize2>,
+        TSize1, TSize2>
         mUblasColumn;
 #else
     EmptyComparisonColumn<
-        AMatrix::Matrix<double, NumberOfRows, NumberOfColumns>, NumberOfRows,
-        NumberOfColumns>
+        AMatrix::Matrix<double, TSize1, TSize2>, TSize1,
+        TSize2>
         mUblasColumn;
 #endif
    public:
@@ -387,7 +387,7 @@ class BenchmarkDynamicMatrix {
         : mAMatrixColumn("AMatrix"),
           mEigenColumn("Eigen"),
           mUblasColumn("Ublas") {
-        std::cout << "Benchmark[" << NumberOfRows << "," << NumberOfColumns
+        std::cout << "Benchmark[" << TSize1 << "," << TSize2
                   << "]";
         std::cout << "\t\t" << mAMatrixColumn.GetColumnName();
         std::cout << "\t\t" << mEigenColumn.GetColumnName();
