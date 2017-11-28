@@ -60,7 +60,11 @@ class ComparisonColumn {
    public:
     ComparisonColumn() = delete;
 
-    ComparisonColumn(std::string ColumnName) : mColumnName(ColumnName) {
+    ComparisonColumn(std::string ColumnName) 
+        : A(TSize1, TSize2),
+          B(TSize1, TSize2),
+          C(TSize1, TSize2),
+          D(TSize1, TSize2), mColumnName(ColumnName) {
         initialize(A);
         initialize(B);
         initialize(C);
@@ -97,75 +101,6 @@ class ComparisonColumn {
     }
 };
 
-template <typename TMatrixType, std::size_t TSize1,
-    std::size_t TSize2>
-class DynamicComparisonColumn {
-    static constexpr std::size_t mRepeat =
-        static_cast<std::size_t>(1e8 / (TSize1 * TSize2));
-    TMatrixType A;
-    TMatrixType B;
-    TMatrixType C;
-    TMatrixType D;
-
-    std::string mColumnName;
-
-    void initialize(TMatrixType& TheMatrix) {
-        for (std::size_t i = 0; i < TSize1; i++)
-            for (std::size_t j = 0; j < TSize2; j++)
-                TheMatrix(i, j) = j + 1.00;
-    }
-
-    void initializeInverse(TMatrixType& TheMatrix) {
-        for (std::size_t i = 0; i < TSize1; i++)
-            for (std::size_t j = 0; j < TSize2; j++)
-                TheMatrix(i, j) = 1.00 / (i + 1);
-    }
-
-   public:
-    DynamicComparisonColumn() = delete;
-
-    DynamicComparisonColumn(std::string ColumnName)
-        : A(TSize1, TSize2),
-          B(TSize1, TSize2),
-          C(TSize1, TSize2),
-          D(TSize1, TSize2) {
-        initialize(A);
-        initialize(B);
-        initialize(C);
-        initialize(D);
-    }
-
-    std::string const& GetColumnName() { return mColumnName; }
-    TMatrixType& GetResult() { return C; }
-
-    template <typename TMatrixType2>
-    bool CheckResult(TMatrixType2 const& Reference) {
-        constexpr double tolerance = 1e-12;
-        for (std::size_t i = 0; i < TSize1; i++)
-            for (std::size_t j = 0; j < TSize2; j++)
-                if (std::abs(C(i, j) != Reference(i, j)) > tolerance) {
-                    std::cout << C(i, j) << " != " << Reference(i, j);
-                    return false;
-                }
-
-        return true;
-    }
-
-    void MeasureSumTime() {
-        AMATRIX_MEASURE_ABC_OPERATION(C.noalias() = A + B; B.noalias() = C;)
-    }
-
-    void MeasureMultTime() {
-        AMATRIX_MEASURE_ABC_OPERATION(C.noalias() = D * A; D.noalias() = B;)
-    }
-    void MeasureABAMultTime() {
-        AMATRIX_MEASURE_ABC_OPERATION(C.noalias() = A * TMatrixType(D * A); D.noalias() = B;)
-    }
-
-    void MeasureATransposeBAMultTime() {
-        AMATRIX_MEASURE_ABC_OPERATION(C.noalias() = A.transpose() * TMatrixType(D * A); D.noalias() = B;)
-    }
-};
 
 #if defined(AMATRIX_COMPARE_WITH_UBLAS)
 template <typename TMatrixType, std::size_t TSize1,
@@ -357,11 +292,11 @@ class BenchmarkMatrix {
 
 template <std::size_t TSize1, std::size_t TSize2>
 class BenchmarkDynamicMatrix {
-    DynamicComparisonColumn<AMatrix::Matrix<double, 0, 0>, TSize1,
+    ComparisonColumn<AMatrix::Matrix<double, 0, 0>, TSize1,
         TSize2>
         mAMatrixColumn;
 #if defined(AMATRIX_COMPARE_WITH_EIGEN)
-    DynamicComparisonColumn<
+    ComparisonColumn<
         Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic>, TSize1,
         TSize2>
         mEigenColumn;
@@ -372,8 +307,7 @@ class BenchmarkDynamicMatrix {
         mEigenColumn;
 #endif
 #if defined(AMATRIX_COMPARE_WITH_UBLAS)
-    UblasComparisonColumn<boost::numeric::ublas::bounded_matrix<double,
-                              TSize1, TSize2>,
+    UblasComparisonColumn<boost::numeric::ublas::bounded_matrix<double, TSize1, TSize2>,
         TSize1, TSize2>
         mUblasColumn;
 #else
