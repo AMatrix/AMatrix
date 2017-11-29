@@ -253,20 +253,20 @@ class BenchmarkDynamicMatrix {
 };
 
 int main() {
-    // BenchmarkMatrix<3, 3> benchmark_3_3;
-    // benchmark_3_3.Run();
+    BenchmarkMatrix<3, 3> benchmark_3_3;
+    benchmark_3_3.Run();
 
-    // BenchmarkMatrix<4, 4> benchmark_4_4;
-    // benchmark_4_4.Run();
+    BenchmarkMatrix<4, 4> benchmark_4_4;
+    benchmark_4_4.Run();
 
-    // BenchmarkMatrix<6, 6> benchmark_6_6;
-    // benchmark_6_6.Run();
+    BenchmarkMatrix<6, 6> benchmark_6_6;
+    benchmark_6_6.Run();
 
-    // BenchmarkMatrix<12, 12> benchmark_12_12;
-    // benchmark_12_12.Run();
+    BenchmarkMatrix<12, 12> benchmark_12_12;
+    benchmark_12_12.Run();
 
-    // BenchmarkMatrix<16, 16> benchmark_16_16;
-    // benchmark_16_16.Run();
+    BenchmarkMatrix<16, 16> benchmark_16_16;
+    benchmark_16_16.Run();
 
     BenchmarkDynamicMatrix<3, 3> dynamic_bechmark_3_3;
     dynamic_bechmark_3_3.Run();
