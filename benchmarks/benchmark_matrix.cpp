@@ -141,6 +141,17 @@ class EmptyComparisonColumn
     }
 };
 
+#define RUN_BENCHMARK(name, function)                          \
+    std::cout << name;                                         \
+    mAMatrixColumn.function();                                 \
+    mEigenColumn.function();                                   \
+    if (!mEigenColumn.CheckResult(mAMatrixColumn.GetResult())) \
+        std::cout << "(Failed!)";                              \
+    mUblasColumn.function();                                   \
+    if (!mUblasColumn.CheckResult(mAMatrixColumn.GetResult())) \
+        std::cout << "(Failed!)";                              \
+    std::cout << std::endl;
+
 template <std::size_t TSize1, std::size_t TSize2>
 class BenchmarkMatrix {
     ComparisonColumn<AMatrix::Matrix<double, TSize1, TSize2>,
@@ -182,48 +193,10 @@ class BenchmarkMatrix {
 
     ~BenchmarkMatrix() = default;
     void Run() {
-        std::cout << "C = A + B";
-        mAMatrixColumn.MeasureSumTime();
-        mEigenColumn.MeasureSumTime();
-        if (!mEigenColumn.CheckResult(mAMatrixColumn.GetResult()))
-            std::cout << "(Failed!)";
-        mUblasColumn.MeasureSumTime();
-        if (!mUblasColumn.CheckResult(mAMatrixColumn.GetResult()))
-            std::cout << "(Failed!)";
-        std::cout << std::endl;
-
-        std::cout << "C = A * B";
-        mAMatrixColumn.MeasureMultTime();
-        mEigenColumn.MeasureMultTime();
-        if (!mEigenColumn.CheckResult(mAMatrixColumn.GetResult()))
-            std::cout << "(Failed!)";
-        mUblasColumn.MeasureMultTime();
-        if (!mUblasColumn.CheckResult(mAMatrixColumn.GetResult()))
-            std::cout << "(Failed!)";
-        std::cout << std::endl;
-
-        std::cout << "C = A * B * A";
-        mAMatrixColumn.MeasureABAMultTime();
-        mEigenColumn.MeasureABAMultTime();
-        if (!mEigenColumn.CheckResult(mAMatrixColumn.GetResult()))
-            std::cout << "(Failed!)";
-        mUblasColumn.MeasureABAMultTime();
-        if (!mUblasColumn.CheckResult(mAMatrixColumn.GetResult()))
-            std::cout << "(Failed!)";
-        std::cout << std::endl;
-
-        std::cout << "C = A^T * B * A";
-        mAMatrixColumn.MeasureATransposeBAMultTime();
-        mEigenColumn.MeasureATransposeBAMultTime();
-        if (!mEigenColumn.CheckResult(mAMatrixColumn.GetResult()))
-            std::cout << "(Failed!)";
-        mUblasColumn.MeasureATransposeBAMultTime();
-        if (!mUblasColumn.CheckResult(mAMatrixColumn.GetResult()))
-            std::cout << "(Failed!)";
-        std::cout << std::endl;
-
-        // std::cout << "AMatrix : " << mAMatrixColumn.GetResult() << std::endl;
-        // std::cout << "Eigen   : " << mEigenColumn.GetResult() << std::endl;
+        RUN_BENCHMARK("C = A + B", MeasureSumTime)
+        RUN_BENCHMARK("C = A * B", MeasureMultTime)
+        RUN_BENCHMARK("C = A * B * A", MeasureABAMultTime)
+        RUN_BENCHMARK("C = A^T * B * A", MeasureATransposeBAMultTime)
 
         std::cout << std::endl;
     }
@@ -246,7 +219,7 @@ class BenchmarkDynamicMatrix {
         mEigenColumn;
 #endif
 #if defined(AMATRIX_COMPARE_WITH_UBLAS)
-    UblasComparisonColumn<boost::numeric::ublas::bounded_matrix<double, TSize1, TSize2>,
+    UblasComparisonColumn<boost::numeric::ublas::matrix<double>,
         TSize1, TSize2>
         mUblasColumn;
 #else
@@ -270,68 +243,30 @@ class BenchmarkDynamicMatrix {
 
     ~BenchmarkDynamicMatrix() = default;
     void Run() {
-        std::cout << "C = A + B";
-        mAMatrixColumn.MeasureSumTime();
-        mEigenColumn.MeasureSumTime();
-        if (!mEigenColumn.CheckResult(mAMatrixColumn.GetResult()))
-            std::cout << "(Failed!)";
-        mUblasColumn.MeasureSumTime();
-        if (!mUblasColumn.CheckResult(mAMatrixColumn.GetResult()))
-            std::cout << "(Failed!)";
-        std::cout << std::endl;
-
-        std::cout << "C = A * B";
-        mAMatrixColumn.MeasureMultTime();
-        mEigenColumn.MeasureMultTime();
-        if (!mEigenColumn.CheckResult(mAMatrixColumn.GetResult()))
-            std::cout << "(Failed!)";
-        mUblasColumn.MeasureMultTime();
-        if (!mUblasColumn.CheckResult(mAMatrixColumn.GetResult()))
-            std::cout << "(Failed!)";
-        std::cout << std::endl;
-
-        std::cout << "C = A * B * A";
-        mAMatrixColumn.MeasureABAMultTime();
-        mEigenColumn.MeasureABAMultTime();
-        if (!mEigenColumn.CheckResult(mAMatrixColumn.GetResult()))
-            std::cout << "(Failed!)";
-        mUblasColumn.MeasureABAMultTime();
-        if (!mUblasColumn.CheckResult(mAMatrixColumn.GetResult()))
-            std::cout << "(Failed!)";
-        std::cout << std::endl;
-
-        // std::cout << "C = A^T * B * A";
-        // mAMatrixColumn.MeasureATransposeBAMultTime();
-        // mEigenColumn.MeasureATransposeBAMultTime();
-        // if (!mEigenColumn.CheckResult(mAMatrixColumn.GetResult()))
-        //     std::cout << "(Failed!)";
-        // mUblasColumn.MeasureATransposeBAMultTime();
-        // if (!mUblasColumn.CheckResult(mAMatrixColumn.GetResult()))
-        //     std::cout << "(Failed!)";
-        // std::cout << std::endl;
-
-        // std::cout << "AMatrix : " << mAMatrixColumn.GetResult() << std::endl;
-        // std::cout << "Eigen   : " << mEigenColumn.GetResult() << std::endl;
+        RUN_BENCHMARK("C = A + B", MeasureSumTime)
+        RUN_BENCHMARK("C = A * B", MeasureMultTime)
+        RUN_BENCHMARK("C = A * B * A", MeasureABAMultTime)
+//        RUN_BENCHMARK("C = A^T * B * A", MeasureATransposeBAMultTime)
 
         std::cout << std::endl;
     }
 };
 
 int main() {
-    BenchmarkMatrix<3, 3> benchmark_3_3;
-    benchmark_3_3.Run();
+    // BenchmarkMatrix<3, 3> benchmark_3_3;
+    // benchmark_3_3.Run();
 
-    BenchmarkMatrix<4, 4> benchmark_4_4;
-    benchmark_4_4.Run();
+    // BenchmarkMatrix<4, 4> benchmark_4_4;
+    // benchmark_4_4.Run();
 
-    BenchmarkMatrix<6, 6> benchmark_6_6;
-    benchmark_6_6.Run();
+    // BenchmarkMatrix<6, 6> benchmark_6_6;
+    // benchmark_6_6.Run();
 
-    BenchmarkMatrix<12, 12> benchmark_12_12;
-    benchmark_12_12.Run();
+    // BenchmarkMatrix<12, 12> benchmark_12_12;
+    // benchmark_12_12.Run();
 
-    BenchmarkMatrix<16, 16> benchmark_16_16;
-    benchmark_16_16.Run();
+    // BenchmarkMatrix<16, 16> benchmark_16_16;
+    // benchmark_16_16.Run();
 
     BenchmarkDynamicMatrix<3, 3> dynamic_bechmark_3_3;
     dynamic_bechmark_3_3.Run();
