@@ -14,6 +14,8 @@
 
 #define AMATRIX_MEASURE_ABC_OPERATION(name, operation)                   \
     void name() {                                                        \
+        TMatrixType A(TSize1, TSize2);                                   \
+        TMatrixType B(TSize1, TSize2);                                   \
         initialize(A);                                                   \
         initialize(B);                                                   \
         Timer timer;                                                     \
@@ -26,6 +28,8 @@
 
 #define AMATRIX_MEASURE_ABCD_OPERATION(name, operation)                  \
     void name() {                                                        \
+        TMatrixType A(TSize1, TSize2);                                   \
+        TMatrixType B(TSize1, TSize2);                                   \
         initialize(A);                                                   \
         initializeInverse(B);                                            \
         initializeInverse(D);                                            \
@@ -43,8 +47,7 @@ class ComparisonColumn {
    protected:
     static constexpr std::size_t mRepeat =
         static_cast<std::size_t>(1e8 / (TSize1 * TSize2));
-    TMatrixType A;
-    TMatrixType B;
+
     TMatrixType C;
     TMatrixType D;
     std::string mColumnName;
@@ -65,12 +68,8 @@ class ComparisonColumn {
     ComparisonColumn() = delete;
 
     ComparisonColumn(std::string ColumnName) 
-        : A(TSize1, TSize2),
-          B(TSize1, TSize2),
-          C(TSize1, TSize2),
+        : C(TSize1, TSize2),
           D(TSize1, TSize2), mColumnName(ColumnName) {
-        initialize(A);
-        initialize(B);
         initialize(C);
     }
     std::string const& GetColumnName() { return mColumnName; }
@@ -91,16 +90,17 @@ class ComparisonColumn {
 
     AMATRIX_MEASURE_ABC_OPERATION(MeasureSumTime,C.noalias() = A + B; B.noalias() = C;)
 
-    AMATRIX_MEASURE_ABC_OPERATION(MeasureMultTime,C.noalias() = D * A; D.noalias() = B;)
+    AMATRIX_MEASURE_ABCD_OPERATION(MeasureMultTime,C.noalias() = D * A; D.noalias() = B;)
 
-    AMATRIX_MEASURE_ABC_OPERATION(MeasureABAMultTime, C.noalias() = A * TMatrixType(D * A); D.noalias() = B;)
+    AMATRIX_MEASURE_ABCD_OPERATION(MeasureABAMultTime, C.noalias() = A * TMatrixType(D * A); D.noalias() = B;)
 
-    AMATRIX_MEASURE_ABC_OPERATION(MeasureATransposeBAMultTime,C.noalias() = A.transpose() * TMatrixType(D * A); D.noalias() = B;)
+    AMATRIX_MEASURE_ABCD_OPERATION(MeasureATransposeBAMultTime,C.noalias() = A.transpose() * TMatrixType(D * A); D.noalias() = B;)
 
 };
 
 
 #if defined(AMATRIX_COMPARE_WITH_UBLAS)
+using namespace boost::numeric::ublas;
 template <typename TMatrixType, std::size_t TSize1,
     std::size_t TSize2>
 
@@ -114,71 +114,12 @@ class UblasComparisonColumn
         : ComparisonColumn<TMatrixType, TSize1, TSize2>(
               ColumnName) {}
 
-    void MeasureSumTime() {
-        using namespace boost::numeric::ublas;
-        BaseType::initialize(BaseType::A);
-        BaseType::initialize(BaseType::B);
-        Timer timer;
-        for (std::size_t i_repeat = 0; i_repeat < BaseType::mRepeat;
-             i_repeat++) {
-            noalias(BaseType::C) =
-                BaseType::A + BaseType::B;
-            noalias(BaseType::B) = BaseType::C;
-        }
 
-        auto elapsed = timer.elapsed().count();
-        std::cout << "\t\t" << elapsed;
-    }
-    void MeasureMultTime() {
-        using namespace boost::numeric::ublas;
-        BaseType::initialize(BaseType::A);
-        BaseType::initializeInverse(BaseType::B);
-        TMatrixType D;
-        BaseType::initializeInverse(D);
-        Timer timer;
-        for (std::size_t i_repeat = 0; i_repeat < BaseType::mRepeat;
-             i_repeat++) {
-            noalias(BaseType::C) = prod(D, BaseType::A);
-            noalias(D) = BaseType::B;
-        }
+    AMATRIX_MEASURE_ABC_OPERATION(MeasureSumTime, noalias(BaseType::C) =  A + B; noalias(B) = BaseType::C;)
+    AMATRIX_MEASURE_ABCD_OPERATION(MeasureMultTime,noalias(BaseType::C) = prod(BaseType::D, A); noalias(BaseType::D) = B;)
+    AMATRIX_MEASURE_ABCD_OPERATION(MeasureABAMultTime, noalias(BaseType::C) = prod(A, TMatrixType(prod(BaseType::D, A))); noalias(BaseType::D) = B;)
+    AMATRIX_MEASURE_ABCD_OPERATION(MeasureATransposeBAMultTime, noalias(BaseType::C) = prod(trans(A), TMatrixType(prod(BaseType::D, A)));noalias(BaseType::D) = B;)
 
-        auto elapsed = timer.elapsed().count();
-        std::cout << "\t\t" << elapsed;
-    }
-    void MeasureABAMultTime() {
-        using namespace boost::numeric::ublas;
-        BaseType::initialize(BaseType::A);
-        BaseType::initializeInverse(BaseType::B);
-        TMatrixType D;
-        BaseType::initializeInverse(D);
-        Timer timer;
-        for (std::size_t i_repeat = 0; i_repeat < BaseType::mRepeat;
-             i_repeat++) {
-            noalias(BaseType::C) =
-                prod(BaseType::A, TMatrixType(prod(D, BaseType::A)));
-            noalias(D) = BaseType::B;
-        }
-
-        auto elapsed = timer.elapsed().count();
-        std::cout << "\t\t" << elapsed;
-    }
-    void MeasureATransposeBAMultTime() {
-        using namespace boost::numeric::ublas;
-        BaseType::initialize(BaseType::A);
-        BaseType::initializeInverse(BaseType::B);
-        TMatrixType D;
-        BaseType::initializeInverse(D);
-        Timer timer;
-        for (std::size_t i_repeat = 0; i_repeat < BaseType::mRepeat;
-             i_repeat++) {
-            noalias(BaseType::C) =
-                prod(trans(BaseType::A), TMatrixType(prod(D, BaseType::A)));
-            noalias(D) = BaseType::B;
-        }
-
-        auto elapsed = timer.elapsed().count();
-        std::cout << "\t\t" << elapsed;
-    }
 };
 #endif
 
