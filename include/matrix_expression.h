@@ -127,4 +127,19 @@ class TransposeMatrix<TDataType, 0, 0> {
     inline std::size_t size2() { return mOriginal.size1(); }
 };
 
+template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
+class ZeroMatrix {
+   public:
+    using data_type = TDataType;
+
+    ZeroMatrix() {}
+
+    inline TDataType operator()(std::size_t i, std::size_t j) const {
+        return 0.0;
+    }
+
+    inline constexpr std::size_t size1() const { return TSize1; }
+    inline constexpr std::size_t size2() const { return TSize2; }
+};
+
 }  // namespace AMatrix

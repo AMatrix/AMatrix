@@ -281,21 +281,6 @@ class Matrix : public MatrixStorage<TDataType, TSize1, TSize2> {
 };
 
 template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
-class ZeroMatrix {
-   public:
-    using data_type = TDataType;
-
-    ZeroMatrix() {}
-
-    inline TDataType operator()(std::size_t i, std::size_t j) const {
-        return 0.0;
-    }
-
-    inline constexpr std::size_t size1() const { return TSize1; }
-    inline constexpr std::size_t size2() const { return TSize2; }
-};
-
-template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
 Matrix<TDataType, TSize1, TSize2> operator+(
     Matrix<TDataType, TSize1, TSize2> const& First,
     Matrix<TDataType, TSize1, TSize2> const& Second) {
