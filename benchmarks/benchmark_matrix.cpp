@@ -12,26 +12,30 @@
 #include <boost/numeric/ublas/matrix.hpp>
 #endif
 
-#define AMATRIX_MEASURE_ABC_OPERATION(operation)                     \
-    initialize(A);                                                   \
-    initialize(B);                                                   \
-    Timer timer;                                                     \
-    for (std::size_t i_repeat = 0; i_repeat < mRepeat; i_repeat++) { \
-        operation                                                    \
-    }                                                                \
-    auto elapsed = timer.elapsed().count();                          \
-    std::cout << "\t\t" << elapsed;
+#define AMATRIX_MEASURE_ABC_OPERATION(name, operation)                   \
+    void name() {                                                        \
+        initialize(A);                                                   \
+        initialize(B);                                                   \
+        Timer timer;                                                     \
+        for (std::size_t i_repeat = 0; i_repeat < mRepeat; i_repeat++) { \
+            operation                                                    \
+        }                                                                \
+        auto elapsed = timer.elapsed().count();                          \
+        std::cout << "\t\t" << elapsed;                                  \
+    }
 
-#define AMATRIX_MEASURE_ABCD_OPERATION(operation)                    \
-    initialize(A);                                                   \
-    initializeInverse(B);                                            \
-    initializeInverse(D);                                            \
-    Timer timer;                                                     \
-    for (std::size_t i_repeat = 0; i_repeat < mRepeat; i_repeat++) { \
-        operation                                                    \
-    }                                                                \
-    auto elapsed = timer.elapsed().count();                          \
-    std::cout << "\t\t" << elapsed;
+#define AMATRIX_MEASURE_ABCD_OPERATION(name, operation)                  \
+    void name() {                                                        \
+        initialize(A);                                                   \
+        initializeInverse(B);                                            \
+        initializeInverse(D);                                            \
+        Timer timer;                                                     \
+        for (std::size_t i_repeat = 0; i_repeat < mRepeat; i_repeat++) { \
+            operation                                                    \
+        }                                                                \
+        auto elapsed = timer.elapsed().count();                          \
+        std::cout << "\t\t" << elapsed;                                  \
+    }
 
 template <typename TMatrixType, std::size_t TSize1,
     std::size_t TSize2>
@@ -85,20 +89,14 @@ class ComparisonColumn {
         return true;
     }
 
-    void MeasureSumTime() {
-        AMATRIX_MEASURE_ABC_OPERATION(C.noalias() = A + B; B.noalias() = C;)
-    }
+    AMATRIX_MEASURE_ABC_OPERATION(MeasureSumTime,C.noalias() = A + B; B.noalias() = C;)
 
-    void MeasureMultTime() {
-        AMATRIX_MEASURE_ABC_OPERATION(C.noalias() = D * A; D.noalias() = B;)
-    }
-    void MeasureABAMultTime() {
-        AMATRIX_MEASURE_ABC_OPERATION(C.noalias() = A * TMatrixType(D * A); D.noalias() = B;)
-    }
+    AMATRIX_MEASURE_ABC_OPERATION(MeasureMultTime,C.noalias() = D * A; D.noalias() = B;)
 
-    void MeasureATransposeBAMultTime() {
-        AMATRIX_MEASURE_ABC_OPERATION(C.noalias() = A.transpose() * TMatrixType(D * A); D.noalias() = B;)
-    }
+    AMATRIX_MEASURE_ABC_OPERATION(MeasureABAMultTime, C.noalias() = A * TMatrixType(D * A); D.noalias() = B;)
+
+    AMATRIX_MEASURE_ABC_OPERATION(MeasureATransposeBAMultTime,C.noalias() = A.transpose() * TMatrixType(D * A); D.noalias() = B;)
+
 };
 
 
