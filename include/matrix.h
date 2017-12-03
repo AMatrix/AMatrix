@@ -7,7 +7,8 @@
 namespace AMatrix {
 
 template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
-class MatrixStorage : public MatrixExpression<MatrixStorage<TDataType, TSize1, TSize2>> {
+class MatrixStorage
+    : public MatrixExpression<MatrixStorage<TDataType, TSize1, TSize2>> {
     TDataType _data[TSize1 * TSize2];
 
    public:
@@ -26,6 +27,10 @@ class MatrixStorage : public MatrixExpression<MatrixStorage<TDataType, TSize1, T
     }
 
     MatrixStorage(MatrixStorage&& Other) = default;
+
+    template <typename TExpressionType>
+    explicit MatrixStorage(MatrixExpression<TExpressionType> const& Other)
+        : MatrixStorage(Other.expression()) {}
 
     template <typename TOtherMatrixType>
     explicit MatrixStorage(TOtherMatrixType const& Other) {
@@ -76,7 +81,8 @@ class MatrixStorage : public MatrixExpression<MatrixStorage<TDataType, TSize1, T
 };
 
 template <typename TDataType>
-class MatrixStorage<TDataType, dynamic, dynamic> : public MatrixExpression<MatrixStorage<TDataType, dynamic, dynamic>> {
+class MatrixStorage<TDataType, dynamic, dynamic>
+    : public MatrixExpression<MatrixStorage<TDataType, dynamic, dynamic>> {
     std::size_t _size1;
     std::size_t _size2;
     TDataType* _data;
@@ -114,6 +120,10 @@ class MatrixStorage<TDataType, dynamic, dynamic> : public MatrixExpression<Matri
             delete[] _data;
     }
 
+    template <typename TExpressionType>
+    explicit MatrixStorage(MatrixExpression<TExpressionType> const& Other)
+        : MatrixStorage(Other.expression()) {}
+
     template <typename TOtherMatrixType>
     explicit MatrixStorage(TOtherMatrixType const& Other)
         : _size1(Other.size1()), _size2(Other.size2()) {
@@ -139,8 +149,7 @@ class MatrixStorage<TDataType, dynamic, dynamic> : public MatrixExpression<Matri
         return *this;
     }
 
-
-    MatrixStorage& operator=(MatrixStorage const& Other)  {
+    MatrixStorage& operator=(MatrixStorage const& Other) {
         std::size_t new_size = Other.size1() * Other.size2();
         if (size() != new_size) {
             delete[] _data;
@@ -196,9 +205,9 @@ class Matrix : public MatrixStorage<TDataType, TSize1, TSize2> {
    public:
     using value_type = TDataType;
     using base_type = MatrixStorage<TDataType, TSize1, TSize2>;
+    using base_type::at;
     using base_type::size1;
     using base_type::size2;
-    using base_type::at;
 
     Matrix() {}
 
