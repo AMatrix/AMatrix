@@ -284,7 +284,7 @@ template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
 Matrix<TDataType, TSize1, TSize2> operator+(
     Matrix<TDataType, TSize1, TSize2> const& First,
     Matrix<TDataType, TSize1, TSize2> const& Second) {
-    Matrix<TDataType, TSize1, TSize2> result;
+    Matrix<TDataType, TSize1, TSize2> result(First.size1(), First.size2());
     for (std::size_t i = 0; i < First.size1(); i++)
         for (std::size_t j = 0; j < First.size2(); j++)
             result(i, j) = First(i, j) + Second(i, j);
@@ -296,29 +296,7 @@ template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
 Matrix<TDataType, TSize1, TSize2> operator-(
     Matrix<TDataType, TSize1, TSize2> const& First,
     Matrix<TDataType, TSize1, TSize2> const& Second) {
-    Matrix<TDataType, TSize1, TSize2> result;
-    for (std::size_t i = 0; i < First.size1(); i++)
-        for (std::size_t j = 0; j < First.size2(); j++)
-            result(i, j) = First(i, j) - Second(i, j);
-
-    return result;
-}
-
-template <typename TDataType>
-Matrix<TDataType, 0, 0> operator+(Matrix<TDataType, 0, 0> const& First,
-    Matrix<TDataType, 0, 0> const& Second) {
-    Matrix<TDataType, 0, 0> result(First.size1(), First.size2());
-    for (std::size_t i = 0; i < First.size1(); i++)
-        for (std::size_t j = 0; j < First.size2(); j++)
-            result(i, j) = First(i, j) + Second(i, j);
-
-    return result;
-}
-
-template <typename TDataType>
-Matrix<TDataType, 0, 0> operator-(Matrix<TDataType, 0, 0> const& First,
-    Matrix<TDataType, 0, 0> const& Second) {
-    Matrix<TDataType, 0, 0> result(First.size1(), First.size2());
+    Matrix<TDataType, TSize1, TSize2> result(First.size1(), First.size2());
     for (std::size_t i = 0; i < First.size1(); i++)
         for (std::size_t j = 0; j < First.size2(); j++)
             result(i, j) = First(i, j) - Second(i, j);
