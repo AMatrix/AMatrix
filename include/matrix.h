@@ -7,7 +7,7 @@
 namespace AMatrix {
 
 template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
-class MatrixStorage {
+class MatrixStorage : public MatrixExpression<MatrixStorage<TDataType, TSize1, TSize2>> {
     TDataType _data[TSize1 * TSize2];
 
    public:
@@ -76,7 +76,7 @@ class MatrixStorage {
 };
 
 template <typename TDataType>
-class MatrixStorage<TDataType, dynamic, dynamic> {
+class MatrixStorage<TDataType, dynamic, dynamic> : public MatrixExpression<MatrixStorage<TDataType, dynamic, dynamic>> {
     std::size_t _size1;
     std::size_t _size2;
     TDataType* _data;
