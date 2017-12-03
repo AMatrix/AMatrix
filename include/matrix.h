@@ -220,6 +220,9 @@ class Matrix : public MatrixStorage<TDataType, TSize1, TSize2> {
 
     Matrix(Matrix&& Other) : base_type(Other) {}
 
+    template <typename TExpressionType>
+    explicit Matrix(MatrixExpression<TExpressionType> const& Other) : base_type(Other) {}
+
     template <typename TOtherMatrixType>
     explicit Matrix(TOtherMatrixType const& Other) : base_type(Other) {}
 
