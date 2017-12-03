@@ -26,23 +26,23 @@
         std::cout << "\t\t" << elapsed;                                  \
     }
 
-#define AMATRIX_MEASURE_ABCD_OPERATION(name, operation)                  \
-    void name() {                                                        \
-        TMatrixType A(TSize1, TSize2);                                   \
-        TMatrixType B(TSize1, TSize2);                                   \
-        initialize(A);                                                   \
-        initializeInverse(B);                                            \
-        initializeInverse(D);                                            \
-        Timer timer;                                                     \
-        for (std::size_t i_repeat = 0; i_repeat < mRepeat; i_repeat++) { \
-            operation                                                    \
-        }                                                                \
-        auto elapsed = timer.elapsed().count();                          \
-        std::cout << "\t\t" << elapsed;                                  \
+#define AMATRIX_MEASURE_ABCD_OPERATION(name, operation)                   \
+    void name() {                                                         \
+        TMatrixType A(TSize1, TSize2);                                    \
+        TMatrixType B(TSize1, TSize2);                                    \
+        initialize(A);                                                    \
+        initializeInverse(B);                                             \
+        initializeInverse(D);                                             \
+        Timer timer;                                                      \
+        for (std::size_t i_repeat = 0; i_repeat < mRepeat / (2 * TSize2); \
+             i_repeat++) {                                                \
+            operation                                                     \
+        }                                                                 \
+        auto elapsed = timer.elapsed().count();                           \
+        std::cout << "\t\t" << elapsed;                                   \
     }
 
-template <typename TMatrixType, std::size_t TSize1,
-    std::size_t TSize2>
+template <typename TMatrixType, std::size_t TSize1, std::size_t TSize2>
 class ComparisonColumn {
    protected:
     static constexpr std::size_t mRepeat =
