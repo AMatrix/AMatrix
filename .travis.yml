@@ -11,7 +11,3 @@ compiler:
 
 script:
 - ctest -j2 -C Release -T test --output-on-failure
-
-
-# - cd ../kratos/python_scripts
-# - python3 run_tests.py -l small
