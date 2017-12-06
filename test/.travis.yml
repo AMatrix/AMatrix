@@ -1,0 +1,17 @@
+sudo: false
+language: cpp
+compiler: g++
+os:
+  - linux
+  - osx
+
+compiler:
+  - gcc
+  - clang
+
+script:
+- ctest -j2 -C Release -T test --output-on-failure
+
+
+# - cd ../kratos/python_scripts
+# - python3 run_tests.py -l small
