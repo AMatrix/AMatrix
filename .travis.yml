@@ -13,5 +13,5 @@ script:
   - mkdir build
   - cd build
   - cmake ..
-  - cmake -j2 --build .
-  - ctest -j2 -C Release -T test --output-on-failure
+  - cmake -j2 --build . --target ALL_BUILD
+  - ctest -j2 --output-on-failure
