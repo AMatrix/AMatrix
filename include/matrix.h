@@ -39,6 +39,14 @@ class MatrixStorage
                 at(i, j) = Other(i, j);
     }
 
+    template <typename TExpressionType>
+    MatrixStorage& operator=(MatrixExpression<TExpressionType> const& Other) {
+        for (std::size_t i = 0; i < size1(); i++)
+            for (std::size_t j = 0; j < size2(); j++)
+                at(i, j) = Other.expression()(i, j);
+        return *this;
+    }
+
     template <typename TOtherMatrixType>
     MatrixStorage& operator=(TOtherMatrixType const& Other) {
         for (std::size_t i = 0; i < size1(); i++)
@@ -131,6 +139,14 @@ class MatrixStorage<TDataType, dynamic, dynamic>
         for (std::size_t i = 0; i < size1(); i++)
             for (std::size_t j = 0; j < size2(); j++)
                 at(i, j) = Other(i, j);
+    }
+
+    template <typename TExpressionType>
+    MatrixStorage& operator=(MatrixExpression<TExpressionType> const& Other) {
+        for (std::size_t i = 0; i < size1(); i++)
+            for (std::size_t j = 0; j < size2(); j++)
+                at(i, j) = Other.expression()(i, j);
+        return *this;
     }
 
     template <typename TOtherMatrixType>
