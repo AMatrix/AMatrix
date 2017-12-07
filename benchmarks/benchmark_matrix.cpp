@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+#include <string>
 
 #include "timer.h"
 #include "matrix.h"
