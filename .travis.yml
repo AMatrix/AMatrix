@@ -3,11 +3,11 @@ language: cpp
 compiler: g++
 os:
   - linux
-  - osx
+#  - osx
 
 compiler:
   - gcc
   - clang
 
 script:
-- ctest -j2 -C Release -T test --output-on-failure
+- ctest -V -j2 -C Release -T test --output-on-failure
