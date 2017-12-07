@@ -10,4 +10,8 @@ compiler:
   - clang
 
 script:
-- ctest -V -j2 -C Release -T test --output-on-failure
+  - mkdir build
+  - cd build
+  - cmake ..
+  - cmake -j2 --build .
+  - ctest -j2 -C Release -T test --output-on-failure
