@@ -3,7 +3,7 @@ language: cpp
 compiler: g++
 os:
   - linux
-#  - osx
+  - osx
 
 compiler:
   - gcc
