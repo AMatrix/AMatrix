@@ -143,6 +143,15 @@ class MatrixStorage<TDataType, dynamic, dynamic>
 
     template <typename TExpressionType>
     MatrixStorage& operator=(MatrixExpression<TExpressionType> const& Other) {
+        auto& other_expression =  Other.expression();
+        std::size_t new_size = other_expression.size1() * other_expression.size2();
+        if (size() != new_size) {
+            delete[] _data;
+            _data = new TDataType[new_size];
+        }
+        _size1 = other_expression.size1();
+        _size2 = other_expression.size2();
+
         for (std::size_t i = 0; i < size1(); i++)
             for (std::size_t j = 0; j < size2(); j++)
                 at(i, j) = Other.expression()(i, j);
