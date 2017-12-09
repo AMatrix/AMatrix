@@ -74,7 +74,7 @@ class TransposeMatrix<TDataType, 0, 0> {
 };
 
 template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
-class ZeroMatrix {
+class ZeroMatrix : public MatrixExpression<ZeroMatrix<TDataType, TSize1, TSize2>> {
    public:
     using data_type = TDataType;
 
