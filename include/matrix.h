@@ -228,7 +228,7 @@ class MatrixStorage<TDataType, dynamic, dynamic>
 template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
 class Matrix : public MatrixStorage<TDataType, TSize1, TSize2> {
    public:
-    using value_type = TDataType;
+    using data_type = TDataType;
     using base_type = MatrixStorage<TDataType, TSize1, TSize2>;
     using base_type::at;
     using base_type::size1;
@@ -308,12 +308,12 @@ class Matrix : public MatrixStorage<TDataType, TSize1, TSize2> {
 
     Matrix& noalias() { return *this; }
 
-    TransposeMatrix<TDataType, TSize1, TSize2> transpose() {  // Eigen benchmark
-        return TransposeMatrix<TDataType, TSize1, TSize2>(*this);
+    TransposeMatrix<Matrix<TDataType, TSize1, TSize2>> transpose() {  // Eigen benchmark
+        return TransposeMatrix<Matrix<TDataType, TSize1, TSize2>>(*this);
     }
 
-    TransposeMatrix<TDataType, TSize1, TSize2> Transpose() {
-        return TransposeMatrix<TDataType, TSize1, TSize2>(*this);
+    TransposeMatrix<Matrix<TDataType, TSize1, TSize2>> Transpose() {
+        return TransposeMatrix<Matrix<TDataType, TSize1, TSize2>>(*this);
     }
 };
 
@@ -381,19 +381,18 @@ inline Matrix<TDataType, 0, 0> operator*(Matrix<TDataType, 0, 0> const& First,
     return result;
 }
 
-template <typename TMatrixType1, typename TMatrixType2>
-inline Matrix<typename TMatrixType1::value_type, TMatrixType1::size1(),
-    TMatrixType2::size2()>
-operator*(TMatrixType1 const& First, TMatrixType2 const& Second) {
-    Matrix<typename TMatrixType1::value_type, TMatrixType1::size1(),
-        TMatrixType2::size2()>
-        result;
-    for (std::size_t i = 0; i < TMatrixType1::size1(); i++)
-        for (std::size_t j = 0; j < TMatrixType2::size2(); j++) {
-            typename TMatrixType1::value_type temp =
-                typename TMatrixType1::value_type();
-            for (std::size_t k = 0; k < TMatrixType1::size2(); k++)
-                temp += First(i, k) * Second(k, j);
+template <typename TExpressionType1, typename TExpressionType2>
+inline Matrix<typename TExpressionType1::data_type, dynamic,
+    dynamic>
+operator*(TExpressionType1 const& First, TExpressionType2 const& Second) {
+    auto const& first_expression = First.expression();
+    auto const& second_expression = Second.expression();
+      Matrix<TExpressionType1::data_type, 0, 0> result(first_expression.size1(), second_expression.size2());
+    for (std::size_t i = 0; i < first_expression.size1(); i++)
+        for (std::size_t j = 0; j < second_expression.size2(); j++) {
+            TExpressionType1::data_type temp = TExpressionType1::data_type();
+            for (std::size_t k = 0; k < first_expression.size2(); k++)
+                temp += first_expression(i, k) * second_expression(k, j);
 
             result(i, j) = temp;
         }

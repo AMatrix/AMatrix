@@ -29,49 +29,25 @@ class MatrixExpression {
 };
 
 
-template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
-class Matrix;
-template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
-class TransposeMatrix : public Matrix<TDataType, TSize1, TSize2> {
-    Matrix<TDataType, TSize1, TSize2> const& mOriginal;
+template <typename TExpressionType>
+class TransposeMatrix : public MatrixExpression<TransposeMatrix<TExpressionType>> {
+    TExpressionType const& mOriginal;
 
    public:
-    using value_type = TDataType;
+    using data_type = typename TExpressionType::data_type;
     TransposeMatrix() = delete;
 
-    TransposeMatrix(Matrix<TDataType, TSize1, TSize2> const& Original)
+    TransposeMatrix(TExpressionType const& Original)
         : mOriginal(Original) {}
 
-    inline value_type const& operator()(std::size_t i, std::size_t j) const {
+    inline data_type const& operator()(std::size_t i, std::size_t j) const {
         return mOriginal(j, i);
     }
 
-    inline static constexpr std::size_t size1() {
-        return Matrix<TDataType, TSize1, TSize2>::size2();
-    }
-    inline static constexpr std::size_t size2() {
-        return Matrix<TDataType, TSize1, TSize2>::size1();
-    }
+    inline std::size_t size1() const { return mOriginal.size2(); }
+    inline std::size_t size2() const { return mOriginal.size1(); }
 };
 
-template <typename TDataType>
-class TransposeMatrix<TDataType, 0, 0> {
-    Matrix<TDataType, 0, 0> const& mOriginal;
-
-   public:
-    using value_type = TDataType;
-    TransposeMatrix() = delete;
-
-    TransposeMatrix(Matrix<TDataType, 0, 0> const& Original)
-        : mOriginal(Original) {}
-
-    inline value_type const& operator()(std::size_t i, std::size_t j) const {
-        return mOriginal(j, i);
-    }
-
-    inline std::size_t size1() { return mOriginal.size2(); }
-    inline std::size_t size2() { return mOriginal.size1(); }
-};
 
 template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
 class ZeroMatrix : public MatrixExpression<ZeroMatrix<TDataType, TSize1, TSize2>> {
