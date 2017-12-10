@@ -69,10 +69,10 @@ class ZeroMatrix : public MatrixExpression<ZeroMatrix<TDataType>> {
     inline std::size_t size2() const { return _size2; }
 };
 
-
 template <typename TExpression1Type, typename TExpression2Type>
 class MatrixSumExpression
-    : public MatrixExpression<MatrixSumExpression<TExpression1Type, TExpression2Type>> {
+    : public MatrixExpression<
+          MatrixSumExpression<TExpression1Type, TExpression2Type>> {
     TExpression1Type const& _first;
     TExpression2Type const& _second;
 
@@ -102,7 +102,8 @@ MatrixSumExpression<TExpression1Type, TExpression2Type> operator+(
 
 template <typename TExpression1Type, typename TExpression2Type>
 class MatrixMinusExpression
-    : public MatrixExpression<MatrixMinusExpression<TExpression1Type, TExpression2Type>> {
+    : public MatrixExpression<
+          MatrixMinusExpression<TExpression1Type, TExpression2Type>> {
     TExpression1Type const& _first;
     TExpression2Type const& _second;
 
@@ -129,6 +130,5 @@ MatrixMinusExpression<TExpression1Type, TExpression2Type> operator-(
     return MatrixMinusExpression<TExpression1Type, TExpression2Type>(
         First, Second);
 }
-
 
 }  // namespace AMatrix
