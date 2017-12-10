@@ -93,10 +93,10 @@ class MatrixSumExpression
     }
 };
 
-template <typename TFirstMatrixType, typename TSecondMatrixType>
-MatrixSumExpression<TFirstMatrixType, TSecondMatrixType> operator+(
-    TFirstMatrixType const& First, TSecondMatrixType const& Second) {
-    return MatrixSumExpression<TFirstMatrixType, TSecondMatrixType>(
+template <typename TExpression1Type, typename TExpression2Type>
+MatrixSumExpression<TExpression1Type, TExpression2Type> operator+(
+    TExpression1Type const& First, TExpression2Type const& Second) {
+    return MatrixSumExpression<TExpression1Type, TExpression2Type>(
         First, Second);
 }
 
