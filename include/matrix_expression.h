@@ -61,7 +61,7 @@ class ZeroMatrix : public MatrixExpression<ZeroMatrix<TDataType>> {
     ZeroMatrix(std::size_t Size1, std::size_t Size2)
         : _size1(Size1), _size2(Size2) {}
 
-    inline TDataType const& operator()(std::size_t i, std::size_t j) const {
+    inline TDataType operator()(std::size_t i, std::size_t j) const {
         return TDataType();
     }
 
