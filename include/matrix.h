@@ -308,11 +308,7 @@ class Matrix : public MatrixStorage<TDataType, TSize1, TSize2> {
 
     Matrix& noalias() { return *this; }
 
-    TransposeMatrix<Matrix<TDataType, TSize1, TSize2>> transpose() {  // Eigen benchmark
-        return TransposeMatrix<Matrix<TDataType, TSize1, TSize2>>(*this);
-    }
-
-    TransposeMatrix<Matrix<TDataType, TSize1, TSize2>> Transpose() {
+    TransposeMatrix<Matrix<TDataType, TSize1, TSize2>> transpose() { 
         return TransposeMatrix<Matrix<TDataType, TSize1, TSize2>>(*this);
     }
 };
