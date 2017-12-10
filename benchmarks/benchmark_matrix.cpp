@@ -247,7 +247,7 @@ class BenchmarkDynamicMatrix {
         RUN_BENCHMARK("C = A + B", MeasureSumTime)
         RUN_BENCHMARK("C = A * B", MeasureMultTime)
         RUN_BENCHMARK("C = A * B * A", MeasureABAMultTime)
-//        RUN_BENCHMARK("C = A^T * B * A", MeasureATransposeBAMultTime)
+        RUN_BENCHMARK("C = A^T * B * A", MeasureATransposeBAMultTime)
 
         std::cout << std::endl;
     }
