@@ -313,17 +313,17 @@ class Matrix : public MatrixStorage<TDataType, TSize1, TSize2> {
     }
 };
 
-template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
-Matrix<TDataType, TSize1, TSize2> operator-(
-    Matrix<TDataType, TSize1, TSize2> const& First,
-    Matrix<TDataType, TSize1, TSize2> const& Second) {
-    Matrix<TDataType, TSize1, TSize2> result(First.size1(), First.size2());
-    for (std::size_t i = 0; i < First.size1(); i++)
-        for (std::size_t j = 0; j < First.size2(); j++)
-            result(i, j) = First(i, j) - Second(i, j);
+// template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
+// Matrix<TDataType, TSize1, TSize2> operator-(
+//     Matrix<TDataType, TSize1, TSize2> const& First,
+//     Matrix<TDataType, TSize1, TSize2> const& Second) {
+//     Matrix<TDataType, TSize1, TSize2> result(First.size1(), First.size2());
+//     for (std::size_t i = 0; i < First.size1(); i++)
+//         for (std::size_t j = 0; j < First.size2(); j++)
+//             result(i, j) = First(i, j) - Second(i, j);
 
-    return result;
-}
+//     return result;
+// }
 
 template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
 bool operator!=(Matrix<TDataType, TSize1, TSize2> const& First,

@@ -100,5 +100,35 @@ MatrixSumExpression<TExpression1Type, TExpression2Type> operator+(
         First, Second);
 }
 
+template <typename TExpression1Type, typename TExpression2Type>
+class MatrixMinusExpression
+    : public MatrixExpression<MatrixMinusExpression<TExpression1Type, TExpression2Type>> {
+    TExpression1Type const& _first;
+    TExpression2Type const& _second;
+
+   public:
+    MatrixMinusExpression(
+        TExpression1Type const& First, TExpression2Type const& Second)
+        : _first(First), _second(Second) {}
+    using data_type = typename TExpression1Type::data_type;
+
+    std::size_t size1() const { return _first.size1(); }
+
+    std::size_t size2() const { return _first.size2(); }
+
+    std::size_t size() const { return _first.size(); }
+
+    inline data_type operator()(std::size_t i, std::size_t j) const {
+        return _first(i, j) - _second(i, j);
+    }
+};
+
+template <typename TExpression1Type, typename TExpression2Type>
+MatrixMinusExpression<TExpression1Type, TExpression2Type> operator-(
+    TExpression1Type const& First, TExpression2Type const& Second) {
+    return MatrixMinusExpression<TExpression1Type, TExpression2Type>(
+        First, Second);
+}
+
 
 }  // namespace AMatrix
