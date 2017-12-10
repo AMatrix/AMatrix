@@ -7,7 +7,7 @@
 template<std::size_t TSize1, std::size_t TSize2>
 std::size_t TestZeroMatrixAssign() {
 	AMatrix::Matrix<double, TSize1,TSize2> a_matrix;
-	a_matrix = AMatrix::ZeroMatrix<double, TSize1, TSize2>();
+	a_matrix = AMatrix::ZeroMatrix<double>(TSize1, TSize2);
 	
 	for (std::size_t i = 0; i < a_matrix.size1(); i++)
 		for (std::size_t j = 0; j < a_matrix.size2(); j++)
