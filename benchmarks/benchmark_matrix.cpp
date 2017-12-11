@@ -107,9 +107,26 @@ template <typename TMatrixType, std::size_t TSize1,
 
 class UblasComparisonColumn
     : public ComparisonColumn<TMatrixType, TSize1, TSize2> {
+    void initialize(TMatrixType& TheMatrix) {
+        for (std::size_t i = 0; i < TSize1; i++)
+            for (std::size_t j = 0; j < TSize2; j++)
+                TheMatrix(i, j) = j + 1.00;
+    }
+
+    void initializeInverse(TMatrixType& TheMatrix) {
+        for (std::size_t i = 0; i < TSize1; i++)
+            for (std::size_t j = 0; j < TSize2; j++)
+                TheMatrix(i, j) = 1.00 / (i + 1);
+    }
    public:
     using BaseType =
         ComparisonColumn<TMatrixType, TSize1, TSize2>;
+
+    using BaseType::mRepeat;
+
+    using BaseType::C;
+    using BaseType::D;
+
 
     UblasComparisonColumn(std::string ColumnName)
         : ComparisonColumn<TMatrixType, TSize1, TSize2>(
