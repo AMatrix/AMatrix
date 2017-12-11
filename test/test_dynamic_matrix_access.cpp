@@ -2,7 +2,7 @@
 #include "checks.h"
 
 std::size_t TestDynamicMatrixAcess(std::size_t Size1, std::size_t Size2) {
-    AMatrix::Matrix<double, 0, 0> a_matrix(Size1, Size2);
+    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> a_matrix(Size1, Size2);
     for (std::size_t i = 0; i < a_matrix.size1(); i++)
         for (std::size_t j = 0; j < a_matrix.size2(); j++)
             a_matrix(i, j) = 2.33 * i - 4.52 * j;
