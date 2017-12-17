@@ -39,6 +39,13 @@ class MatrixStorage
                 at(i, j) = Other(i, j);
     }
 
+    explicit MatrixStorage(std::initializer_list<TDataType> InitialValues) {
+        std::size_t position = 0;
+        for(auto& i : InitialValues){
+            _data[position++] = i;
+        }
+    }
+
     template <typename TExpressionType>
     MatrixStorage& operator=(MatrixExpression<TExpressionType> const& Other) {
         for (std::size_t i = 0; i < size1(); i++)
@@ -252,6 +259,8 @@ class Matrix : public MatrixStorage<TDataType, TSize1, TSize2> {
 
     template <typename TOtherMatrixType>
     explicit Matrix(TOtherMatrixType const& Other) : base_type(Other) {}
+
+    explicit Matrix(std::initializer_list<TDataType> InitialValues) : base_type(InitialValues){}
 
     template <typename TOtherMatrixType>
     Matrix& operator=(TOtherMatrixType const& Other) {
