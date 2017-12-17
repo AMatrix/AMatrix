@@ -101,13 +101,6 @@ int main() {
     number_of_failed_tests += TestMatrixInitialize2();
     number_of_failed_tests += TestMatrixInitialize3();
 
-    // number_of_failed_tests += TestMatrixAssign<3,1>();
-    // number_of_failed_tests += TestMatrixAssign<3,2>();
-    // number_of_failed_tests += TestMatrixAssign<3,3>();
-    // number_of_failed_tests += TestMatrixAssign<1,3>();
-    // number_of_failed_tests += TestMatrixAssign<2,3>();
-    // number_of_failed_tests += TestMatrixAssign<3,3>();
-
     std::cout << number_of_failed_tests << "tests failed" << std::endl;
 
     return number_of_failed_tests;
