@@ -3,6 +3,9 @@ include_directories("${PROJECT_SOURCE_DIR}/include")
 add_executable(run_test_matrix_access ${PROJECT_SOURCE_DIR}/test/test_matrix_access.cpp)
 add_test(MatrixAcessTest run_test_matrix_access COMMAND run_test_matrix_access)
 
+add_executable(run_test_matrix_initialize ${PROJECT_SOURCE_DIR}/test/test_matrix_initialize.cpp)
+add_test(MatrixInitializeTest run_test_matrix_initialize COMMAND run_test_matrix_initialize)
+
 add_executable(run_test_matrix_assign  ${PROJECT_SOURCE_DIR}/test/test_matrix_assign.cpp)
 add_test(MatrixAssignTest run_test_matrix_assign COMMAND run_test_matrix_assign)
 
