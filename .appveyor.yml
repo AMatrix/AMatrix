@@ -5,6 +5,7 @@ platform: x86
 clone_folder: c:\AMatrix
 build_script:
   - md build
+  - cmake . -Bbuild
   - cmake --build build --target ALL_BUILD --config Release
 test_script:
   - ps: cd build
