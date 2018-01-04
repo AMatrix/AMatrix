@@ -1,0 +1,10 @@
+version: 0.1.{build}
+image: Visual Studio 2017
+configuration: Release
+platform: x86
+clone_folder: c:\AMatrix
+build_script:
+  - cmake --build c:/users/pooyan/documents/github/amatrix/build --target ALL_BUILD --config Release
+test_script:
+  - ps: cd build
+  - ctest -C Release -T test --output-on-failure
