@@ -41,8 +41,16 @@ class MatrixStorage
 
     explicit MatrixStorage(std::initializer_list<TDataType> InitialValues) {
         std::size_t position = 0;
-        for(auto& i : InitialValues){
+        for (auto& i : InitialValues) {
             _data[position++] = i;
+        }
+    }
+
+    explicit MatrixStorage(std::initializer_list<std::initializer_list<TDataType>> InitialRows) {
+        std::size_t position = 0;
+        for (auto& i_row : InitialRows) {
+            for(auto i : i_row)
+                _data[position++] = i;
         }
     }
 
@@ -128,6 +136,21 @@ class MatrixStorage<TDataType, dynamic, dynamic>
     MatrixStorage(MatrixStorage&& Other)
         : _size1(Other.size1()), _size2(Other.size2()), _data(Other._data) {
         Other._data = nullptr;
+    }
+
+    explicit MatrixStorage(std::initializer_list<std::initializer_list<TDataType>> InitialRows): _size1(0), _size2(0), _data(nullptr) {
+        const std::size_t size1 = InitialRows.size();
+        if (size1 == 0) return;
+        const std::size_t size2 = InitialRows.begin()->size();
+        if(size2 == 0) return;
+        _size1 = size1;
+        _size2 = size2;
+        _data = new TDataType[size()];
+        std::size_t position = 0;
+        for (auto& i_row : InitialRows) {
+            for(auto i : i_row)
+                _data[position++] = i;
+        }
     }
 
     virtual ~MatrixStorage() {
@@ -260,7 +283,11 @@ class Matrix : public MatrixStorage<TDataType, TSize1, TSize2> {
     template <typename TOtherMatrixType>
     explicit Matrix(TOtherMatrixType const& Other) : base_type(Other) {}
 
-    explicit Matrix(std::initializer_list<TDataType> InitialValues) : base_type(InitialValues){}
+    explicit Matrix(std::initializer_list<TDataType> InitialValues)
+        : base_type(InitialValues) {}
+
+    explicit Matrix(std::initializer_list<std::initializer_list<TDataType>> InitialRows)
+        : base_type(InitialRows) {}
 
     template <typename TOtherMatrixType>
     Matrix& operator=(TOtherMatrixType const& Other) {
