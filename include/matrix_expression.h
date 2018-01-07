@@ -158,9 +158,16 @@ class MatrixScalarProductExpression
 
 template <typename TExpressionType>
 MatrixScalarProductExpression<TExpressionType> operator*(
-    typename TExpressionType::data_type const& First, TExpressionType const& Second) {
+    typename TExpressionType::data_type const& First, MatrixExpression<TExpressionType> const& Second) {
     return MatrixScalarProductExpression<TExpressionType>(
-        First, Second);
+        First, Second.expression());
+}
+
+template <typename TExpressionType>
+MatrixScalarProductExpression<TExpressionType> operator*(
+    MatrixExpression<TExpressionType> const& First,  typename TExpressionType::data_type const& Second) {
+    return MatrixScalarProductExpression<TExpressionType>(
+        First.expression(), Second);
 }
 
 
@@ -193,9 +200,9 @@ class MatrixProductExpression
 
 template <typename TExpression1Type, typename TExpression2Type>
 MatrixProductExpression<TExpression1Type, TExpression2Type> operator*(
-    MatrixExpression<TExpression1Type> const& First, TExpression2Type const& Second) {
+    MatrixExpression<TExpression1Type> const& First, MatrixExpression<TExpression2Type> const& Second) {
     return MatrixProductExpression<TExpression1Type, TExpression2Type>(
-        First.expression(), Second);
+        First.expression(), Second.expression());
 }
 
 }  // namespace AMatrix
