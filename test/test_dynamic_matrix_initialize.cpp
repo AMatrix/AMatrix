@@ -14,7 +14,7 @@ std::size_t TestMatrixInitializeToZero() {
 }
 
 std::size_t TestMatrixInitializeByRows1() {
-    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> a_matrix{{1.2}};
+    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> a_matrix{ {1.2} };
 
     AMATRIX_CHECK_EQUAL(a_matrix.size1(), 1);
     AMATRIX_CHECK_EQUAL(a_matrix.size2(), 1);
@@ -24,12 +24,12 @@ std::size_t TestMatrixInitializeByRows1() {
 }
 
 std::size_t TestMatrixInitializeByRows2() {
-    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> a_matrix{{1.2, 2.3}};
-    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> b_matrix{{1.2}, 
-										                                 {2.3}};
+    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> a_matrix{ {1.2, 2.3} };
+    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> b_matrix{ {1.2}, 
+										                                  {2.3} };
 
-    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> c_matrix{{1.2, 2.3},
-										                                 {3.4, 4.5}};
+    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> c_matrix{ {1.2, 2.3},
+										                                  {3.4, 4.5} };
 
     AMATRIX_CHECK_EQUAL(a_matrix.size1(), 1);
     AMATRIX_CHECK_EQUAL(a_matrix.size2(), 2);
@@ -53,17 +53,17 @@ std::size_t TestMatrixInitializeByRows2() {
 }
 
 std::size_t TestMatrixInitializeByRows3() {
-    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> a_matrix{{1.2, 2.3, 3.4}};
-    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> b_matrix{{1.2}, 
-													    			     {2.3},
-										   			    			     {3.4}};
+    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> a_matrix{ {1.2, 2.3, 3.4} };
+    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> b_matrix{ {1.2}, 
+													    			      {2.3},
+										   			    			      {3.4} };
 
-    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> c_matrix{{1.2, 2.3, 3.4}, 
-										   			    			     {4.5, 5.6, 6.7}};
+    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> c_matrix{ {1.2, 2.3, 3.4}, 
+										   			    			      {4.5, 5.6, 6.7} };
 
-    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> d_matrix{{1.2, 2.3},
-										   			    			     {3.4, 4.5},
-										   			    			     {5.6, 6.7}};
+    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> d_matrix{ {1.2, 2.3},
+										   			    			      {3.4, 4.5},
+										   			    			      {5.6, 6.7} };
 
     AMATRIX_CHECK_EQUAL(a_matrix.size1(), 1);
     AMATRIX_CHECK_EQUAL(a_matrix.size2(), 3);
