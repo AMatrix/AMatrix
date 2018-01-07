@@ -167,7 +167,7 @@ template <typename TExpressionType>
 MatrixScalarProductExpression<TExpressionType> operator*(
     MatrixExpression<TExpressionType> const& First,  typename TExpressionType::data_type const& Second) {
     return MatrixScalarProductExpression<TExpressionType>(
-        second, First.expression());
+        Second, First.expression());
 }
 
 
