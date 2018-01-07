@@ -376,25 +376,25 @@ inline Matrix<TDataType, 0, 0> operator*(Matrix<TDataType, 0, 0> const& First,
     return result;
 }
 
-template <typename TExpressionType1, typename TExpressionType2>
-inline Matrix<typename TExpressionType1::data_type, dynamic, dynamic> operator*(
-    TExpressionType1 const& First, TExpressionType2 const& Second) {
-    auto const& first_expression = First.expression();
-    auto const& second_expression = Second.expression();
-    Matrix<typename TExpressionType1::data_type, 0, 0> result(
-        first_expression.size1(), second_expression.size2());
-    for (std::size_t i = 0; i < first_expression.size1(); i++)
-        for (std::size_t j = 0; j < second_expression.size2(); j++) {
-            typename TExpressionType1::data_type temp =
-                typename TExpressionType1::data_type();
-            for (std::size_t k = 0; k < first_expression.size2(); k++)
-                temp += first_expression(i, k) * second_expression(k, j);
+// template <typename TExpressionType1, typename TExpressionType2>
+// inline Matrix<typename TExpressionType1::data_type, dynamic, dynamic> operator*(
+//     TExpressionType1 const& First, TExpressionType2 const& Second) {
+//     auto const& first_expression = First.expression();
+//     auto const& second_expression = Second.expression();
+//     Matrix<typename TExpressionType1::data_type, 0, 0> result(
+//         first_expression.size1(), second_expression.size2());
+//     for (std::size_t i = 0; i < first_expression.size1(); i++)
+//         for (std::size_t j = 0; j < second_expression.size2(); j++) {
+//             typename TExpressionType1::data_type temp =
+//                 typename TExpressionType1::data_type();
+//             for (std::size_t k = 0; k < first_expression.size2(); k++)
+//                 temp += first_expression(i, k) * second_expression(k, j);
 
-            result(i, j) = temp;
-        }
+//             result(i, j) = temp;
+//         }
 
-    return result;
-}
+//     return result;
+// }
 
 /// output stream function
 template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
