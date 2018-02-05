@@ -34,9 +34,10 @@ class MatrixStorage
 
     template <typename TOtherMatrixType>
     explicit MatrixStorage(TOtherMatrixType const& Other) {
+        auto i_data = _data;
         for (std::size_t i = 0; i < size1(); i++)
             for (std::size_t j = 0; j < size2(); j++)
-                at(i, j) = Other(i, j);
+                *(i_data++) = Other(i, j);
     }
 
     explicit MatrixStorage(std::initializer_list<TDataType> InitialValues) {
@@ -48,17 +49,19 @@ class MatrixStorage
 
     template <typename TExpressionType>
     MatrixStorage& operator=(MatrixExpression<TExpressionType> const& Other) {
+        auto i_data = _data;
         for (std::size_t i = 0; i < size1(); i++)
             for (std::size_t j = 0; j < size2(); j++)
-                at(i, j) = Other.expression()(i, j);
+               *(i_data++) = Other.expression()(i, j);
         return *this;
     }
 
     template <typename TOtherMatrixType>
     MatrixStorage& operator=(TOtherMatrixType const& Other) {
-        for (std::size_t i = 0; i < size1(); i++)
+       auto i_data = _data;
+       for (std::size_t i = 0; i < size1(); i++)
             for (std::size_t j = 0; j < size2(); j++)
-                at(i, j) = Other(i, j);
+                *(i_data++) = Other(i, j);
         return *this;
     }
 
@@ -154,9 +157,10 @@ class MatrixStorage<TDataType, dynamic, dynamic>
     explicit MatrixStorage(TOtherMatrixType const& Other)
         : _size1(Other.size1()), _size2(Other.size2()) {
         _data = new TDataType[size()];
+        auto i_data = _data;
         for (std::size_t i = 0; i < size1(); i++)
             for (std::size_t j = 0; j < size2(); j++)
-                at(i, j) = Other(i, j);
+                *(i_data++) = Other(i, j);
     }
 
     template <typename TExpressionType>
@@ -171,9 +175,10 @@ class MatrixStorage<TDataType, dynamic, dynamic>
         _size1 = other_expression.size1();
         _size2 = other_expression.size2();
 
+        auto i_data = _data;
         for (std::size_t i = 0; i < size1(); i++)
             for (std::size_t j = 0; j < size2(); j++)
-                at(i, j) = Other.expression()(i, j);
+                *(i_data++) = Other.expression()(i, j);
         return *this;
     }
 
@@ -187,9 +192,10 @@ class MatrixStorage<TDataType, dynamic, dynamic>
         _size1 = Other.size1();
         _size2 = Other.size2();
 
+        auto i_data = _data;
         for (std::size_t i = 0; i < size1(); i++)
             for (std::size_t j = 0; j < size2(); j++)
-                at(i, j) = Other(i, j);
+               *(i_data++) = Other(i, j);
         return *this;
     }
 
