@@ -81,7 +81,7 @@ class ComparisonColumn {
         constexpr double tolerance = 1e-12;
         for (std::size_t i = 0; i < TSize1; i++)
             for (std::size_t j = 0; j < TSize2; j++)
-                if (std::abs(C(i, j) != Reference(i, j)) > tolerance) {
+                if (std::abs(C(i, j) - Reference(i, j)) > tolerance) {
                     std::cout << " " << C(i, j) << " != " << Reference(i, j);
                     return false;
                 }
