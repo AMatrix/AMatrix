@@ -19,6 +19,38 @@ std::size_t TestMatrixTranspose() {
 }
 
 
+template <std::size_t Size1, std::size_t Size2,
+    std::size_t NumberOfSecondRows>
+std::size_t TestMatrixTransposeProduct() {
+    std::cout << "Testing A(" << Size1 << "," << Size2
+              << ") X B(" << Size2 << "," << NumberOfSecondRows
+              << ") ";
+    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> a_matrix(Size1, Size2);
+    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> b_matrix(Size2, SecondSize1);
+    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> c_matrix(Size1, SecondSize1);
+    for (std::size_t i = 0; i < a_matrix.size1(); i++)
+        for (std::size_t j = 0; j < a_matrix.size2(); j++)
+            if (i == j)
+                a_matrix(i, j) = 2.33 * (i + 1);
+            else
+                a_matrix(i, j) = 0.00;
+
+    for (std::size_t i = 0; i < b_matrix.size1(); i++)
+        for (std::size_t j = 0; j < b_matrix.size2(); j++)
+            b_matrix(i, j) = i + j + 1;
+
+    c_matrix = a_matrix * b_matrix.transpose();
+
+    for (std::size_t i = 0; i < c_matrix.size1(); i++)
+        for (std::size_t j = 0; j < c_matrix.size2(); j++)
+            if (static_cast<std::size_t>(i) < Size2)
+                AMATRIX_CHECK_EQUAL(
+                    c_matrix(i, j), b_matrix(j, i) * (i + 1) * 2.33);
+
+    std::cout << "OK" << std::endl;
+    return 0;  // not failed
+}
+
 int main()
 {
 	std::size_t number_of_failed_tests = 0;
