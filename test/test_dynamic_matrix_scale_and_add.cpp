@@ -1,10 +1,10 @@
 #include "matrix.h"
 #include "checks.h"
 
-std::size_t TestMatrixScaleAndAdd(std::size_t Size1, std::size_t Size2) {
-    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> a_matrix(Size1, Size2);
-    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> b_matrix(Size1, Size2);
-    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> c_matrix(Size1, Size2);
+std::size_t TestMatrixScaleAndAdd(std::size_t TSize1, std::size_t TSize2) {
+    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> a_matrix(TSize1, TSize2);
+    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> b_matrix(TSize1, TSize2);
+    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> c_matrix(TSize1, TSize2);
     for (std::size_t i = 0; i < a_matrix.size1(); i++)
         for (std::size_t j = 0; j < a_matrix.size2(); j++)
             a_matrix(i, j) = 2.33 * i - 4.52 * j;
@@ -20,10 +20,10 @@ std::size_t TestMatrixScaleAndAdd(std::size_t Size1, std::size_t Size2) {
     return 0;  // not failed
 }
 
-std::size_t TestMatrixScaleAndAddEqual(std::size_t Size1, std::size_t Size2) {
-    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> a_matrix(Size1, Size2);
-    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> b_matrix(Size1, Size2);
-    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> c_matrix(Size1, Size2);
+std::size_t TestMatrixScaleAndAddEqual(std::size_t TSize1, std::size_t TSize2) {
+    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> a_matrix(TSize1, TSize2);
+    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> b_matrix(TSize1, TSize2);
+    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> c_matrix(TSize1, TSize2);
     for (std::size_t i = 0; i < a_matrix.size1(); i++)
         for (std::size_t j = 0; j < a_matrix.size2(); j++)
             a_matrix(i, j) = 2.33 * i - 4.52 * j;

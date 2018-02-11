@@ -1,9 +1,9 @@
 #include "matrix.h"
 #include "checks.h"
 
-template<std::size_t Size1, std::size_t Size2>
+template<std::size_t TSize1, std::size_t TSize2>
 std::size_t TestMatrixTranspose() {
-	AMatrix::Matrix<double, Size1,Size2> a_matrix;
+	AMatrix::Matrix<double, TSize1,TSize2> a_matrix;
 	double b = 0;
 	for (std::size_t i = 0; i < a_matrix.size1(); i++)
 		for (std::size_t j = 0; j < a_matrix.size2(); j++)
@@ -19,15 +19,15 @@ std::size_t TestMatrixTranspose() {
 }
 
 
-template <std::size_t Size1, std::size_t Size2,
+template <std::size_t TSize1, std::size_t TSize2,
     std::size_t NumberOfSecondRows>
 std::size_t TestMatrixTransposeProduct() {
-    std::cout << "Testing A(" << Size1 << "," << Size2
-              << ") X B(" << Size2 << "," << NumberOfSecondRows
+    std::cout << "Testing A(" << TSize1 << "," << TSize2
+              << ") X B(" << TSize2 << "," << NumberOfSecondRows
               << ") ";
-    AMatrix::Matrix<double, Size1, Size2> a_matrix;
-    AMatrix::Matrix<double, NumberOfSecondRows, Size2> b_matrix;
-    AMatrix::Matrix<double, Size1, NumberOfSecondRows> c_matrix;
+    AMatrix::Matrix<double, TSize1, TSize2> a_matrix;
+    AMatrix::Matrix<double, NumberOfSecondRows, TSize2> b_matrix;
+    AMatrix::Matrix<double, TSize1, NumberOfSecondRows> c_matrix;
     for (std::size_t i = 0; i < a_matrix.size1(); i++)
         for (std::size_t j = 0; j < a_matrix.size2(); j++)
             if (i == j)
@@ -43,7 +43,7 @@ std::size_t TestMatrixTransposeProduct() {
 
     for (std::size_t i = 0; i < c_matrix.size1(); i++)
         for (std::size_t j = 0; j < c_matrix.size2(); j++)
-            if (static_cast<std::size_t>(i) < Size2)
+            if (static_cast<std::size_t>(i) < TSize2)
                 AMATRIX_CHECK_EQUAL(
                     c_matrix(i, j), b_matrix(j, i) * (i + 1) * 2.33);
 

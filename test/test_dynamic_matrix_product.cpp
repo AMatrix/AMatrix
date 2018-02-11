@@ -1,9 +1,9 @@
 #include "matrix.h"
 #include "checks.h"
 
-std::size_t TestMatrixScalarProduct(std::size_t Size1, std::size_t Size2) {
-    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> a_matrix(Size1, Size2);
-    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> b_matrix(Size1, Size2);
+std::size_t TestMatrixScalarProduct(std::size_t TSize1, std::size_t TSize2) {
+    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> a_matrix(TSize1, TSize2);
+    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> b_matrix(TSize1, TSize2);
     for (std::size_t i = 0; i < a_matrix.size1(); i++)
         for (std::size_t j = 0; j < a_matrix.size2(); j++)
             a_matrix(i, j) = 2.33 * i - 4.52 * j;
@@ -19,14 +19,14 @@ std::size_t TestMatrixScalarProduct(std::size_t Size1, std::size_t Size2) {
     return 0;  // not failed
 }
 
-std::size_t TestMatrixProduct(std::size_t Size1, std::size_t Size2,
-    std::size_t SecondSize1) {
-    std::cout << "Testing A(" << Size1 << "," << Size2
-              << ") X B(" << Size2 << "," << SecondSize1
+std::size_t TestMatrixProduct(std::size_t TSize1, std::size_t TSize2,
+    std::size_t TSecondSize1) {
+    std::cout << "Testing A(" << TSize1 << "," << TSize2
+              << ") X B(" << TSize2 << "," << TSecondSize1
               << ") ";
-    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> a_matrix(Size1, Size2);
-    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> b_matrix(Size2, SecondSize1);
-    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> c_matrix(Size1, SecondSize1);
+    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> a_matrix(TSize1, TSize2);
+    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> b_matrix(TSize2, TSecondSize1);
+    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> c_matrix(TSize1, TSecondSize1);
     for (std::size_t i = 0; i < a_matrix.size1(); i++)
         for (std::size_t j = 0; j < a_matrix.size2(); j++)
             if (i == j)
@@ -42,7 +42,7 @@ std::size_t TestMatrixProduct(std::size_t Size1, std::size_t Size2,
 
     for (std::size_t i = 0; i < c_matrix.size1(); i++)
         for (std::size_t j = 0; j < c_matrix.size2(); j++)
-            if (static_cast<std::size_t>(i) < Size2)
+            if (static_cast<std::size_t>(i) < TSize2)
                 AMATRIX_CHECK_EQUAL(
                     c_matrix(i, j), b_matrix(i, j) * (i + 1) * 2.33);
 
