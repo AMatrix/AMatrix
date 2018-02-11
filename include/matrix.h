@@ -51,14 +51,14 @@ class MatrixStorage {
         auto i_data = _data;
         for (std::size_t i = 0; i < size1(); i++)
             for (std::size_t j = 0; j < size2(); j++)
-               *(i_data++) = Other.expression()(i, j);
+                *(i_data++) = Other.expression()(i, j);
         return *this;
     }
 
     template <typename TOtherMatrixType>
     MatrixStorage& operator=(TOtherMatrixType const& Other) {
-       auto i_data = _data;
-       for (std::size_t i = 0; i < size1(); i++)
+        auto i_data = _data;
+        for (std::size_t i = 0; i < size1(); i++)
             for (std::size_t j = 0; j < size2(); j++)
                 *(i_data++) = Other(i, j);
         return *this;
@@ -193,7 +193,7 @@ class MatrixStorage<TDataType, dynamic, dynamic> {
         auto i_data = _data;
         for (std::size_t i = 0; i < size1(); i++)
             for (std::size_t j = 0; j < size2(); j++)
-               *(i_data++) = Other(i, j);
+                *(i_data++) = Other(i, j);
         return *this;
     }
 
@@ -249,7 +249,8 @@ class MatrixStorage<TDataType, dynamic, dynamic> {
 };
 
 template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
-class Matrix : public  MatrixExpression<Matrix<TDataType, TSize1, TSize2>>, public MatrixStorage<TDataType, TSize1, TSize2> {
+class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>>,
+               public MatrixStorage<TDataType, TSize1, TSize2> {
    public:
     using data_type = TDataType;
     using base_type = MatrixStorage<TDataType, TSize1, TSize2>;
@@ -360,4 +361,32 @@ inline std::ostream& operator<<(std::ostream& rOStream,
 
     return rOStream;
 }
+
+template <typename TDataType>
+using Matrix11 = Matrix<TDataType, 1, 1>;
+
+template <typename TDataType>
+using Matrix22 = Matrix<TDataType, 2, 2>;
+
+template <typename TDataType>
+using Matrix33 = Matrix<TDataType, 3, 3>;
+
+template <typename TDataType>
+using Matrix44 = Matrix<TDataType, 4, 4>;
+
+template <typename TDataType>
+using Matrix55 = Matrix<TDataType, 5, 5>;
+
+template <typename TDataType>
+using Matrix66 = Matrix<TDataType, 6, 6>;
+
+template <typename TDataType>
+using Matrix77 = Matrix<TDataType, 7, 7>;
+
+template <typename TDataType>
+using Matrix88 = Matrix<TDataType, 8, 8>;
+
+template <typename TDataType>
+using Matrix99 = Matrix<TDataType, 9, 9>;
+
 }  // namespace AMatrix
