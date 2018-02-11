@@ -477,4 +477,7 @@ using RowVector8 = Matrix<TDataType, 1, 8>;
 template <typename TDataType>
 using RowVector9 = Matrix<TDataType, 1, 9>;
 
+template <typename TDataType>
+using ZeroVector = ZeroMatrix<TDataType>;
+
 }  // namespace AMatrix
