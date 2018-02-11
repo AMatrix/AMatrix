@@ -86,6 +86,20 @@ class MatrixStorage {
         return _data[i * TSize2 + j];
     }
 
+    TDataType& operator[](std::size_t i) { return at(i); }
+
+    TDataType const& operator[](std::size_t i) const {
+        return at(i);
+    }
+
+    TDataType& at(std::size_t i) {
+        return _data[i];
+    }
+
+    TDataType const& at(std::size_t i) const {
+        return _data[i];
+    }
+
     static constexpr std::size_t size1() { return TSize1; }
 
     static constexpr std::size_t size2() { return TSize2; }
@@ -235,6 +249,20 @@ class MatrixStorage<TDataType, dynamic, dynamic> {
 
     TDataType const& at(std::size_t i, std::size_t j) const {
         return _data[i * _size2 + j];
+    }
+
+    TDataType& operator[](std::size_t i) { return at(i); }
+
+    TDataType const& operator[](std::size_t i) const {
+        return at(i);
+    }
+
+    TDataType& at(std::size_t i) {
+        return _data[i];
+    }
+
+    TDataType const& at(std::size_t i) const {
+        return _data[i];
     }
 
     std::size_t size1() const { return _size1; }
