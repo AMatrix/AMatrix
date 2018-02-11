@@ -26,8 +26,8 @@ std::size_t TestMatrixTransposeProduct() {
               << ") X B(" << Size2 << "," << NumberOfSecondRows
               << ") ";
     AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> a_matrix(Size1, Size2);
-    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> b_matrix(Size2, SecondSize1);
-    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> c_matrix(Size1, SecondSize1);
+    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> b_matrix(NumberOfSecondRows, Size2);
+    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> c_matrix(Size1, NumberOfSecondRows);
     for (std::size_t i = 0; i < a_matrix.size1(); i++)
         for (std::size_t j = 0; j < a_matrix.size2(); j++)
             if (i == j)
@@ -66,6 +66,47 @@ int main()
 	number_of_failed_tests += TestMatrixTranspose<1,3>();
 	number_of_failed_tests += TestMatrixTranspose<2,3>();
 	number_of_failed_tests += TestMatrixTranspose<3,3>();
+
+
+    // matrix transpose product test
+    number_of_failed_tests += TestMatrixTransposeProduct<1, 1, 1>();
+
+    number_of_failed_tests += TestMatrixTransposeProduct<1, 2, 1>();
+    number_of_failed_tests += TestMatrixTransposeProduct<2, 1, 1>();
+    number_of_failed_tests += TestMatrixTransposeProduct<2, 2, 1>();
+
+    number_of_failed_tests += TestMatrixTransposeProduct<3, 1, 1>();
+    number_of_failed_tests += TestMatrixTransposeProduct<3, 2, 1>();
+    number_of_failed_tests += TestMatrixTransposeProduct<3, 3, 1>();
+    number_of_failed_tests += TestMatrixTransposeProduct<1, 3, 1>();
+    number_of_failed_tests += TestMatrixTransposeProduct<2, 3, 1>();
+    number_of_failed_tests += TestMatrixTransposeProduct<3, 3, 1>();
+
+    number_of_failed_tests += TestMatrixTransposeProduct<1, 1, 2>();
+
+    number_of_failed_tests += TestMatrixTransposeProduct<1, 2, 2>();
+    number_of_failed_tests += TestMatrixTransposeProduct<2, 1, 2>();
+    number_of_failed_tests += TestMatrixTransposeProduct<2, 2, 2>();
+
+    number_of_failed_tests += TestMatrixTransposeProduct<3, 1, 2>();
+    number_of_failed_tests += TestMatrixTransposeProduct<3, 2, 2>();
+    number_of_failed_tests += TestMatrixTransposeProduct<3, 3, 2>();
+    number_of_failed_tests += TestMatrixTransposeProduct<1, 3, 2>();
+    number_of_failed_tests += TestMatrixTransposeProduct<2, 3, 2>();
+    number_of_failed_tests += TestMatrixTransposeProduct<3, 3, 2>();
+
+    number_of_failed_tests += TestMatrixTransposeProduct<1, 1, 3>();
+
+    number_of_failed_tests += TestMatrixTransposeProduct<1, 2, 3>();
+    number_of_failed_tests += TestMatrixTransposeProduct<2, 1, 3>();
+    number_of_failed_tests += TestMatrixTransposeProduct<2, 2, 3>();
+
+    number_of_failed_tests += TestMatrixTransposeProduct<3, 1, 3>();
+    number_of_failed_tests += TestMatrixTransposeProduct<3, 2, 3>();
+    number_of_failed_tests += TestMatrixTransposeProduct<3, 3, 3>();
+    number_of_failed_tests += TestMatrixTransposeProduct<1, 3, 3>();
+    number_of_failed_tests += TestMatrixTransposeProduct<2, 3, 3>();
+    number_of_failed_tests += TestMatrixTransposeProduct<3, 3, 3>();
 
 	std::cout << number_of_failed_tests << "tests failed" << std::endl;
 
