@@ -419,4 +419,34 @@ using Vector8 = Matrix<TDataType, 8, 1>;
 template <typename TDataType>
 using Vector9 = Matrix<TDataType, 9, 1>;
 
+template <typename TDataType, std::size_t TSize>
+using RowVector = Matrix<TDataType, 1, TSize>;
+
+template <typename TDataType>
+using RowVector1 = Matrix<TDataType, 1, 1>;
+
+template <typename TDataType>
+using RowVector2 = Matrix<TDataType, 1, 2>;
+
+template <typename TDataType>
+using RowVector3 = Matrix<TDataType, 1, 3>;
+
+template <typename TDataType>
+using RowVector4 = Matrix<TDataType, 1, 4>;
+
+template <typename TDataType>
+using RowVector5 = Matrix<TDataType, 1, 5>;
+
+template <typename TDataType>
+using RowVector6 = Matrix<TDataType, 1, 6>;
+
+template <typename TDataType>
+using RowVector7 = Matrix<TDataType, 1, 7>;
+
+template <typename TDataType>
+using RowVector8 = Matrix<TDataType, 1, 8>;
+
+template <typename TDataType>
+using RowVector9 = Matrix<TDataType, 1, 9>;
+
 }  // namespace AMatrix
