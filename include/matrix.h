@@ -389,4 +389,34 @@ using Matrix88 = Matrix<TDataType, 8, 8>;
 template <typename TDataType>
 using Matrix99 = Matrix<TDataType, 9, 9>;
 
+template <typename TDataType, std::size_t TSize>
+using Vector = Matrix<TDataType, TSize, 1>;
+
+template <typename TDataType>
+using Vector1 = Matrix<TDataType, 1, 1>;
+
+template <typename TDataType>
+using Vector2 = Matrix<TDataType, 2, 1>;
+
+template <typename TDataType>
+using Vector3 = Matrix<TDataType, 3, 1>;
+
+template <typename TDataType>
+using Vector4 = Matrix<TDataType, 4, 1>;
+
+template <typename TDataType>
+using Vector5 = Matrix<TDataType, 5, 1>;
+
+template <typename TDataType>
+using Vector6 = Matrix<TDataType, 6, 1>;
+
+template <typename TDataType>
+using Vector7 = Matrix<TDataType, 7, 1>;
+
+template <typename TDataType>
+using Vector8 = Matrix<TDataType, 8, 1>;
+
+template <typename TDataType>
+using Vector9 = Matrix<TDataType, 9, 1>;
+
 }  // namespace AMatrix
