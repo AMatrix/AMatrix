@@ -70,38 +70,38 @@ int main()
     // matrix transpose product test
     number_of_failed_tests += TestMatrixTransposeProduct<1, 1, 1>();
 
-    number_of_failed_tests += TestMatrixTransposeProduct<1, 1, 2>();
+    number_of_failed_tests += TestMatrixTransposeProduct<1, 2, 1>();
     number_of_failed_tests += TestMatrixTransposeProduct<2, 1, 1>();
-    number_of_failed_tests += TestMatrixTransposeProduct<2, 1, 2>();
+    number_of_failed_tests += TestMatrixTransposeProduct<2, 2, 1>();
 
     number_of_failed_tests += TestMatrixTransposeProduct<3, 1, 1>();
-    number_of_failed_tests += TestMatrixTransposeProduct<3, 1, 2>();
-    number_of_failed_tests += TestMatrixTransposeProduct<3, 1, 3>();
-    number_of_failed_tests += TestMatrixTransposeProduct<1, 1, 3>();
-    number_of_failed_tests += TestMatrixTransposeProduct<2, 1, 3>();
-    number_of_failed_tests += TestMatrixTransposeProduct<3, 1, 3>();
+    number_of_failed_tests += TestMatrixTransposeProduct<3, 2, 1>();
+    number_of_failed_tests += TestMatrixTransposeProduct<3, 3, 1>();
+    number_of_failed_tests += TestMatrixTransposeProduct<1, 3, 1>();
+    number_of_failed_tests += TestMatrixTransposeProduct<2, 3, 1>();
+    number_of_failed_tests += TestMatrixTransposeProduct<3, 3, 1>();
 
-    number_of_failed_tests += TestMatrixTransposeProduct<1, 2, 1>();
+    number_of_failed_tests += TestMatrixTransposeProduct<1, 1, 2>();
 
     number_of_failed_tests += TestMatrixTransposeProduct<1, 2, 2>();
-    number_of_failed_tests += TestMatrixTransposeProduct<2, 2, 1>();
+    number_of_failed_tests += TestMatrixTransposeProduct<2, 1, 2>();
     number_of_failed_tests += TestMatrixTransposeProduct<2, 2, 2>();
 
-    number_of_failed_tests += TestMatrixTransposeProduct<3, 2, 1>();
+    number_of_failed_tests += TestMatrixTransposeProduct<3, 1, 2>();
     number_of_failed_tests += TestMatrixTransposeProduct<3, 2, 2>();
-    number_of_failed_tests += TestMatrixTransposeProduct<3, 2, 3>();
-    number_of_failed_tests += TestMatrixTransposeProduct<1, 2, 3>();
-    number_of_failed_tests += TestMatrixTransposeProduct<2, 2, 3>();
-    number_of_failed_tests += TestMatrixTransposeProduct<3, 2, 3>();
-
-    number_of_failed_tests += TestMatrixTransposeProduct<1, 3, 1>();
-
-    number_of_failed_tests += TestMatrixTransposeProduct<1, 3, 2>();
-    number_of_failed_tests += TestMatrixTransposeProduct<2, 3, 1>();
-    number_of_failed_tests += TestMatrixTransposeProduct<2, 3, 2>();
-
-    number_of_failed_tests += TestMatrixTransposeProduct<3, 3, 1>();
     number_of_failed_tests += TestMatrixTransposeProduct<3, 3, 2>();
+    number_of_failed_tests += TestMatrixTransposeProduct<1, 3, 2>();
+    number_of_failed_tests += TestMatrixTransposeProduct<2, 3, 2>();
+    number_of_failed_tests += TestMatrixTransposeProduct<3, 3, 2>();
+
+    number_of_failed_tests += TestMatrixTransposeProduct<1, 1, 3>();
+
+    number_of_failed_tests += TestMatrixTransposeProduct<1, 2, 3>();
+    number_of_failed_tests += TestMatrixTransposeProduct<2, 1, 3>();
+    number_of_failed_tests += TestMatrixTransposeProduct<2, 2, 3>();
+
+    number_of_failed_tests += TestMatrixTransposeProduct<3, 1, 3>();
+    number_of_failed_tests += TestMatrixTransposeProduct<3, 2, 3>();
     number_of_failed_tests += TestMatrixTransposeProduct<3, 3, 3>();
     number_of_failed_tests += TestMatrixTransposeProduct<1, 3, 3>();
     number_of_failed_tests += TestMatrixTransposeProduct<2, 3, 3>();
