@@ -131,4 +131,78 @@ MatrixMinusExpression<TExpression1Type, TExpression2Type> operator-(
         First, Second);
 }
 
+
+template <typename TExpressionType>
+class MatrixScalarProductExpression
+    : public MatrixExpression<
+          MatrixScalarProductExpression<TExpressionType>> {
+    typename TExpressionType::data_type const& _first;
+    TExpressionType const& _second;
+
+   public:
+    using data_type = typename TExpressionType::data_type;
+
+    MatrixScalarProductExpression(
+        data_type const& First, TExpressionType const& Second)
+        : _first(First), _second(Second) {}
+    std::size_t size1() const { return _second.size1(); }
+
+    std::size_t size2() const { return _second.size2(); }
+
+    std::size_t size() const { return _second.size(); }
+
+    inline data_type operator()(std::size_t i, std::size_t j) const {
+        return _first * _second(i, j);
+    }
+};
+
+template <typename TExpressionType>
+MatrixScalarProductExpression<TExpressionType> operator*(
+    typename TExpressionType::data_type const& First, MatrixExpression<TExpressionType> const& Second) {
+    return MatrixScalarProductExpression<TExpressionType>(
+        First, Second.expression());
+}
+
+template <typename TExpressionType>
+MatrixScalarProductExpression<TExpressionType> operator*(
+    MatrixExpression<TExpressionType> const& First,  typename TExpressionType::data_type const& Second) {
+    return MatrixScalarProductExpression<TExpressionType>(
+        Second, First.expression());
+}
+
+
+template <typename TExpression1Type, typename TExpression2Type>
+class MatrixProductExpression
+    : public MatrixExpression<
+          MatrixProductExpression<TExpression1Type, TExpression2Type>> {
+    TExpression1Type const& _first;
+    TExpression2Type const& _second;
+
+   public:
+    MatrixProductExpression(
+        TExpression1Type const& First, TExpression2Type const& Second)
+        : _first(First), _second(Second) {}
+    using data_type = typename TExpression1Type::data_type;
+
+    std::size_t size1() const { return _first.size1(); }
+
+    std::size_t size2() const { return _second.size2(); }
+
+    std::size_t size() const { return size1()*size2(); }
+
+    inline data_type operator()(std::size_t i, std::size_t j) const {
+        data_type result = data_type();
+        for(std::size_t k = 0 ; k < _first.size2(); k++)
+            result += _first(i, k)  * _second(k, j);
+        return result;
+    }
+};
+
+template <typename TExpression1Type, typename TExpression2Type>
+MatrixProductExpression<TExpression1Type, TExpression2Type> operator*(
+    MatrixExpression<TExpression1Type> const& First, MatrixExpression<TExpression2Type> const& Second) {
+    return MatrixProductExpression<TExpression1Type, TExpression2Type>(
+        First.expression(), Second.expression());
+}
+
 }  // namespace AMatrix

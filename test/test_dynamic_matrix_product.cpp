@@ -10,6 +10,7 @@ std::size_t TestMatrixScalarProduct(std::size_t Size1, std::size_t Size2) {
 
     b_matrix = 1.3 * a_matrix * 0.34;
     b_matrix = 2 * b_matrix;
+    b_matrix = b_matrix * 1;
 
     for (std::size_t i = 0; i < a_matrix.size1(); i++)
         for (std::size_t j = 0; j < a_matrix.size2(); j++)
