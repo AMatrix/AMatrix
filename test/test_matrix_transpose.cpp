@@ -26,7 +26,7 @@ std::size_t TestMatrixTransposeProduct() {
               << ") X B(" << Size2 << "," << NumberOfSecondRows
               << ") ";
     AMatrix::Matrix<double, Size1, Size2> a_matrix;
-    AMatrix::Matrix<double, Size2, NumberOfSecondRows> b_matrix;
+    AMatrix::Matrix<double, NumberOfSecondRows, Size2> b_matrix;
     AMatrix::Matrix<double, Size1, NumberOfSecondRows> c_matrix;
     for (std::size_t i = 0; i < a_matrix.size1(); i++)
         for (std::size_t j = 0; j < a_matrix.size2(); j++)
