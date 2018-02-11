@@ -21,7 +21,7 @@ template<class TMatrixType>
 
 template<class TMatrixType, std::size_t TSize1, std::size_t TSize2>
     void Profile() {                     
-        constexpr std::size_t repeat = 10000000;                                   
+        constexpr std::size_t repeat = 100000000;                                   
         TMatrixType A(TSize1, TSize2);                                   
         TMatrixType B(TSize1, TSize2);                                   
         TMatrixType C(TSize1, TSize2);                                   
