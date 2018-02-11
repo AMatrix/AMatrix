@@ -58,6 +58,9 @@ class ZeroMatrix : public MatrixExpression<ZeroMatrix<TDataType>> {
 
     ZeroMatrix() = delete;
 
+    ZeroMatrix(std::size_t Size)
+        : _size1(Size), _size2(1) {}
+
     ZeroMatrix(std::size_t Size1, std::size_t Size2)
         : _size1(Size1), _size2(Size2) {}
 
