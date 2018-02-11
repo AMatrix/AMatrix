@@ -7,8 +7,7 @@
 namespace AMatrix {
 
 template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
-class MatrixStorage
-    : public MatrixExpression<MatrixStorage<TDataType, TSize1, TSize2>> {
+class MatrixStorage {
     TDataType _data[TSize1 * TSize2];
 
    public:
@@ -99,8 +98,7 @@ class MatrixStorage
 };
 
 template <typename TDataType>
-class MatrixStorage<TDataType, dynamic, dynamic>
-    : public MatrixExpression<MatrixStorage<TDataType, dynamic, dynamic>> {
+class MatrixStorage<TDataType, dynamic, dynamic> {
     std::size_t _size1;
     std::size_t _size2;
     TDataType* _data;
@@ -251,7 +249,7 @@ class MatrixStorage<TDataType, dynamic, dynamic>
 };
 
 template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
-class Matrix : public MatrixStorage<TDataType, TSize1, TSize2> {
+class Matrix : public  MatrixExpression<Matrix<TDataType, TSize1, TSize2>>, public MatrixStorage<TDataType, TSize1, TSize2> {
    public:
     using data_type = TDataType;
     using base_type = MatrixStorage<TDataType, TSize1, TSize2>;
@@ -346,60 +344,6 @@ template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
 bool operator!=(Matrix<TDataType, TSize1, TSize2> const& First,
     Matrix<TDataType, TSize1, TSize2> const& Second) {
     return !(First == Second);
-}
-
-template <typename TDataType, std::size_t TSize1, std::size_t TSize2,
-    std::size_t SecondNumberOfColumns>
-inline Matrix<TDataType, TSize1, SecondNumberOfColumns> operator*(
-    Matrix<TDataType, TSize1, TSize2> const& First,
-    Matrix<TDataType, TSize2, SecondNumberOfColumns> const& Second) {
-    Matrix<TDataType, TSize1, SecondNumberOfColumns> result;
-    for (std::size_t i = 0; i < TSize1; i++)
-        for (std::size_t j = 0; j < SecondNumberOfColumns; j++) {
-            TDataType temp = TDataType();
-            for (std::size_t k = 0; k < TSize2; k++)
-                temp += First(i, k) * Second(k, j);
-
-            result(i, j) = temp;
-        }
-
-    return result;
-}
-
-template <typename TDataType>
-inline Matrix<TDataType, 0, 0> operator*(Matrix<TDataType, 0, 0> const& First,
-    Matrix<TDataType, 0, 0> const& Second) {
-    Matrix<TDataType, 0, 0> result(First.size1(), Second.size2());
-    for (std::size_t i = 0; i < First.size1(); i++)
-        for (std::size_t j = 0; j < Second.size2(); j++) {
-            TDataType temp = TDataType();
-            for (std::size_t k = 0; k < First.size2(); k++)
-                temp += First(i, k) * Second(k, j);
-
-            result(i, j) = temp;
-        }
-
-    return result;
-}
-
-template <typename TExpressionType1, typename TExpressionType2>
-inline Matrix<typename TExpressionType1::data_type, dynamic, dynamic> operator*(
-    TExpressionType1 const& First, TExpressionType2 const& Second) {
-    auto const& first_expression = First.expression();
-    auto const& second_expression = Second.expression();
-    Matrix<typename TExpressionType1::data_type, 0, 0> result(
-        first_expression.size1(), second_expression.size2());
-    for (std::size_t i = 0; i < first_expression.size1(); i++)
-        for (std::size_t j = 0; j < second_expression.size2(); j++) {
-            typename TExpressionType1::data_type temp =
-                typename TExpressionType1::data_type();
-            for (std::size_t k = 0; k < first_expression.size2(); k++)
-                temp += first_expression(i, k) * second_expression(k, j);
-
-            result(i, j) = temp;
-        }
-
-    return result;
 }
 
 /// output stream function

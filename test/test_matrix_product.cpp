@@ -11,7 +11,8 @@ std::size_t TestMatrixScalarProduct() {
 
     b_matrix = 1.3 * a_matrix * 0.34;
     b_matrix = 2 * b_matrix;
-
+    b_matrix = b_matrix * 1;
+    
     for (std::size_t i = 0; i < a_matrix.size1(); i++)
         for (std::size_t j = 0; j < a_matrix.size2(); j++)
             AMATRIX_CHECK_EQUAL(b_matrix(i, j), 2 * 1.3 * (2.33 * i - 4.52 * j) * 0.34);
