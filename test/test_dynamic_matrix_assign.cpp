@@ -3,9 +3,11 @@
 
 template <std::size_t TSize1, std::size_t TSize2>
 std::size_t TestZeroMatrixAssign() {
-    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> a_matrix(TSize1, TSize2);
+    AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> a_matrix(1,1);
     a_matrix = AMatrix::ZeroMatrix<double>(TSize1, TSize2);
 
+    AMATRIX_CHECK_EQUAL(a_matrix.size1(), TSize1);
+    AMATRIX_CHECK_EQUAL(a_matrix.size2(), TSize2);
     for (std::size_t i = 0; i < a_matrix.size1(); i++)
         for (std::size_t j = 0; j < a_matrix.size2(); j++)
             AMATRIX_CHECK_EQUAL(a_matrix(i, j), 0.00);
@@ -22,6 +24,8 @@ std::size_t TestMatrixAssign(std::size_t Size1, std::size_t Size2) {
 
     b_matrix = a_matrix;
 
+    AMATRIX_CHECK_EQUAL(b_matrix.size1(), Size1);
+    AMATRIX_CHECK_EQUAL(b_matrix.size2(), Size2);
     for (std::size_t i = 0; i < a_matrix.size1(); i++)
         for (std::size_t j = 0; j < a_matrix.size2(); j++)
             AMATRIX_CHECK_EQUAL(b_matrix(i, j), 2.33 * i - 4.52 * j);
