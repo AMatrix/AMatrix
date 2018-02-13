@@ -292,6 +292,7 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>, row_ma
     using data_type = TDataType;
     using base_type = MatrixStorage<TDataType, TSize1, TSize2>;
     using base_type::at;
+    using base_type::size;
     using base_type::size1;
     using base_type::size2;
 
@@ -371,13 +372,14 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>, row_ma
         return TheScalar * TheMatrix;
     }
 
-    // template <typename TExpressionType, std::size_t TExpressionCategory>
-    // data_type dot(MatrixExpression<TExpressionType, TExpressionCategory> const& Other){
-    //     data_type result = data_type();
-    //     for (std::size_t i = 0; i < size(); ++i){
-    //         result += _data[i] *
-    //     }
-    // }
+    template <typename TExpressionType>
+    data_type dot(MatrixExpression<TExpressionType, row_major_access> const& Other){
+        data_type result = data_type();
+        for (std::size_t i = 0; i < size(); ++i){
+            result += at(i) * Other.expression()[i];
+        }
+        return result;
+    }
 
     Matrix& noalias() { return *this; }
 
