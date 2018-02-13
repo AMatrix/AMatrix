@@ -86,6 +86,10 @@ class ZeroMatrix
         return TDataType();
     }
 
+    inline TDataType operator[](std::size_t i) const {
+        return TDataType();
+    }
+
     inline std::size_t size1() const { return _size1; }
     inline std::size_t size2() const { return _size2; }
 };
@@ -113,6 +117,10 @@ class MatrixSumExpression
 
     inline data_type operator()(std::size_t i, std::size_t j) const {
         return _first(i, j) + _second(i, j);
+    }
+
+    inline data_type operator[](std::size_t i) const {
+        return _first[i] + _second[i];
     }
 };
 
@@ -149,6 +157,10 @@ class MatrixMinusExpression
     inline data_type operator()(std::size_t i, std::size_t j) const {
         return _first(i, j) - _second(i, j);
     }
+
+    inline data_type operator[](std::size_t i) const {
+        return _first[i] - _second[i];
+    }
 };
 
 template <typename TExpression1Type, typename TExpression2Type,
@@ -181,6 +193,10 @@ class MatrixScalarProductExpression
 
     inline data_type operator()(std::size_t i, std::size_t j) const {
         return _first * _second(i, j);
+    }
+
+    inline data_type operator[](std::size_t i) const {
+        return _first * _second[i];
     }
 };
 
