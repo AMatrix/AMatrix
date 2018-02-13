@@ -6,6 +6,30 @@ namespace AMatrix {
 constexpr std::size_t dynamic = 0;
 
 template <typename TExpressionType>
+class RowMajorExpression {
+   public:
+    // using value_type = TExpressionType::value_type;
+    RowMajorExpression() {}
+
+    RowMajorExpression(RowMajorExpression const& Other) = default;
+
+    RowMajorExpression(RowMajorExpression&& Other) = default;
+
+    RowMajorExpression& operator=(RowMajorExpression const& Other) = default;
+
+    RowMajorExpression& operator=(RowMajorExpression&& Other) = default;
+
+    TExpressionType& expression() {
+        return *static_cast<TExpressionType*>(this);
+    }
+    TExpressionType const& expression() const {
+        return *static_cast<const TExpressionType* const>(this);
+    }
+
+    TExpressionType& noalias() { return expression(); }
+};
+
+template <typename TExpressionType>
 class MatrixExpression {
    public:
     // using value_type = TExpressionType::value_type;
