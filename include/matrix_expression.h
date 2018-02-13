@@ -139,11 +139,12 @@ class MatrixSumExpression
     }
 };
 
-template <typename TExpression1Type, typename TExpression2Type>
+template <typename TExpression1Type, typename TExpression2Type,
+    std::size_t TExpressionCategory1, std::size_t TExpressionCategory2>
 MatrixSumExpression<TExpression1Type, TExpression2Type> operator+(
-    TExpression1Type const& First, TExpression2Type const& Second) {
+    MatrixExpression<TExpression1Type, TExpressionCategory1> const& First, MatrixExpression<TExpression2Type, TExpressionCategory2> const& Second) {
     return MatrixSumExpression<TExpression1Type, TExpression2Type>(
-        First, Second);
+        First.expression(), Second.expression());
 }
 
 template <typename TExpression1Type, typename TExpression2Type>
