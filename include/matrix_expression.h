@@ -20,35 +20,11 @@ class AccessTrait<row_major_access, row_major_access> {
     static constexpr std::size_t category = row_major_access;
 };
 
-template <typename TExpressionType>
-class RowMajorExpression {
-   public:
-    // using value_type = TExpressionType::value_type;
-    RowMajorExpression() {}
-
-    RowMajorExpression(RowMajorExpression const& Other) = default;
-
-    RowMajorExpression(RowMajorExpression&& Other) = default;
-
-    RowMajorExpression& operator=(RowMajorExpression const& Other) = default;
-
-    RowMajorExpression& operator=(RowMajorExpression&& Other) = default;
-
-    TExpressionType& expression() {
-        return *static_cast<TExpressionType*>(this);
-    }
-    TExpressionType const& expression() const {
-        return *static_cast<const TExpressionType* const>(this);
-    }
-
-    TExpressionType& noalias() { return expression(); }
-};
-
 template <typename TExpressionType,
     std::size_t TExpressionCategory = unordered_access>
 class MatrixExpression {
    public:
-    static constexpr std::size_t  category = TExpressionCategory;
+    static constexpr std::size_t category = TExpressionCategory;
 
     // using value_type = TExpressionType::value_type;
     MatrixExpression() {}
@@ -118,7 +94,8 @@ template <typename TExpression1Type, typename TExpression2Type>
 class MatrixSumExpression
     : public MatrixExpression<
           MatrixSumExpression<TExpression1Type, TExpression2Type>,
-          AccessTrait<TExpression1Type::category, TExpression2Type::category>::category> {
+          AccessTrait<TExpression1Type::category,
+              TExpression2Type::category>::category> {
     TExpression1Type const& _first;
     TExpression2Type const& _second;
 
@@ -142,7 +119,8 @@ class MatrixSumExpression
 template <typename TExpression1Type, typename TExpression2Type,
     std::size_t TExpressionCategory1, std::size_t TExpressionCategory2>
 MatrixSumExpression<TExpression1Type, TExpression2Type> operator+(
-    MatrixExpression<TExpression1Type, TExpressionCategory1> const& First, MatrixExpression<TExpression2Type, TExpressionCategory2> const& Second) {
+    MatrixExpression<TExpression1Type, TExpressionCategory1> const& First,
+    MatrixExpression<TExpression2Type, TExpressionCategory2> const& Second) {
     return MatrixSumExpression<TExpression1Type, TExpression2Type>(
         First.expression(), Second.expression());
 }
@@ -151,7 +129,8 @@ template <typename TExpression1Type, typename TExpression2Type>
 class MatrixMinusExpression
     : public MatrixExpression<
           MatrixMinusExpression<TExpression1Type, TExpression2Type>,
-          AccessTrait<TExpression1Type::category, TExpression2Type::category>::category> {
+          AccessTrait<TExpression1Type::category,
+              TExpression2Type::category>::category> {
     TExpression1Type const& _first;
     TExpression2Type const& _second;
 
@@ -172,11 +151,13 @@ class MatrixMinusExpression
     }
 };
 
-template <typename TExpression1Type, typename TExpression2Type>
+template <typename TExpression1Type, typename TExpression2Type,
+    std::size_t TExpressionCategory1, std::size_t TExpressionCategory2>
 MatrixMinusExpression<TExpression1Type, TExpression2Type> operator-(
-    TExpression1Type const& First, TExpression2Type const& Second) {
+    MatrixExpression<TExpression1Type, TExpressionCategory1> const& First,
+    MatrixExpression<TExpression2Type, TExpressionCategory2> const& Second) {
     return MatrixMinusExpression<TExpression1Type, TExpression2Type>(
-        First, Second);
+        First.expression(), Second.expression());
 }
 
 template <typename TExpressionType>

@@ -52,8 +52,8 @@ class MatrixStorage {
         }
     }
 
-    template <typename TExpressionType>
-    MatrixStorage& operator=(MatrixExpression<TExpressionType> const& Other) {
+    template <typename TExpressionType, std::size_t TExpressionCategory>
+    MatrixStorage& operator=(MatrixExpression<TExpressionType, TExpressionCategory> const& Other) {
         auto i_data = _data;
         for (std::size_t i = 0; i < size1(); i++)
             for (std::size_t j = 0; j < size2(); j++)
@@ -62,9 +62,9 @@ class MatrixStorage {
     }
 
     template <typename TExpressionType>
-    MatrixStorage& operator=(RowMajorExpression<TExpressionType> const& Other) {
+    MatrixStorage& operator=(MatrixExpression<TExpressionType,row_major_access> const& Other) {
         for (std::size_t i = 0; i < size(); i++)
-            _data[i] = Other.expression()[i];
+            _data[i] = Other[i];
         return *this;
     }
 
@@ -168,12 +168,12 @@ class MatrixStorage<TDataType, dynamic, dynamic> {
             delete[] _data;
     }
 
-    template <typename TExpressionType>
-    explicit MatrixStorage(MatrixExpression<TExpressionType> const& Other)
+    template <typename TExpressionType, std::size_t TExpressionCategory>
+    explicit MatrixStorage(MatrixExpression<TExpressionType, TExpressionCategory> const& Other)
         : MatrixStorage(Other.expression()) {}
 
     template <typename TExpressionType>
-    explicit MatrixStorage(RowMajorExpression<TExpressionType> const& Other)
+    explicit MatrixStorage(MatrixExpression<TExpressionType, row_major_access> const& Other)
         : _size1(Other.size1()), _size2(Other.size2()) {
         _data = new TDataType[size()];
         for (std::size_t i = 0; i < size(); i++)
@@ -190,8 +190,8 @@ class MatrixStorage<TDataType, dynamic, dynamic> {
                 *(i_data++) = Other(i, j);
     }
 
-    template <typename TExpressionType>
-    MatrixStorage& operator=(MatrixExpression<TExpressionType> const& Other) {
+    template <typename TExpressionType, std::size_t TExpressionCategory>
+    MatrixStorage& operator=(MatrixExpression<TExpressionType, TExpressionCategory> const& Other) {
         auto& other_expression = Other.expression();
         std::size_t new_size =
             other_expression.size1() * other_expression.size2();
@@ -306,8 +306,8 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>, row_ma
 
     Matrix(Matrix&& Other) : base_type(Other) {}
 
-    template <typename TExpressionType>
-    explicit Matrix(MatrixExpression<TExpressionType> const& Other)
+    template <typename TExpressionType, std::size_t TExpressionCategory>
+    explicit Matrix(MatrixExpression<TExpressionType, TExpressionCategory> const& Other)
         : base_type(Other) {}
 
     template <typename TOtherMatrixType>
@@ -371,8 +371,8 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>, row_ma
         return TheScalar * TheMatrix;
     }
 
-    // template <typename TExpressionType>
-    // data_type dot(MatrixExpression<TExpressionType> const& Other){
+    // template <typename TExpressionType, std::size_t TExpressionCategory>
+    // data_type dot(MatrixExpression<TExpressionType, TExpressionCategory> const& Other){
     //     data_type result = data_type();
     //     for (std::size_t i = 0; i < size(); ++i){
     //         result += _data[i] *
