@@ -340,7 +340,9 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>, row_ma
         return true;
     }
 
-    Matrix& operator+=(Matrix const& Other) {
+
+    template <typename TExpressionType, std::size_t TExpressionCategory>
+    Matrix& operator+=(MatrixExpression<TExpressionType, TExpressionCategory> const& Other) {
         for (std::size_t i = 0; i < size1(); i++)
             for (std::size_t j = 0; j < size2(); j++)
                 at(i, j) += Other(i, j);
@@ -348,10 +350,27 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>, row_ma
         return *this;
     }
 
-    Matrix& operator-=(Matrix const& Other) {
+    template <typename TExpressionType>
+    Matrix& operator+=(MatrixExpression<TExpressionType, row_major_access> const& Other) {
+        for (std::size_t i = 0; i < size(); i++)
+                at(i) += Other.expression()[i];
+
+        return *this;
+    }
+
+    template <typename TExpressionType, std::size_t TExpressionCategory>
+    Matrix& operator-=(MatrixExpression<TExpressionType, TExpressionCategory> const& Other) {
         for (std::size_t i = 0; i < size1(); i++)
             for (std::size_t j = 0; j < size2(); j++)
                 at(i, j) -= Other(i, j);
+
+        return *this;
+    }
+
+    template <typename TExpressionType>
+    Matrix& operator-=(MatrixExpression<TExpressionType, row_major_access> const& Other) {
+        for (std::size_t i = 0; i < size(); i++)
+                at(i) -= Other.expression()[i];
 
         return *this;
     }
