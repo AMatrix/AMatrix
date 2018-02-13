@@ -375,22 +375,6 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>, row_ma
         return *this;
     }
 
-    friend Matrix operator*(
-        TDataType const& TheScalar, Matrix const& TheMatrix) {
-        Matrix result(TheMatrix.size1(), TheMatrix.size2());
-        const TDataType* __restrict second_data = TheMatrix.data();
-        TDataType* __restrict result_data = result.data();
-        for (std::size_t i = 0; i < TheMatrix.size(); ++i)
-            *result_data++ = TheScalar * (*second_data++);
-
-        return result;
-    }
-
-    friend Matrix operator*(
-        Matrix const& TheMatrix, TDataType const& TheScalar) {
-        return TheScalar * TheMatrix;
-    }
-
     template <typename TExpressionType>
     data_type dot(MatrixExpression<TExpressionType, row_major_access> const& Other){
         data_type result = data_type();
