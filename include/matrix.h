@@ -88,17 +88,11 @@ class MatrixStorage {
 
     TDataType& operator[](std::size_t i) { return at(i); }
 
-    TDataType const& operator[](std::size_t i) const {
-        return at(i);
-    }
+    TDataType const& operator[](std::size_t i) const { return at(i); }
 
-    TDataType& at(std::size_t i) {
-        return _data[i];
-    }
+    TDataType& at(std::size_t i) { return _data[i]; }
 
-    TDataType const& at(std::size_t i) const {
-        return _data[i];
-    }
+    TDataType const& at(std::size_t i) const { return _data[i]; }
 
     static constexpr std::size_t size1() { return TSize1; }
 
@@ -253,17 +247,11 @@ class MatrixStorage<TDataType, dynamic, dynamic> {
 
     TDataType& operator[](std::size_t i) { return at(i); }
 
-    TDataType const& operator[](std::size_t i) const {
-        return at(i);
-    }
+    TDataType const& operator[](std::size_t i) const { return at(i); }
 
-    TDataType& at(std::size_t i) {
-        return _data[i];
-    }
+    TDataType& at(std::size_t i) { return _data[i]; }
 
-    TDataType const& at(std::size_t i) const {
-        return _data[i];
-    }
+    TDataType const& at(std::size_t i) const { return _data[i]; }
 
     std::size_t size1() const { return _size1; }
 
@@ -362,7 +350,17 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>>,
         return TheScalar * TheMatrix;
     }
 
-    Matrix& noalias() { return *this; }
+    // template <typename TExpressionType>
+    // data_type dot(MatrixExpression<TExpressionType> const& Other){
+    //     data_type result = data_type();
+    //     for (std::size_t i = 0; i < size(); ++i){
+    //         result += _data[i] * 
+    //     }
+    // }
+
+        Matrix& noalias() {
+        return *this;
+    }
 
     TransposeMatrix<Matrix<TDataType, TSize1, TSize2>> transpose() {
         return TransposeMatrix<Matrix<TDataType, TSize1, TSize2>>(*this);
