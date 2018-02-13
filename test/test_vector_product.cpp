@@ -20,20 +20,22 @@ std::size_t TestVectorScalarProduct() {
 
 template <std::size_t TSize>
 std::size_t TestVectorProduct() {
-    // AMatrix::Vector<double, TSize> a_vector;
-    // AMatrix::Vector<double, TSize> b_vector;
+    AMatrix::Vector<double, TSize> a_vector;
+    AMatrix::Vector<double, TSize> b_vector;
 
-    // for (std::size_t i = 0; i < a_vector.size(); i++)
-    //     a_vector[i] = 2.2;
+    for (std::size_t i = 0; i < a_vector.size(); i++)
+        a_vector[i] = i+1;
 
-    // for (std::size_t i = 0; i < b_vector.size1(); i++)
-    //         b_vector[i] = 5.1;
+    for (std::size_t i = 0; i < b_vector.size1(); i++)
+            b_vector[i] = 5.1;
 
-    // double result = a_vector * b_vector;
+    double result = a_vector.dot(b_vector);
 
-    // AMATRIX_CHECK_EQUAL(result, 5.1*2.2*b_vector.size());
+    auto n = b_vector.size();
 
-    // std::cout << "OK" << std::endl;
+    AMATRIX_CHECK_EQUAL(result, 5.1*int(n*(n+1)/2));
+
+    std::cout << "OK" << std::endl;
     return 0;  // not failed
 }
 
