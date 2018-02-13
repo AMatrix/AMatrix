@@ -149,7 +149,8 @@ MatrixSumExpression<TExpression1Type, TExpression2Type> operator+(
 template <typename TExpression1Type, typename TExpression2Type>
 class MatrixMinusExpression
     : public MatrixExpression<
-          MatrixMinusExpression<TExpression1Type, TExpression2Type>> {
+          MatrixMinusExpression<TExpression1Type, TExpression2Type>,
+          AccessTrait<TExpression1Type::category, TExpression2Type::category>::category> {
     TExpression1Type const& _first;
     TExpression2Type const& _second;
 
@@ -179,7 +180,8 @@ MatrixMinusExpression<TExpression1Type, TExpression2Type> operator-(
 
 template <typename TExpressionType>
 class MatrixScalarProductExpression
-    : public MatrixExpression<MatrixScalarProductExpression<TExpressionType>> {
+    : public MatrixExpression<MatrixScalarProductExpression<TExpressionType>,
+          AccessTrait<TExpressionType::category, row_major_access>::category> {
     typename TExpressionType::data_type const& _first;
     TExpressionType const& _second;
 
