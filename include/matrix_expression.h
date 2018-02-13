@@ -200,17 +200,17 @@ class MatrixScalarProductExpression
     }
 };
 
-template <typename TExpressionType>
+template <typename TExpressionType, std::size_t TExpressionCategory>
 MatrixScalarProductExpression<TExpressionType> operator*(
     typename TExpressionType::data_type const& First,
-    MatrixExpression<TExpressionType> const& Second) {
+    MatrixExpression<TExpressionType, TExpressionCategory> const& Second) {
     return MatrixScalarProductExpression<TExpressionType>(
         First, Second.expression());
 }
 
-template <typename TExpressionType>
+template <typename TExpressionType, std::size_t TExpressionCategory>
 MatrixScalarProductExpression<TExpressionType> operator*(
-    MatrixExpression<TExpressionType> const& First,
+    MatrixExpression<TExpressionType, TExpressionCategory> const& First,
     typename TExpressionType::data_type const& Second) {
     return MatrixScalarProductExpression<TExpressionType>(
         Second, First.expression());
