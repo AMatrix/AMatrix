@@ -212,20 +212,20 @@ class MatrixStorage<TDataType, dynamic, dynamic> {
         return *this;
     }
 
-    template <typename TOtherMatrixType>
-    MatrixStorage& operator=(TOtherMatrixType const& Other) {
-        std::size_t new_size = Other.size1() * Other.size2();
+    template <typename TExpressionType>
+    MatrixStorage& operator=(MatrixExpression<TExpressionType, row_major_access> const& Other) {
+        auto the_expression = Other.expression();
+        std::size_t new_size = the_expression.size1() * the_expression.size2();
         if (size() != new_size) {
             delete[] _data;
             _data = new TDataType[new_size];
         }
-        _size1 = Other.size1();
-        _size2 = Other.size2();
+        _size1 = the_expression.size1();
+        _size2 = the_expression.size2();
 
         auto i_data = _data;
-        for (std::size_t i = 0; i < size1(); i++)
-            for (std::size_t j = 0; j < size2(); j++)
-                *(i_data++) = Other(i, j);
+        for (std::size_t i = 0; i < size(); i++)
+                *(i_data++) = the_expression[i];
         return *this;
     }
 
