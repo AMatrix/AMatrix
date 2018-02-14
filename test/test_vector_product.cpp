@@ -19,6 +19,20 @@ std::size_t TestVectorScalarProduct() {
 }
 
 template <std::size_t TSize>
+std::size_t TestVectorScalarSelfProduct() {
+    AMatrix::Vector<double, TSize> a_vector;
+    for (std::size_t i = 0; i < a_vector.size(); i++)
+            a_vector[i] = 2.33 * i - 4.52;
+
+    a_vector *= 2.4;
+    
+    for (std::size_t i = 0; i < a_vector.size(); i++)
+            AMATRIX_CHECK_EQUAL(a_vector[i], 2.4 * (2.33 * i - 4.52 ));
+
+    return 0;  // not failed
+}
+
+template <std::size_t TSize>
 std::size_t TestVectorProduct() {
     AMatrix::Vector<double, TSize> a_vector;
     AMatrix::Vector<double, TSize> b_vector;
@@ -47,7 +61,12 @@ int main() {
     number_of_failed_tests += TestVectorScalarProduct<2>();
     number_of_failed_tests += TestVectorScalarProduct<3>();
  
-    // matrix product test
+    // scalar product test
+    number_of_failed_tests += TestVectorScalarSelfProduct<1>();
+    number_of_failed_tests += TestVectorScalarSelfProduct<2>();
+    number_of_failed_tests += TestVectorScalarSelfProduct<3>();
+ 
+    // vector product test
     number_of_failed_tests += TestVectorProduct<1>();
     number_of_failed_tests += TestVectorProduct<2>();
     number_of_failed_tests += TestVectorProduct<3>();
