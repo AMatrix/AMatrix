@@ -1,4 +1,4 @@
-#include "matrix.h"
+#include "amatrix.h"
 #include "checks.h"
 
 template<std::size_t TSize>

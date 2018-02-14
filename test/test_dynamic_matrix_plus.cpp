@@ -1,4 +1,4 @@
-#include "matrix.h"
+#include "amatrix.h"
 #include "checks.h"
 
 std::size_t TestMatrixPlus(std::size_t Size1, std::size_t Size2) {

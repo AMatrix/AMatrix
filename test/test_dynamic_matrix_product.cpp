@@ -1,4 +1,4 @@
-#include "matrix.h"
+#include "amatrix.h"
 #include "checks.h"
 
 std::size_t TestMatrixScalarProduct(std::size_t TSize1, std::size_t TSize2) {
