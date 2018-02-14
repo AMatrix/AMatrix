@@ -10,7 +10,9 @@ std::size_t TestVectorNorm() {
     for (std::size_t i = 0; i < a_vector.size(); i++)
         a_vector[i] = i+1;
 
-    AMATRIX_CHECK_EQUAL(a_vector.norm(), results[TSize]);
+    AMATRIX_CHECK_EQUAL(a_vector.norm(), std::sqrt(results[TSize]));
+    AMATRIX_CHECK_EQUAL(a_vector.squared_norm(), results[TSize]);
+
 
     std::cout << "OK" << std::endl;
     return 0;  // not failed

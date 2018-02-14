@@ -1,7 +1,7 @@
 #pragma once
 
 // A matrix Library to be simple and fast
-
+#include <cmath>
 #include "matrix_expression.h"
 
 namespace AMatrix {
@@ -384,8 +384,12 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>, row_ma
         return result;
     }
 
-    data_type norm() {
+    data_type squared_norm() {
         return dot(*this);
+    }
+
+    data_type norm() {
+        return std::sqrt(dot(*this));
     }
 
     Matrix& noalias() { return *this; }
