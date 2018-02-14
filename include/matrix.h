@@ -387,6 +387,13 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>,
         return *this;
     }
 
+    Matrix& operator*=(data_type TheValue) {
+        for (std::size_t i = 0; i < size(); i++)
+            at(i) *= TheValue;
+
+        return *this;
+    }
+
     template <typename TExpressionType>
     data_type dot(
         MatrixExpression<TExpressionType, row_major_access> const& Other)
