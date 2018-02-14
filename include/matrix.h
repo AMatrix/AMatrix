@@ -376,7 +376,7 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>, row_ma
     }
 
     template <typename TExpressionType>
-    data_type dot(MatrixExpression<TExpressionType, row_major_access> const& Other){
+    data_type dot(MatrixExpression<TExpressionType, row_major_access> const& Other) const {
         data_type result = data_type();
         for (std::size_t i = 0; i < size(); ++i){
             result += at(i) * Other.expression()[i];
@@ -384,11 +384,11 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>, row_ma
         return result;
     }
 
-    data_type squared_norm() {
+    data_type squared_norm() const {
         return dot(*this);
     }
 
-    data_type norm() {
+    data_type norm() const {
         return std::sqrt(dot(*this));
     }
 
