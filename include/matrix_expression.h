@@ -8,7 +8,7 @@ constexpr std::size_t row_major_access = 1;
 constexpr std::size_t column_major_access = 2;
 constexpr std::size_t unordered_access = 3;
 
-template <std::size_t TExpressionCategory1, std::size_t TExpressionCategory2>
+template <std::size_t TCategory1, std::size_t TCategory2>
 class AccessTrait {
    public:
     static constexpr std::size_t Category = unordered_access;
@@ -21,10 +21,10 @@ class AccessTrait<row_major_access, row_major_access> {
 };
 
 template <typename TExpressionType,
-    std::size_t TExpressionCategory = unordered_access>
+    std::size_t TCategory = unordered_access>
 class MatrixExpression {
    public:
-    static constexpr std::size_t category = TExpressionCategory;
+    static constexpr std::size_t category = TCategory;
 
     // using value_type = TExpressionType::value_type;
     MatrixExpression() {}
@@ -125,10 +125,10 @@ class MatrixSumExpression
 };
 
 template <typename TExpression1Type, typename TExpression2Type,
-    std::size_t TExpressionCategory1, std::size_t TExpressionCategory2>
+    std::size_t TCategory1, std::size_t TCategory2>
 MatrixSumExpression<TExpression1Type, TExpression2Type> operator+(
-    MatrixExpression<TExpression1Type, TExpressionCategory1> const& First,
-    MatrixExpression<TExpression2Type, TExpressionCategory2> const& Second) {
+    MatrixExpression<TExpression1Type, TCategory1> const& First,
+    MatrixExpression<TExpression2Type, TCategory2> const& Second) {
     return MatrixSumExpression<TExpression1Type, TExpression2Type>(
         First.expression(), Second.expression());
 }
@@ -164,10 +164,10 @@ class MatrixMinusExpression
 };
 
 template <typename TExpression1Type, typename TExpression2Type,
-    std::size_t TExpressionCategory1, std::size_t TExpressionCategory2>
+    std::size_t TCategory1, std::size_t TCategory2>
 MatrixMinusExpression<TExpression1Type, TExpression2Type> operator-(
-    MatrixExpression<TExpression1Type, TExpressionCategory1> const& First,
-    MatrixExpression<TExpression2Type, TExpressionCategory2> const& Second) {
+    MatrixExpression<TExpression1Type, TCategory1> const& First,
+    MatrixExpression<TExpression2Type, TCategory2> const& Second) {
     return MatrixMinusExpression<TExpression1Type, TExpression2Type>(
         First.expression(), Second.expression());
 }
@@ -200,17 +200,17 @@ class MatrixScalarProductExpression
     }
 };
 
-template <typename TExpressionType, std::size_t TExpressionCategory>
+template <typename TExpressionType, std::size_t TCategory>
 MatrixScalarProductExpression<TExpressionType> operator*(
     typename TExpressionType::data_type const& First,
-    MatrixExpression<TExpressionType, TExpressionCategory> const& Second) {
+    MatrixExpression<TExpressionType, TCategory> const& Second) {
     return MatrixScalarProductExpression<TExpressionType>(
         First, Second.expression());
 }
 
-template <typename TExpressionType, std::size_t TExpressionCategory>
+template <typename TExpressionType, std::size_t TCategory>
 MatrixScalarProductExpression<TExpressionType> operator*(
-    MatrixExpression<TExpressionType, TExpressionCategory> const& First,
+    MatrixExpression<TExpressionType, TCategory> const& First,
     typename TExpressionType::data_type const& Second) {
     return MatrixScalarProductExpression<TExpressionType>(
         Second, First.expression());
@@ -245,10 +245,10 @@ class MatrixProductExpression
 };
 
 template <typename TExpression1Type, typename TExpression2Type,
-    std::size_t TExpressionCategory1, std::size_t TExpressionCategory2>
+    std::size_t TCategory1, std::size_t TCategory2>
 MatrixProductExpression<TExpression1Type, TExpression2Type> operator*(
-    MatrixExpression<TExpression1Type, TExpressionCategory1> const& First,
-    MatrixExpression<TExpression2Type, TExpressionCategory2> const& Second) {
+    MatrixExpression<TExpression1Type, TCategory1> const& First,
+    MatrixExpression<TExpression2Type, TCategory2> const& Second) {
     return MatrixProductExpression<TExpression1Type, TExpression2Type>(
         First.expression(), Second.expression());
 }
