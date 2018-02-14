@@ -20,8 +20,7 @@ class AccessTrait<row_major_access, row_major_access> {
     static constexpr std::size_t category = row_major_access;
 };
 
-template <typename TExpressionType,
-    std::size_t TCategory = unordered_access>
+template <typename TExpressionType, std::size_t TCategory = unordered_access>
 class MatrixExpression {
    public:
     static constexpr std::size_t category = TCategory;
@@ -86,9 +85,7 @@ class ZeroMatrix
         return TDataType();
     }
 
-    inline TDataType operator[](std::size_t i) const {
-        return TDataType();
-    }
+    inline TDataType operator[](std::size_t i) const { return TDataType(); }
 
     inline std::size_t size1() const { return _size1; }
     inline std::size_t size2() const { return _size2; }

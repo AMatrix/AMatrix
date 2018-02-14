@@ -29,11 +29,13 @@ class MatrixStorage {
     MatrixStorage(MatrixStorage&& Other) = default;
 
     template <typename TExpressionType, std::size_t TCategory>
-    explicit MatrixStorage(MatrixExpression<TExpressionType, TCategory> const& Other)
+    explicit MatrixStorage(
+        MatrixExpression<TExpressionType, TCategory> const& Other)
         : MatrixStorage(Other.expression()) {}
 
     template <typename TExpressionType>
-    explicit MatrixStorage(MatrixExpression<TExpressionType, row_major_access> const& Other) {
+    explicit MatrixStorage(
+        MatrixExpression<TExpressionType, row_major_access> const& Other) {
         for (std::size_t i = 0; i < size(); i++)
             _data[i] = Other[i];
     }
@@ -54,7 +56,8 @@ class MatrixStorage {
     }
 
     template <typename TExpressionType, std::size_t TCategory>
-    MatrixStorage& operator=(MatrixExpression<TExpressionType, TCategory> const& Other) {
+    MatrixStorage& operator=(
+        MatrixExpression<TExpressionType, TCategory> const& Other) {
         auto i_data = _data;
         for (std::size_t i = 0; i < size1(); i++)
             for (std::size_t j = 0; j < size2(); j++)
@@ -63,7 +66,8 @@ class MatrixStorage {
     }
 
     template <typename TExpressionType>
-    MatrixStorage& operator=(MatrixExpression<TExpressionType,row_major_access> const& Other) {
+    MatrixStorage& operator=(
+        MatrixExpression<TExpressionType, row_major_access> const& Other) {
         for (std::size_t i = 0; i < size(); i++)
             _data[i] = Other[i];
         return *this;
@@ -170,11 +174,13 @@ class MatrixStorage<TDataType, dynamic, dynamic> {
     }
 
     template <typename TExpressionType, std::size_t TCategory>
-    explicit MatrixStorage(MatrixExpression<TExpressionType, TCategory> const& Other)
+    explicit MatrixStorage(
+        MatrixExpression<TExpressionType, TCategory> const& Other)
         : MatrixStorage(Other.expression()) {}
 
     template <typename TExpressionType>
-    explicit MatrixStorage(MatrixExpression<TExpressionType, row_major_access> const& Other)
+    explicit MatrixStorage(
+        MatrixExpression<TExpressionType, row_major_access> const& Other)
         : _size1(Other.size1()), _size2(Other.size2()) {
         _data = new TDataType[size()];
         for (std::size_t i = 0; i < size(); i++)
@@ -192,7 +198,8 @@ class MatrixStorage<TDataType, dynamic, dynamic> {
     }
 
     template <typename TExpressionType, std::size_t TCategory>
-    MatrixStorage& operator=(MatrixExpression<TExpressionType, TCategory> const& Other) {
+    MatrixStorage& operator=(
+        MatrixExpression<TExpressionType, TCategory> const& Other) {
         auto& other_expression = Other.expression();
         std::size_t new_size =
             other_expression.size1() * other_expression.size2();
@@ -287,7 +294,8 @@ class MatrixStorage<TDataType, dynamic, dynamic> {
 };
 
 template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
-class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>, row_major_access>,
+class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>,
+                   row_major_access>,
                public MatrixStorage<TDataType, TSize1, TSize2> {
    public:
     using data_type = TDataType;
@@ -341,9 +349,9 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>, row_ma
         return true;
     }
 
-
     template <typename TExpressionType, std::size_t TCategory>
-    Matrix& operator+=(MatrixExpression<TExpressionType, TCategory> const& Other) {
+    Matrix& operator+=(
+        MatrixExpression<TExpressionType, TCategory> const& Other) {
         for (std::size_t i = 0; i < size1(); i++)
             for (std::size_t j = 0; j < size2(); j++)
                 at(i, j) += Other(i, j);
@@ -352,15 +360,17 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>, row_ma
     }
 
     template <typename TExpressionType>
-    Matrix& operator+=(MatrixExpression<TExpressionType, row_major_access> const& Other) {
+    Matrix& operator+=(
+        MatrixExpression<TExpressionType, row_major_access> const& Other) {
         for (std::size_t i = 0; i < size(); i++)
-                at(i) += Other.expression()[i];
+            at(i) += Other.expression()[i];
 
         return *this;
     }
 
     template <typename TExpressionType, std::size_t TCategory>
-    Matrix& operator-=(MatrixExpression<TExpressionType, TCategory> const& Other) {
+    Matrix& operator-=(
+        MatrixExpression<TExpressionType, TCategory> const& Other) {
         for (std::size_t i = 0; i < size1(); i++)
             for (std::size_t j = 0; j < size2(); j++)
                 at(i, j) -= Other(i, j);
@@ -369,38 +379,36 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>, row_ma
     }
 
     template <typename TExpressionType>
-    Matrix& operator-=(MatrixExpression<TExpressionType, row_major_access> const& Other) {
+    Matrix& operator-=(
+        MatrixExpression<TExpressionType, row_major_access> const& Other) {
         for (std::size_t i = 0; i < size(); i++)
-                at(i) -= Other.expression()[i];
+            at(i) -= Other.expression()[i];
 
         return *this;
     }
 
     template <typename TExpressionType>
-    data_type dot(MatrixExpression<TExpressionType, row_major_access> const& Other) const {
+    data_type dot(
+        MatrixExpression<TExpressionType, row_major_access> const& Other)
+        const {
         data_type result = data_type();
-        for (std::size_t i = 0; i < size(); ++i){
+        for (std::size_t i = 0; i < size(); ++i) {
             result += at(i) * Other.expression()[i];
         }
         return result;
     }
 
-    data_type squared_norm() const {
-        return dot(*this);
-    }
+    data_type squared_norm() const { return dot(*this); }
 
-    data_type norm() const {
-        return std::sqrt(dot(*this));
-    }
+    data_type norm() const { return std::sqrt(dot(*this)); }
 
-    void normalize(){
+    void normalize() {
         auto the_norm = norm();
-        if (the_norm > std::numeric_limits<data_type>::epsilon()){
+        if (the_norm > std::numeric_limits<data_type>::epsilon()) {
             const auto norm_inverse = 1.0 / the_norm;
-        for (std::size_t i = 0; i < size(); ++i){
-            at(i) *= norm_inverse;
-        }
-             
+            for (std::size_t i = 0; i < size(); ++i) {
+                at(i) *= norm_inverse;
+            }
         }
     }
 
