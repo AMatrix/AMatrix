@@ -2,6 +2,7 @@
 
 // A matrix Library to be simple and fast
 #include <cmath>
+#include <limits>
 #include "matrix_expression.h"
 
 namespace AMatrix {
@@ -390,6 +391,17 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>, row_ma
 
     data_type norm() const {
         return std::sqrt(dot(*this));
+    }
+
+    void normalize(){
+        auto the_norm = norm();
+        if (the_norm > std::numeric_limits<data_type>::epsilon()){
+            const auto norm_inverse = 1.0 / the_norm;
+        for (std::size_t i = 0; i < size(); ++i){
+            at(i) *= norm_inverse;
+        }
+             
+        }
     }
 
     Matrix& noalias() { return *this; }
