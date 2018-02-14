@@ -384,6 +384,10 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>, row_ma
         return result;
     }
 
+    data_type norm() {
+        return dot(*this);
+    }
+
     Matrix& noalias() { return *this; }
 
     TransposeMatrix<Matrix<TDataType, TSize1, TSize2>> transpose() {
