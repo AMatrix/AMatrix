@@ -25,9 +25,9 @@ class MatrixStorage : public DenseStorage<TDataType, TSize1*TSize2> {
         : DenseStorage(Other) {}
 
     template <typename TOtherMatrixType>
-    explicit MatrixStorage(TOtherMatrixType const& Other)  : DenseStorage(Other) {}
+    explicit MatrixStorage(TOtherMatrixType const& Other)  : base_type(Other) {}
 
-    explicit MatrixStorage(std::initializer_list<TDataType> InitialValues) : DenseStorage(InitialValues) {}
+    explicit MatrixStorage(std::initializer_list<TDataType> InitialValues) : base_type(InitialValues) {}
 
     template <typename TExpressionType, std::size_t TCategory>
     MatrixStorage& operator=(
