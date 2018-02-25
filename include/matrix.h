@@ -24,8 +24,6 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>,
     explicit Matrix(std::size_t TheSize1, std::size_t TheSize2)
         : base_type(TheSize1, TheSize2) {}
 
-    explicit Matrix(TDataType const& InitialValue) : base_type(InitialValue) {}
-
     Matrix(Matrix const& Other) : base_type(Other) {}
 
     Matrix(Matrix&& Other) : base_type(Other) {}

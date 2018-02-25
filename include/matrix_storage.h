@@ -11,11 +11,6 @@ class MatrixStorage {
 
     explicit MatrixStorage(std::size_t TheSize1, std::size_t TheSize2) {}
 
-    explicit MatrixStorage(TDataType const& InitialValue) {
-        for (std::size_t i = 0; i < size(); i++)
-            _data[i] = InitialValue;
-    }
-
     MatrixStorage(MatrixStorage const& Other) {
         for (std::size_t i = 0; i < size(); i++)
             _data[i] = Other._data[i];
