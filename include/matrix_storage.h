@@ -22,7 +22,7 @@ class MatrixStorage : public DenseStorage<TDataType, TSize1*TSize2> {
     template <typename TExpressionType, std::size_t TCategory>
     explicit MatrixStorage(
         MatrixExpression<TExpressionType, TCategory> const& Other)
-        : DenseStorage(Other) {}
+        : base_type(Other) {}
 
     template <typename TOtherMatrixType>
     explicit MatrixStorage(TOtherMatrixType const& Other)  : base_type(Other) {}
