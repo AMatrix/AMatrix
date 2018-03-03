@@ -3,14 +3,13 @@
 namespace AMatrix {
 
 template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
-class MatrixStorage : public DenseStorage<TDataType, TSize1*TSize2> {
-
+class MatrixStorage : public DenseStorage<TDataType, TSize1 * TSize2> {
    public:
-    using base_type = DenseStorage<TDataType, TSize1*TSize2>;
+    using base_type = DenseStorage<TDataType, TSize1 * TSize2>;
     using base_type::at;
-    using base_type::size;
     using base_type::data;
-   
+    using base_type::size;
+
     MatrixStorage() {}
 
     explicit MatrixStorage(std::size_t TheSize1, std::size_t TheSize2) {}
@@ -25,25 +24,26 @@ class MatrixStorage : public DenseStorage<TDataType, TSize1*TSize2> {
         : base_type(Other) {}
 
     template <typename TOtherMatrixType>
-    explicit MatrixStorage(TOtherMatrixType const& Other)  : base_type(Other) {}
+    explicit MatrixStorage(TOtherMatrixType const& Other) : base_type(Other) {}
 
-    explicit MatrixStorage(std::initializer_list<TDataType> InitialValues) : base_type(InitialValues) {}
+    explicit MatrixStorage(std::initializer_list<TDataType> InitialValues)
+        : base_type(InitialValues) {}
 
     template <typename TExpressionType, std::size_t TCategory>
     MatrixStorage& operator=(
         MatrixExpression<TExpressionType, TCategory> const& Other) {
-        base_type::operator=(Other);    
+        base_type::operator=(Other);
         return *this;
     }
 
     template <typename TOtherMatrixType>
     MatrixStorage& operator=(TOtherMatrixType const& Other) {
-        base_type::operator=(Other);    
+        base_type::operator=(Other);
         return *this;
     }
 
     MatrixStorage& operator=(MatrixStorage const& Other) {
-        base_type::operator=(Other);    
+        base_type::operator=(Other);
         return *this;
     }
 
@@ -55,9 +55,7 @@ class MatrixStorage : public DenseStorage<TDataType, TSize1*TSize2> {
         return at(i, j);
     }
 
-    TDataType& at(std::size_t i, std::size_t j) {
-        return at(i * TSize2 + j);
-    }
+    TDataType& at(std::size_t i, std::size_t j) { return at(i * TSize2 + j); }
 
     TDataType const& at(std::size_t i, std::size_t j) const {
         return at(i * TSize2 + j);
@@ -146,48 +144,27 @@ class MatrixStorage<TDataType, dynamic, dynamic> {
     MatrixStorage& operator=(
         MatrixExpression<TExpressionType, TCategory> const& Other) {
         auto& other_expression = Other.expression();
-        std::size_t new_size =
-            other_expression.size1() * other_expression.size2();
-        if (size() != new_size) {
-            delete[] _data;
-            _data = new TDataType[new_size];
-        }
-        _size1 = other_expression.size1();
-        _size2 = other_expression.size2();
-
+        resize(other_expression.size1(), other_expression.size2());
         auto i_data = _data;
         for (std::size_t i = 0; i < size1(); i++)
             for (std::size_t j = 0; j < size2(); j++)
-                *(i_data++) = Other.expression()(i, j);
+                *(i_data++) = other_expression(i, j);
         return *this;
     }
 
     template <typename TExpressionType>
-    MatrixStorage& operator=(MatrixExpression<TExpressionType, row_major_access> const& Other) {
+    MatrixStorage& operator=(
+        MatrixExpression<TExpressionType, row_major_access> const& Other) {
         auto the_expression = Other.expression();
-        std::size_t new_size = the_expression.size1() * the_expression.size2();
-        if (size() != new_size) {
-            delete[] _data;
-            _data = new TDataType[new_size];
-        }
-        _size1 = the_expression.size1();
-        _size2 = the_expression.size2();
-
+        resize(the_expression.size1(), the_expression.size2());
         auto i_data = _data;
         for (std::size_t i = 0; i < size(); i++)
-                *(i_data++) = the_expression[i];
+            *(i_data++) = the_expression[i];
         return *this;
     }
 
     MatrixStorage& operator=(MatrixStorage const& Other) {
-        std::size_t new_size = Other.size1() * Other.size2();
-        if (size() != new_size) {
-            delete[] _data;
-            _data = new TDataType[new_size];
-        }
-        _size1 = Other.size1();
-        _size2 = Other.size2();
-
+        resize(Other.size1(), Other.size2());
         for (std::size_t i = 0; i < size(); i++)
             _data[i] = Other._data[i];
         return *this;
@@ -233,7 +210,7 @@ class MatrixStorage<TDataType, dynamic, dynamic> {
 
     std::size_t size() const { return _size1 * _size2; }
 
-    void resize(std::size_t NewSize1, std::size_t NewSize2){
+    void resize(std::size_t NewSize1, std::size_t NewSize2) {
         std::size_t new_size = NewSize1 * NewSize2;
         if (size() != new_size) {
             delete[] _data;
@@ -269,8 +246,7 @@ class MatrixStorage<TDataType, TSize1, dynamic> {
             _data[i] = InitialValue;
     }
 
-    MatrixStorage(MatrixStorage const& Other)
-        : _size2(Other.size2()) {
+    MatrixStorage(MatrixStorage const& Other) : _size2(Other.size2()) {
         _data = new TDataType[size()];
         for (std::size_t i = 0; i < size(); i++)
             _data[i] = Other._data[i];
@@ -282,7 +258,7 @@ class MatrixStorage<TDataType, TSize1, dynamic> {
     }
 
     explicit MatrixStorage(std::initializer_list<TDataType> InitialValues)
-        : _size2(InitialValues.size()/TSize1), _data(nullptr) {
+        : _size2(InitialValues.size() / TSize1), _data(nullptr) {
         if (_size2 == 0)
             return;
         _data = new TDataType[size()];
@@ -408,10 +384,10 @@ class MatrixStorage<TDataType, TSize1, dynamic> {
 
     std::size_t size() const { return TSize1 * _size2; }
 
-    void resize(std::size_t NewSize){
+    void resize(std::size_t NewSize) {
         if (size2() != NewSize) {
             delete[] _data;
-            _data = new TDataType[ TSize1*NewSize];
+            _data = new TDataType[TSize1 * NewSize];
         }
         _size2 = NewSize;
     }
@@ -442,8 +418,7 @@ class MatrixStorage<TDataType, dynamic, TSize2> {
             _data[i] = InitialValue;
     }
 
-    MatrixStorage(MatrixStorage const& Other)
-        : _size1(Other.size1()) {
+    MatrixStorage(MatrixStorage const& Other) : _size1(Other.size1()) {
         _data = new TDataType[size()];
         for (std::size_t i = 0; i < size(); i++)
             _data[i] = Other._data[i];
@@ -581,10 +556,10 @@ class MatrixStorage<TDataType, dynamic, TSize2> {
 
     std::size_t size() const { return _size1 * TSize2; }
 
-    void resize(std::size_t NewSize){
+    void resize(std::size_t NewSize) {
         if (size1() != NewSize) {
             delete[] _data;
-            _data = new TDataType[ NewSize * TSize2];
+            _data = new TDataType[NewSize * TSize2];
         }
         _size1 = NewSize;
     }
@@ -594,4 +569,4 @@ class MatrixStorage<TDataType, dynamic, TSize2> {
     TDataType const* data() const { return _data; }
 };
 
-} // namespace AMatrix
+}  // namespace AMatrix
