@@ -233,6 +233,16 @@ class MatrixStorage<TDataType, dynamic, dynamic> {
 
     std::size_t size() const { return _size1 * _size2; }
 
+    void resize(std::size_t NewSize1, std::size_t NewSize2){
+        std::size_t new_size = NewSize1 * NewSize2;
+        if (size() != new_size) {
+            delete[] _data;
+            _data = new TDataType[new_size];
+        }
+        _size1 = NewSize1;
+        _size2 = NewSize2;
+    }
+
     TDataType* data() { return _data; }
 
     TDataType const* data() const { return _data; }
@@ -398,6 +408,14 @@ class MatrixStorage<TDataType, TSize1, dynamic> {
 
     std::size_t size() const { return TSize1 * _size2; }
 
+    void resize(std::size_t NewSize){
+        if (size2() != NewSize) {
+            delete[] _data;
+            _data = new TDataType[ TSize1*NewSize];
+        }
+        _size2 = NewSize;
+    }
+
     TDataType* data() { return _data; }
 
     TDataType const* data() const { return _data; }
@@ -562,6 +580,14 @@ class MatrixStorage<TDataType, dynamic, TSize2> {
     constexpr std::size_t size2() const { return TSize2; }
 
     std::size_t size() const { return _size1 * TSize2; }
+
+    void resize(std::size_t NewSize){
+        if (size1() != NewSize) {
+            delete[] _data;
+            _data = new TDataType[ NewSize * TSize2];
+        }
+        _size1 = NewSize;
+    }
 
     TDataType* data() { return _data; }
 
