@@ -106,6 +106,14 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>,
         return *this;
     }
 
+    Matrix& operator/=(data_type TheValue) {
+        auto inverse_of_value = 1.00 / TheValue;
+        for (std::size_t i = 0; i < size(); i++)
+            at(i) *= inverse_of_value;
+
+        return *this;
+    }
+
     void resize(std::size_t NewSize1, std::size_t NewSize2){
         base_type::resize(NewSize1,NewSize2);
     }
