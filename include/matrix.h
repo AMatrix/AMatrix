@@ -152,6 +152,23 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>,
     TransposeMatrix<Matrix<TDataType, TSize1, TSize2>> transpose() {
         return TransposeMatrix<Matrix<TDataType, TSize1, TSize2>>(*this);
     }
+
+    class iterator : public std::iterator<std::random_access_iterator_tag, TDataType> {
+            TDataType* _p_data;
+        public:
+            iterator() = default;
+            iterator(iterator const& Other) = default;
+            iterator(iterator&& Other) = default;
+            iterator(TDataType* pData) : _p_data(pData) {}
+
+            iterator& operator=(iterator const& Other) = default;
+
+            
+
+
+            
+
+    };
 };
 
 template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
