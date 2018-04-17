@@ -151,23 +151,25 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>,
         return TransposeMatrix<Matrix<TDataType, TSize1, TSize2>>(*this);
     }
 
-    class iterator
+private:
+
+    class random_access_iterator
         : public std::iterator<std::random_access_iterator_tag, TDataType> {
         TDataType* _p_data;
 
        public:
-        iterator() = default;
-        iterator(iterator const& Other) = default;
-        iterator(iterator&& Other) = default;
-        iterator(TDataType* pData) : _p_data(pData) {}
+        random_access_iterator() = default;
+        random_access_iterator(random_access_iterator const& Other) = default;
+        random_access_iterator(random_access_iterator&& Other) = default;
+        random_access_iterator(TDataType* pData) : _p_data(pData) {}
 
-        iterator& operator=(iterator const& Other) = default;
+        random_access_iterator& operator=(random_access_iterator const& Other) = default;
 
-        bool operator==(const iterator& Other) const {
+        bool operator==(const random_access_iterator& Other) const {
             return _p_data == Other._p_data;
         }
 
-        bool operator!=(const iterator& Other) const {
+        bool operator!=(const random_access_iterator& Other) const {
             return _p_data != Other._p_data;
         }
         
