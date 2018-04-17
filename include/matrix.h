@@ -114,13 +114,11 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>,
         return *this;
     }
 
-    void resize(std::size_t NewSize1, std::size_t NewSize2){
-        base_type::resize(NewSize1,NewSize2);
+    void resize(std::size_t NewSize1, std::size_t NewSize2) {
+        base_type::resize(NewSize1, NewSize2);
     }
 
-    void resize(std::size_t NewSize){
-        base_type::resize(NewSize);
-    }
+    void resize(std::size_t NewSize) { base_type::resize(NewSize); }
 
     template <typename TExpressionType>
     data_type dot(
@@ -153,21 +151,33 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>,
         return TransposeMatrix<Matrix<TDataType, TSize1, TSize2>>(*this);
     }
 
-    class iterator : public std::iterator<std::random_access_iterator_tag, TDataType> {
-            TDataType* _p_data;
-        public:
-            iterator() = default;
-            iterator(iterator const& Other) = default;
-            iterator(iterator&& Other) = default;
-            iterator(TDataType* pData) : _p_data(pData) {}
+    class iterator
+        : public std::iterator<std::random_access_iterator_tag, TDataType> {
+        TDataType* _p_data;
 
-            iterator& operator=(iterator const& Other) = default;
+       public:
+        iterator() = default;
+        iterator(iterator const& Other) = default;
+        iterator(iterator&& Other) = default;
+        iterator(TDataType* pData) : _p_data(pData) {}
 
-            
+        iterator& operator=(iterator const& Other) = default;
 
+        bool operator==(const iterator& Other) const {
+            return _p_data == Other._p_data;
+        }
 
-            
-
+        bool operator!=(const iterator& Other) const {
+            return _p_data != Other._p_data;
+        }
+        
+        TDataType const& operator*() const { return *_p_data; }
+        
+        TDataType& operator*() { return *_p_data; }
+        
+        TDataType* const operator->() const { return _p_data; }
+        
+        TDataType* operator->() { return _p_data; }
     };
 };
 
