@@ -15,10 +15,10 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>,
     using data_type = TDataType;
     using base_type = MatrixStorage<TDataType, TSize1, TSize2>;
     using base_type::at;
+    using base_type::data;
     using base_type::size;
     using base_type::size1;
     using base_type::size2;
-    using base_type::data;
 
     Matrix() {}
 
@@ -186,6 +186,7 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>,
             ++_p_data;
             return *this;
         }
+
         random_access_iterator operator++(int) {
             random_access_iterator temp(*this);
             ++_p_data;
@@ -196,19 +197,33 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>,
             --_p_data;
             return *this;
         }
+
         random_access_iterator operator--(int) {
             random_access_iterator temp(*this);
             --_p_data;
             return temp;
         }
+
+        random_access_iterator& operator+=(std::size_t Offset) {
+            _p_data += Offset;
+            return *this;
+        }
+
+        random_access_iterator& operator-=(std::size_t Offset) {
+            _p_data -= Offset;
+            return *this;
+        }
+
+        
+        
+
     };
 
-    public:
-        using iterator = random_access_iterator;
+   public:
+    using iterator = random_access_iterator;
 
-        iterator begin(){return iterator(data()); }
-        iterator end(){return iterator(data() + size()); }
-
+    iterator begin() { return iterator(data()); }
+    iterator end() { return iterator(data() + size()); }
 };
 
 template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
