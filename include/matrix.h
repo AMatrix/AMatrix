@@ -191,6 +191,13 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>,
             return temp;
         }
     };
+
+    public:
+        using iterator = random_access_iterator;
+
+        iterator begin(){return iterator(data()); }
+        iterator end(){return iterator(data() + size()); }
+
 };
 
 template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
