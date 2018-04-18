@@ -191,6 +191,16 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>,
             ++_p_data;
             return temp;
         }
+
+        random_access_iterator& operator--() {
+            --_p_data;
+            return *this;
+        }
+        random_access_iterator operator--(int) {
+            random_access_iterator temp(*this);
+            --_p_data;
+            return temp;
+        }
     };
 
     public:

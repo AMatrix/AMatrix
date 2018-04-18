@@ -19,11 +19,31 @@ std::size_t TestMatrixIteratorAssign() {
 }
 
 template <std::size_t TSize1, std::size_t TSize2>
+std::size_t TestMatrixIteratorDecreasing() {
+    AMatrix::Matrix<double, TSize1, TSize2> a_matrix;
+    double memberwise_coeficient = 0.00;
+
+    auto i_value = a_matrix.end();
+    i_value--;
+    for (; i_value != a_matrix.begin(); i_value--)
+        *i_value = 2.33 * (++memberwise_coeficient);
+
+    for (std::size_t i = 0; i < a_matrix.size1(); i++)
+        for (std::size_t j = 0; j < a_matrix.size2(); j++) {
+            double value = 2.33 * (--memberwise_coeficient);
+
+            AMATRIX_CHECK_EQUAL(a_matrix(i, j), value);
+        }
+    return 0;  // not failed
+}
+
+template <std::size_t TSize1, std::size_t TSize2>
 std::size_t TestMatrixForEachIteratorAssign() {
     AMatrix::Matrix<double, TSize1, TSize2> a_matrix;
     double memberwise_coeficient = 0.00;
-    for (auto& i : a_matrix)
-        i = 2.33 * (++memberwise_coeficient);
+
+    for (auto& value : a_matrix)
+        value = 2.33 * (++memberwise_coeficient);
 
     memberwise_coeficient = 0.00;
     for (std::size_t i = 0; i < a_matrix.size1(); i++)
