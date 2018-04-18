@@ -18,6 +18,7 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>,
     using base_type::size;
     using base_type::size1;
     using base_type::size2;
+    using base_type::data;
 
     Matrix() {}
 
