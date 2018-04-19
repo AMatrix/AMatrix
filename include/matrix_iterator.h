@@ -3,24 +3,24 @@
 namespace AMatrix {
 
 template <typename TDataType>
-class random_access_iterator
+class RandomAccessIterator
     : public std::iterator<std::random_access_iterator_tag, TDataType> {
     TDataType* _p_data;
 
    public:
-    random_access_iterator() = default;
-    random_access_iterator(random_access_iterator const& Other) = default;
-    random_access_iterator(random_access_iterator&& Other) = default;
-    random_access_iterator(TDataType* pData) : _p_data(pData) {}
+    RandomAccessIterator() = default;
+    RandomAccessIterator(RandomAccessIterator const& Other) = default;
+    RandomAccessIterator(RandomAccessIterator&& Other) = default;
+    RandomAccessIterator(TDataType* pData) : _p_data(pData) {}
 
-    random_access_iterator& operator=(
-        random_access_iterator const& Other) = default;
+    RandomAccessIterator& operator=(
+        RandomAccessIterator const& Other) = default;
 
-    bool operator==(const random_access_iterator& Other) const {
+    bool operator==(const RandomAccessIterator& Other) const {
         return _p_data == Other._p_data;
     }
 
-    bool operator!=(const random_access_iterator& Other) const {
+    bool operator!=(const RandomAccessIterator& Other) const {
         return _p_data != Other._p_data;
     }
 
@@ -32,37 +32,39 @@ class random_access_iterator
 
     TDataType* operator->() { return _p_data; }
 
-    random_access_iterator& operator++() {
+    RandomAccessIterator& operator++() {
         ++_p_data;
         return *this;
     }
 
-    random_access_iterator operator++(int) {
-        random_access_iterator temp(*this);
+    RandomAccessIterator operator++(int) {
+        RandomAccessIterator temp(*this);
         ++_p_data;
         return temp;
     }
 
-    random_access_iterator& operator--() {
+    RandomAccessIterator& operator--() {
         --_p_data;
         return *this;
     }
 
-    random_access_iterator operator--(int) {
-        random_access_iterator temp(*this);
+    RandomAccessIterator operator--(int) {
+        RandomAccessIterator temp(*this);
         --_p_data;
         return temp;
     }
 
-    random_access_iterator& operator+=(std::size_t Offset) {
+    RandomAccessIterator& operator+=(std::size_t Offset) {
         _p_data += Offset;
         return *this;
     }
 
-    random_access_iterator& operator-=(std::size_t Offset) {
+    RandomAccessIterator& operator-=(std::size_t Offset) {
         _p_data -= Offset;
         return *this;
     }
+
+
 };
 
 }  // namespace AMatrix

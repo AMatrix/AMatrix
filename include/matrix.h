@@ -21,7 +21,7 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>,
     using base_type::size1;
     using base_type::size2;
     
-    using iterator = random_access_iterator<TDataType>;
+    using iterator = RandomAccessIterator<TDataType>;
 
 
     Matrix() {}
