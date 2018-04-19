@@ -65,6 +65,38 @@ class TransposeMatrix
     inline std::size_t size2() const { return mOriginal.size1(); }
 };
 
+template <typename TExpressionType>
+class SubMatrix : public MatrixExpression<SubMatrix<TExpressionType>> {
+    TExpressionType const& mOriginal;
+    std::size_t _origin_index1;
+    std::size_t _origin_index2;
+    std::size_t _size1;
+    std::size_t _size2;
+
+   public:
+    using data_type = typename TExpressionType::data_type;
+    SubMatrix() = delete;
+
+    SubMatrix(TExpressionType const& Original, std::size_t OriginIndex1,
+        std::size_t OriginIndex2, std::size_t TheSize1, std::size_t TheSize2)
+        : mOriginal(Original),
+          _origin_index1(OriginIndex1),
+          _origin_index2(OriginIndex2),
+          _size1(TheSize1),
+          _size2(TheSize2) {}
+
+    inline data_type const& operator()(std::size_t i, std::size_t j) const {
+        return mOriginal(j, i);
+    }
+
+    inline data_type& operator()(std::size_t i, std::size_t j) {
+        return mOriginal(j, i);
+    }
+
+    inline std::size_t size1() const { _size2(); }
+    inline std::size_t size2() const { _size1(); }
+};
+
 template <typename TDataType>
 class ZeroMatrix
     : public MatrixExpression<ZeroMatrix<TDataType>, row_major_access> {
