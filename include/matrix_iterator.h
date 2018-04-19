@@ -9,7 +9,7 @@ class RandomAccessIterator
 
    public:
     using base_type = std::iterator<std::random_access_iterator_tag, TDataType>;
-    using base_type::difference_type;
+    using typename base_type::difference_type;
     RandomAccessIterator() = default;
     RandomAccessIterator(RandomAccessIterator const& Other) = default;
     RandomAccessIterator(RandomAccessIterator&& Other) = default;
