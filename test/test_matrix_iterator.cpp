@@ -75,7 +75,6 @@ std::size_t TestMatrixIteratorArithmetic() {
         }
 
     // test n + it operator
-    int counter = 0;
     for (std::size_t i = 0; i < a_matrix.size1(); i++)
         for (std::size_t j = 0; j < a_matrix.size2(); j++) {
             AMATRIX_CHECK_EQUAL(a_matrix(i, j),
