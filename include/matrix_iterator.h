@@ -68,26 +68,35 @@ class RandomAccessIterator
 
     friend RandomAccessIterator operator+(
         RandomAccessIterator First, difference_type Second) {
-        First += Second; 
-        return First;  
+        First += Second;
+        return First;
     }
 
     friend RandomAccessIterator operator+(
         difference_type First, RandomAccessIterator Second) {
-        Second += First; 
-        return Second;  
+        Second += First;
+        return Second;
     }
 
     friend RandomAccessIterator operator-(
         RandomAccessIterator First, difference_type Second) {
-        First -= Second; 
-        return First;  
+        First -= Second;
+        return First;
     }
 
     friend difference_type operator-(
         RandomAccessIterator const& First, RandomAccessIterator const& Second) {
         return First._p_data - Second._p_data;
     }
+
+    friend bool operator<(
+         RandomAccessIterator const& First,  RandomAccessIterator const& Second) {
+             return First._p_data < Second._p_data;
+    }
+
+    friend bool operator>( RandomAccessIterator const& First,  RandomAccessIterator const& Second) { return Second < First; }
+    friend bool operator<=( RandomAccessIterator const& First,  RandomAccessIterator const& Second) { return !(First > Second); }
+    friend bool operator>=( RandomAccessIterator const& First,  RandomAccessIterator const& Second) { return !(First < Second); }
 };
 
 }  // namespace AMatrix

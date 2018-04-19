@@ -113,6 +113,26 @@ std::size_t TestMatrixForEachIteratorAssign() {
     return 0;  // not failed
 }
 
+template <std::size_t TSize1, std::size_t TSize2>
+std::size_t TestMatrixInequality() {
+    AMatrix::Matrix<double, TSize1, TSize2> a_matrix(AMatrix::ZeroMatrix<double>(TSize1, TSize2));
+
+    for(auto i = a_matrix.begin() ; i != a_matrix.end() ; i++){
+        AMATRIX_CHECK(i >= a_matrix.begin());
+        AMATRIX_CHECK(i <= a_matrix.end());
+    }
+
+    for(auto i = a_matrix.begin() + 1 ; i != a_matrix.end()  ; i++){
+        AMATRIX_CHECK(i > a_matrix.begin());
+    }
+
+    for(auto i = a_matrix.begin() ; i != a_matrix.end() - 1 ; i++){
+        AMATRIX_CHECK(i < a_matrix.end());
+    }
+
+    return 0;  // not failed
+}
+
 int main() {
     std::size_t number_of_failed_tests = 0;
     number_of_failed_tests += TestMatrixIteratorAssign<1, 1>();
@@ -166,6 +186,19 @@ int main() {
     number_of_failed_tests += TestMatrixForEachIteratorAssign<1, 3>();
     number_of_failed_tests += TestMatrixForEachIteratorAssign<2, 3>();
     number_of_failed_tests += TestMatrixForEachIteratorAssign<3, 3>();
+
+    number_of_failed_tests += TestMatrixInequality<1, 1>();
+
+    number_of_failed_tests += TestMatrixInequality<1, 2>();
+    number_of_failed_tests += TestMatrixInequality<2, 1>();
+    number_of_failed_tests += TestMatrixInequality<2, 2>();
+
+    number_of_failed_tests += TestMatrixInequality<3, 1>();
+    number_of_failed_tests += TestMatrixInequality<3, 2>();
+    number_of_failed_tests += TestMatrixInequality<3, 3>();
+    number_of_failed_tests += TestMatrixInequality<1, 3>();
+    number_of_failed_tests += TestMatrixInequality<2, 3>();
+    number_of_failed_tests += TestMatrixInequality<3, 3>();
 
     std::cout << number_of_failed_tests << "tests failed" << std::endl;
 
