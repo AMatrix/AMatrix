@@ -22,6 +22,7 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>,
     using base_type::size2;
     
     using iterator = RandomAccessIterator<TDataType>;
+    using const_iterator = RandomAccessIterator<const TDataType>;
 
 
     Matrix() {}
@@ -126,7 +127,12 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>,
     void resize(std::size_t NewSize) { base_type::resize(NewSize); }
 
     iterator begin() { return iterator(data()); }
+
     iterator end() { return iterator(data() + size()); }
+
+    const_iterator begin() const { return const_iterator(data()); }
+
+    const_iterator end() const { return const_iterator(data() + size()); }
 
     template <typename TExpressionType>
     data_type dot(

@@ -132,6 +132,24 @@ std::size_t TestMatrixInequality() {
     return 0;  // not failed
 }
 
+template <std::size_t TSize1, std::size_t TSize2>
+std::size_t TestMatrixConstIterator() {
+    AMatrix::Matrix<double, TSize1, TSize2> a_matrix;
+    double memberwise_coeficient = 0.00;
+
+    for (auto& value : a_matrix)
+        value = 2.33 * (++memberwise_coeficient);
+
+    memberwise_coeficient = 0.00;
+    AMatrix::Matrix<double, TSize1, TSize2>::const_iterator i_const = a_matrix.begin();
+    for (std::size_t i = 0; i < a_matrix.size1(); i++)
+        for (std::size_t j = 0; j < a_matrix.size2(); j++) {
+            double value = 2.33 * (++memberwise_coeficient);
+            AMATRIX_CHECK_EQUAL(*(i_const++), value);
+        }
+    return 0;  // not failed
+}
+
 int main() {
     std::size_t number_of_failed_tests = 0;
     number_of_failed_tests += TestMatrixIteratorAssign<1, 1>();
@@ -198,6 +216,19 @@ int main() {
     number_of_failed_tests += TestMatrixInequality<1, 3>();
     number_of_failed_tests += TestMatrixInequality<2, 3>();
     number_of_failed_tests += TestMatrixInequality<3, 3>();
+
+    number_of_failed_tests += TestMatrixConstIterator<1, 1>();
+
+    number_of_failed_tests += TestMatrixConstIterator<1, 2>();
+    number_of_failed_tests += TestMatrixConstIterator<2, 1>();
+    number_of_failed_tests += TestMatrixConstIterator<2, 2>();
+
+    number_of_failed_tests += TestMatrixConstIterator<3, 1>();
+    number_of_failed_tests += TestMatrixConstIterator<3, 2>();
+    number_of_failed_tests += TestMatrixConstIterator<3, 3>();
+    number_of_failed_tests += TestMatrixConstIterator<1, 3>();
+    number_of_failed_tests += TestMatrixConstIterator<2, 3>();
+    number_of_failed_tests += TestMatrixConstIterator<3, 3>();
 
     std::cout << number_of_failed_tests << "tests failed" << std::endl;
 

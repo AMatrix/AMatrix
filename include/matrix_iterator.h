@@ -15,6 +15,10 @@ class RandomAccessIterator
     RandomAccessIterator(RandomAccessIterator&& Other) = default;
     RandomAccessIterator(TDataType* pData) : _p_data(pData) {}
 
+    template <typename TOtherDataType>
+    RandomAccessIterator(RandomAccessIterator<TOtherDataType> const& Other):
+        _p_data(Other.operator->()) {}
+
     RandomAccessIterator& operator=(
         RandomAccessIterator const& Other) = default;
 
@@ -90,13 +94,22 @@ class RandomAccessIterator
     }
 
     friend bool operator<(
-         RandomAccessIterator const& First,  RandomAccessIterator const& Second) {
-             return First._p_data < Second._p_data;
+        RandomAccessIterator const& First, RandomAccessIterator const& Second) {
+        return First._p_data < Second._p_data;
     }
 
-    friend bool operator>( RandomAccessIterator const& First,  RandomAccessIterator const& Second) { return Second < First; }
-    friend bool operator<=( RandomAccessIterator const& First,  RandomAccessIterator const& Second) { return !(First > Second); }
-    friend bool operator>=( RandomAccessIterator const& First,  RandomAccessIterator const& Second) { return !(First < Second); }
+    friend bool operator>(
+        RandomAccessIterator const& First, RandomAccessIterator const& Second) {
+        return Second < First;
+    }
+    friend bool operator<=(
+        RandomAccessIterator const& First, RandomAccessIterator const& Second) {
+        return !(First > Second);
+    }
+    friend bool operator>=(
+        RandomAccessIterator const& First, RandomAccessIterator const& Second) {
+        return !(First < Second);
+    }
 };
 
 }  // namespace AMatrix
