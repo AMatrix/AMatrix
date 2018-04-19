@@ -86,8 +86,12 @@ std::size_t TestMatrixIteratorArithmetic() {
     for (std::size_t i = 0; i < a_matrix.size1(); i++)
         for (std::size_t j = 0; j < a_matrix.size2(); j++) {
             AMATRIX_CHECK_EQUAL(a_matrix(i, j),
-                *(a_matrix.end() - (a_matrix.size() - i * a_matrix.size2() - j)));
+                *(a_matrix.end() -
+                    (a_matrix.size() - i * a_matrix.size2() - j)));
         }
+
+    // test it1 - it2 operator
+    AMATRIX_CHECK_EQUAL(a_matrix.size(), a_matrix.end() - a_matrix.begin());
 
     return 0;  // not failed
 }
