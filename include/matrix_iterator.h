@@ -8,6 +8,8 @@ class RandomAccessIterator
     TDataType* _p_data;
 
    public:
+    using base_type = std::iterator<std::random_access_iterator_tag, TDataType>;
+    using base_type::difference_type;
     RandomAccessIterator() = default;
     RandomAccessIterator(RandomAccessIterator const& Other) = default;
     RandomAccessIterator(RandomAccessIterator&& Other) = default;
@@ -54,17 +56,27 @@ class RandomAccessIterator
         return temp;
     }
 
-    RandomAccessIterator& operator+=(std::size_t Offset) {
+    RandomAccessIterator& operator+=(difference_type Offset) {
         _p_data += Offset;
         return *this;
     }
 
-    RandomAccessIterator& operator-=(std::size_t Offset) {
+    RandomAccessIterator& operator-=(difference_type Offset) {
         _p_data -= Offset;
         return *this;
     }
 
+    friend RandomAccessIterator operator+(
+        RandomAccessIterator First, difference_type Second) {
+        First += Second; 
+        return First;  
+    }
 
+    friend RandomAccessIterator operator+(
+        difference_type First, RandomAccessIterator Second) {
+        Second += First; 
+        return Second;  
+    }
 };
 
 }  // namespace AMatrix

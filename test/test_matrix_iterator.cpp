@@ -53,7 +53,7 @@ std::size_t TestMatrixIteratorArithmetic() {
     auto i_value = a_matrix.begin();
     for (; i_value != a_matrix.end(); i_value++)
         *i_value = (++memberwise_coeficient);
-
+    // test -= and +=
     i_value -= a_matrix.size();
     for (std::size_t i = 0; i < a_matrix.size1(); i++)
         for (std::size_t j = 0; j < a_matrix.size2(); j++) {
@@ -65,6 +65,20 @@ std::size_t TestMatrixIteratorArithmetic() {
         for (int j = a_matrix.size2() - 1; j >= 0; j--) {
             i_value -= 1;
             AMATRIX_CHECK_EQUAL(a_matrix(i, j), *i_value);
+        }
+
+    // test it + n operator
+    std::size_t counter = 0;
+    for (std::size_t i = 0; i < a_matrix.size1(); i++)
+        for (std::size_t j = 0; j < a_matrix.size2(); j++) {
+            AMATRIX_CHECK_EQUAL(a_matrix(i, j), *(a_matrix.begin() + (counter++)));
+        }
+
+    // test n + it operator
+    counter = 0;
+    for (std::size_t i = 0; i < a_matrix.size1(); i++)
+        for (std::size_t j = 0; j < a_matrix.size2(); j++) {
+            AMATRIX_CHECK_EQUAL(a_matrix(i, j), *((counter++) + a_matrix.begin()));
         }
 
     
