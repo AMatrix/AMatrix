@@ -77,6 +77,12 @@ class RandomAccessIterator
         Second += First; 
         return Second;  
     }
+
+    friend RandomAccessIterator operator-(
+        RandomAccessIterator First, difference_type Second) {
+        First -= Second; 
+        return First;  
+    }
 };
 
 }  // namespace AMatrix

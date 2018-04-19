@@ -41,7 +41,7 @@ std::size_t TestMatrixIteratorForwardBackward() {
         for (int j = a_matrix.size2() - 1; j >= 0; j--) {
             AMATRIX_CHECK_EQUAL(a_matrix(i, j), *(--i_value));
         }
-    
+
     return 0;  // not failed
 }
 
@@ -68,20 +68,27 @@ std::size_t TestMatrixIteratorArithmetic() {
         }
 
     // test it + n operator
-    std::size_t counter = 0;
     for (std::size_t i = 0; i < a_matrix.size1(); i++)
         for (std::size_t j = 0; j < a_matrix.size2(); j++) {
-            AMATRIX_CHECK_EQUAL(a_matrix(i, j), *(a_matrix.begin() + (counter++)));
+            AMATRIX_CHECK_EQUAL(a_matrix(i, j),
+                *(a_matrix.begin() + (i * a_matrix.size2() + j)));
         }
 
     // test n + it operator
-    counter = 0;
+    int counter = 0;
     for (std::size_t i = 0; i < a_matrix.size1(); i++)
         for (std::size_t j = 0; j < a_matrix.size2(); j++) {
-            AMATRIX_CHECK_EQUAL(a_matrix(i, j), *((counter++) + a_matrix.begin()));
+            AMATRIX_CHECK_EQUAL(a_matrix(i, j),
+                *((i * a_matrix.size2() + j) + a_matrix.begin()));
         }
 
-    
+    // test it - n operator
+    for (std::size_t i = 0; i < a_matrix.size1(); i++)
+        for (std::size_t j = 0; j < a_matrix.size2(); j++) {
+            AMATRIX_CHECK_EQUAL(a_matrix(i, j),
+                *(a_matrix.end() - (a_matrix.size() - i * a_matrix.size2() - j)));
+        }
+
     return 0;  // not failed
 }
 
