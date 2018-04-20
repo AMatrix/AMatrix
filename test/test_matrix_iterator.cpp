@@ -141,7 +141,7 @@ std::size_t TestMatrixConstIterator() {
         value = 2.33 * (++memberwise_coeficient);
 
     memberwise_coeficient = 0.00;
-    AMatrix::Matrix<double, TSize1, TSize2>::const_iterator i_const = a_matrix.begin();
+    typename AMatrix::Matrix<double, TSize1, TSize2>::const_iterator i_const = a_matrix.begin();
     for (std::size_t i = 0; i < a_matrix.size1(); i++)
         for (std::size_t j = 0; j < a_matrix.size2(); j++) {
             double value = 2.33 * (++memberwise_coeficient);
