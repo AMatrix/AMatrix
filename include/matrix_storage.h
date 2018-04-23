@@ -1,3 +1,5 @@
+#pragma once
+
 #include "dense_storage.h"
 
 namespace AMatrix {
