@@ -123,6 +123,27 @@ class ZeroMatrix
     inline std::size_t size2() const { return _size2; }
 };
 
+template <typename TDataType>
+class IdentityMatrix
+    : public MatrixExpression<IdentityMatrix<TDataType>, row_major_access> {
+    std::size_t _size;
+
+   public:
+    using data_type = TDataType;
+
+    IdentityMatrix() = delete;
+
+    IdentityMatrix(std::size_t Size) : _size(Size) {}
+
+    inline TDataType operator()(std::size_t i, std::size_t j) const {
+        return 1.00 * (i == j);
+    }
+
+    inline std::size_t size1() const { return _size; }
+    inline std::size_t size2() const { return _size; }
+    inline std::size_t size() const { return _size * _size; }
+};
+
 template <typename TExpression1Type, typename TExpression2Type>
 class MatrixSumExpression
     : public MatrixExpression<
