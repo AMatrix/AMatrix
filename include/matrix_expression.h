@@ -401,4 +401,40 @@ MatrixProductExpression<TExpression1Type, TExpression2Type> operator*(
         First.expression(), Second.expression());
 }
 
+
+template <typename TExpression1Type, typename TExpression2Type>
+class VectorOuterProductExpression
+    : public MatrixExpression<
+          VectorOuterProductExpression<TExpression1Type, TExpression2Type>,
+          unordered_access> {
+    TExpression1Type const& _first;
+    TExpression2Type const& _second;
+
+   public:
+    VectorOuterProductExpression(
+        TExpression1Type const& First, TExpression2Type const& Second)
+        : _first(First), _second(Second) {}
+    using data_type = typename TExpression1Type::data_type;
+
+    std::size_t size1() const { return _first.size(); }
+
+    std::size_t size2() const { return _second.size(); }
+
+    std::size_t size() const { return size() * size(); }
+
+    inline data_type operator()(std::size_t i, std::size_t j) const {
+        return _first[i]*_second[j];
+    }
+};
+
+template <typename TExpression1Type, typename TExpression2Type,
+    std::size_t TCategory1, std::size_t TCategory2>
+VectorOuterProductExpression<TExpression1Type, TExpression2Type> OuterProduct(
+    MatrixExpression<TExpression1Type, TCategory1> const& First,
+    MatrixExpression<TExpression2Type, TCategory2> const& Second) {
+    return VectorOuterProductExpression<TExpression1Type, TExpression2Type>(
+        First.expression(), Second.expression());
+}
+
+
 }  // namespace AMatrix
