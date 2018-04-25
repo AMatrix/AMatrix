@@ -49,25 +49,26 @@ class MatrixExpression {
 template <typename TExpressionType>
 class TransposeMatrix
     : public MatrixExpression<TransposeMatrix<TExpressionType>> {
-    TExpressionType const& mOriginal;
+    TExpressionType const& _original_expression;
 
    public:
     using data_type = typename TExpressionType::data_type;
     TransposeMatrix() = delete;
 
-    TransposeMatrix(TExpressionType const& Original) : mOriginal(Original) {}
+    TransposeMatrix(TExpressionType const& Original)
+        : _original_expression(Original) {}
 
     inline data_type const& operator()(std::size_t i, std::size_t j) const {
-        return mOriginal(j, i);
+        return _original_expression(j, i);
     }
 
-    inline std::size_t size1() const { return mOriginal.size2(); }
-    inline std::size_t size2() const { return mOriginal.size1(); }
+    inline std::size_t size1() const { return _original_expression.size2(); }
+    inline std::size_t size2() const { return _original_expression.size1(); }
 };
 
 template <typename TExpressionType>
 class SubMatrix : public MatrixExpression<SubMatrix<TExpressionType>> {
-    TExpressionType& mOriginal;
+    TExpressionType& _original_expression;
     std::size_t _origin_index1;
     std::size_t _origin_index2;
     std::size_t _size1;
@@ -79,22 +80,49 @@ class SubMatrix : public MatrixExpression<SubMatrix<TExpressionType>> {
 
     SubMatrix(TExpressionType& Original, std::size_t OriginIndex1,
         std::size_t OriginIndex2, std::size_t TheSize1, std::size_t TheSize2)
-        : mOriginal(Original),
+        : _original_expression(Original),
           _origin_index1(OriginIndex1),
           _origin_index2(OriginIndex2),
           _size1(TheSize1),
           _size2(TheSize2) {}
 
     inline data_type const& operator()(std::size_t i, std::size_t j) const {
-        return mOriginal(i + _origin_index1, j + _origin_index2);
+        return _original_expression(i + _origin_index1, j + _origin_index2);
     }
 
     inline data_type& operator()(std::size_t i, std::size_t j) {
-        return mOriginal(i + _origin_index1, j + _origin_index2);
+        return _original_expression(i + _origin_index1, j + _origin_index2);
     }
 
     inline std::size_t size1() const { return _size1; }
     inline std::size_t size2() const { return _size2; }
+};
+
+template <typename TExpressionType>
+class SubVector : public MatrixExpression<SubMatrix<TExpressionType>> {
+    TExpressionType& _original_expression;
+    std::size_t _origin_index;
+    std::size_t _size;
+
+   public:
+    using data_type = typename TExpressionType::data_type;
+    SubVector() = delete;
+
+    SubVector(
+        TExpressionType& Original, std::size_t OriginIndex, std::size_t TheSize)
+        : _original_expression(Original),
+          _origin_index(OriginIndex),
+          _size(TheSize) {}
+
+    inline data_type const& operator[](std::size_t i) const {
+        return _original_expression[i + _origin_index];
+    }
+
+    inline data_type& operator[](std::size_t i) {
+        return _original_expression[i + _origin_index];
+    }
+
+    inline std::size_t size() const { return _size; }
 };
 
 template <typename TDataType>
@@ -244,7 +272,7 @@ class MatrixUnaryMinusExpression
     }
 
     inline data_type operator[](std::size_t i) const {
-        return - _original_expression[i];
+        return -_original_expression[i];
     }
 };
 
