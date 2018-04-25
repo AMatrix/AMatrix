@@ -223,6 +223,32 @@ MatrixMinusExpression<TExpression1Type, TExpression2Type> operator-(
 }
 
 template <typename TExpressionType>
+class MatrixUnaryMinusExpression
+    : public MatrixExpression<MatrixUnaryMinusExpression<TExpressionType>,
+          AccessTrait<TExpressionType::category, row_major_access>::category> {
+    TExpressionType const& _original_expression;
+
+   public:
+    using data_type = typename TExpressionType::data_type;
+
+    MatrixUnaryMinusExpression(TExpressionType const& TheExpression)
+        : _original_expression(TheExpression) {}
+    std::size_t size1() const { return _original_expression.size1(); }
+
+    std::size_t size2() const { return _original_expression.size2(); }
+
+    std::size_t size() const { return _original_expression.size(); }
+
+    inline data_type operator()(std::size_t i, std::size_t j) const {
+        return -_original_expression(i, j);
+    }
+
+    inline data_type operator[](std::size_t i) const {
+        return - _original_expression[i];
+    }
+};
+
+template <typename TExpressionType>
 class MatrixScalarProductExpression
     : public MatrixExpression<MatrixScalarProductExpression<TExpressionType>,
           AccessTrait<TExpressionType::category, row_major_access>::category> {
