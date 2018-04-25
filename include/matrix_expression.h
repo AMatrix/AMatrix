@@ -333,11 +333,11 @@ class MatrixScalarDivisionExpression
     MatrixScalarDivisionExpression(
         TExpressionType const& First, data_type const& Second)
         : _first(First), _inverse_of_second(data_type(1) / Second) {}
-    std::size_t size1() const { return _second.size1(); }
+    std::size_t size1() const { return _first.size1(); }
 
-    std::size_t size2() const { return _second.size2(); }
+    std::size_t size2() const { return _first.size2(); }
 
-    std::size_t size() const { return _second.size(); }
+    std::size_t size() const { return _first.size(); }
 
     inline data_type operator()(std::size_t i, std::size_t j) const {
         return _first(i, j) * _inverse_of_second;
