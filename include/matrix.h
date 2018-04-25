@@ -72,7 +72,7 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>,
         MatrixExpression<TExpressionType, TCategory> const& Other) {
         for (std::size_t i = 0; i < size1(); i++)
             for (std::size_t j = 0; j < size2(); j++)
-                at(i, j) += Other(i, j);
+                at(i, j) += Other.expression()(i, j);
 
         return *this;
     }
@@ -91,7 +91,7 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>,
         MatrixExpression<TExpressionType, TCategory> const& Other) {
         for (std::size_t i = 0; i < size1(); i++)
             for (std::size_t j = 0; j < size2(); j++)
-                at(i, j) -= Other(i, j);
+                at(i, j) -= Other.expression()(i, j);
 
         return *this;
     }
