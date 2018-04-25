@@ -120,6 +120,10 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>,
         return *this;
     }
 
+    MatrixUnaryMinusExpression<Matrix> operator-() {
+        return MatrixUnaryMinusExpression<Matrix>(*this);
+    }
+
     void resize(std::size_t NewSize1, std::size_t NewSize2) {
         base_type::resize(NewSize1, NewSize2);
     }
