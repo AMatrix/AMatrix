@@ -114,6 +114,14 @@ class SubVector : public MatrixExpression<SubMatrix<TExpressionType>> {
           _origin_index(OriginIndex),
           _size(TheSize) {}
 
+    template <typename TOtherExpressionType>
+    SubVector& operator=(TOtherExpressionType const& Other) {
+        for(std::size_t i = 0; i < _size; i++)
+            _original_expression[i + _origin_index] = Other[i];
+
+        return *this;
+    }
+
     inline data_type const& operator[](std::size_t i) const {
         return _original_expression[i + _origin_index];
     }
