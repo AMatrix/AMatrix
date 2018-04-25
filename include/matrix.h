@@ -120,7 +120,7 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>,
         return *this;
     }
 
-    MatrixUnaryMinusExpression<Matrix> operator-() {
+    MatrixUnaryMinusExpression<Matrix> operator-() const {
         return MatrixUnaryMinusExpression<Matrix>(*this);
     }
 
