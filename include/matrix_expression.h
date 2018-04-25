@@ -324,15 +324,15 @@ template <typename TExpressionType>
 class MatrixScalarDivisionExpression
     : public MatrixExpression<MatrixScalarDivisionExpression<TExpressionType>,
           AccessTrait<TExpressionType::category, row_major_access>::category> {
-    typename TExpressionType::data_type const& _inverse_of_first;
-    TExpressionType const& _second;
+    TExpressionType const& _first;
+    typename TExpressionType::data_type const _inverse_of_second;
 
    public:
     using data_type = typename TExpressionType::data_type;
 
     MatrixScalarDivisionExpression(
-        data_type const& First, TExpressionType const& Second)
-        : _inverse_of_first(1.00 / First), _second(Second) {}
+        TExpressionType const& First, data_type const& Second)
+        : _first(First), _inverse_of_second(data_type(1) / Second) {}
     std::size_t size1() const { return _second.size1(); }
 
     std::size_t size2() const { return _second.size2(); }
@@ -340,20 +340,20 @@ class MatrixScalarDivisionExpression
     std::size_t size() const { return _second.size(); }
 
     inline data_type operator()(std::size_t i, std::size_t j) const {
-        return _inverse_of_first * _second(i, j);
+        return _first(i, j) * _inverse_of_second;
     }
 
     inline data_type operator[](std::size_t i) const {
-        return _inverse_of_first * _second[i];
+        return _first[i] * _inverse_of_second;
     }
 };
 
 template <typename TExpressionType, std::size_t TCategory>
 MatrixScalarDivisionExpression<TExpressionType> operator/(
-    typename TExpressionType::data_type const& First,
-    MatrixExpression<TExpressionType, TCategory> const& Second) {
+    MatrixExpression<TExpressionType, TCategory> const& First,
+    typename TExpressionType::data_type const& Second) {
     return MatrixScalarDivisionExpression<TExpressionType>(
-        First, Second.expression());
+        First.expression(), Second);
 }
 
 template <typename TExpression1Type, typename TExpression2Type>

@@ -50,6 +50,19 @@ int main() {
     number_of_failed_tests += TestMatrixScalarSelfDivision<2, 3>();
     number_of_failed_tests += TestMatrixScalarSelfDivision<3, 3>();
 
+    number_of_failed_tests += TestMatrixScalarDivision<1, 1>();
+
+    number_of_failed_tests += TestMatrixScalarDivision<1, 2>();
+    number_of_failed_tests += TestMatrixScalarDivision<2, 1>();
+    number_of_failed_tests += TestMatrixScalarDivision<2, 2>();
+
+    number_of_failed_tests += TestMatrixScalarDivision<3, 1>();
+    number_of_failed_tests += TestMatrixScalarDivision<3, 2>();
+    number_of_failed_tests += TestMatrixScalarDivision<3, 3>();
+    number_of_failed_tests += TestMatrixScalarDivision<1, 3>();
+    number_of_failed_tests += TestMatrixScalarDivision<2, 3>();
+    number_of_failed_tests += TestMatrixScalarDivision<3, 3>();
+
      std::cout << number_of_failed_tests << " tests failed" << std::endl;
 
     return number_of_failed_tests;
