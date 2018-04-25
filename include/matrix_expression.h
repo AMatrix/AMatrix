@@ -11,7 +11,7 @@ constexpr std::size_t unordered_access = 3;
 template <std::size_t TCategory1, std::size_t TCategory2>
 class AccessTrait {
    public:
-    static constexpr std::size_t Category = unordered_access;
+    static constexpr std::size_t category = unordered_access;
 };
 
 template <>
