@@ -126,10 +126,10 @@ class MatrixStorage<TDataType, dynamic, dynamic> {
     template <typename TExpressionType>
     explicit MatrixStorage(
         MatrixExpression<TExpressionType, row_major_access> const& Other)
-        : _size1(Other.size1()), _size2(Other.size2()) {
+        : _size1(Other.expression().size1()), _size2(Other.expression().size2()) {
         _data = new TDataType[size()];
         for (std::size_t i = 0; i < size(); i++)
-            _data[i] = Other[i];
+            _data[i] = Other.expression()[i];
     }
 
     template <typename TOtherMatrixType>
@@ -455,10 +455,10 @@ class MatrixStorage<TDataType, dynamic, TSize2> {
     template <typename TExpressionType>
     explicit MatrixStorage(
         MatrixExpression<TExpressionType, row_major_access> const& Other)
-        : _size1(Other.size1()) {
+        : _size1(Other.expression().size1()) {
         _data = new TDataType[size()];
         for (std::size_t i = 0; i < size(); i++)
-            _data[i] = Other[i];
+            _data[i] = Other.expression()[i];
     }
 
     template <typename TOtherMatrixType>
