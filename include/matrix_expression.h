@@ -116,7 +116,7 @@ class SubVector : public MatrixExpression<SubMatrix<TExpressionType>> {
 
     template <typename TOtherExpressionType>
     SubVector& operator=(TOtherExpressionType const& Other) {
-        for(std::size_t i = 0; i < _size; i++)
+        for (std::size_t i = 0; i < _size; i++)
             _original_expression[i + _origin_index] = Other[i];
 
         return *this;
@@ -401,7 +401,6 @@ MatrixProductExpression<TExpression1Type, TExpression2Type> operator*(
         First.expression(), Second.expression());
 }
 
-
 template <typename TExpression1Type, typename TExpression2Type>
 class VectorOuterProductExpression
     : public MatrixExpression<
@@ -423,7 +422,7 @@ class VectorOuterProductExpression
     std::size_t size() const { return size() * size(); }
 
     inline data_type operator()(std::size_t i, std::size_t j) const {
-        return _first[i]*_second[j];
+        return _first[i] * _second[j];
     }
 };
 
@@ -436,5 +435,85 @@ VectorOuterProductExpression<TExpression1Type, TExpression2Type> OuterProduct(
         First.expression(), Second.expression());
 }
 
+template <typename TExpressionType, typename TPermutationVectorType>
+class LUFactorization
+    : public MatrixExpression<
+          LUFactorization<TExpressionType, TPermutationVectorType>> {
+    TExpressionType& _matrix;
+    TPermutationVectorType _permutation_vector;
+    std::size_t number_of_pivoting;
+
+   public:
+    using data_type = typename TExpressionType::data_type;
+    LUFactorization() = delete;
+
+    LUFactorization(TExpressionType& Original) : _matrix(Original) {
+        PerformLU();
+    }
+
+    inline data_type const& operator()(std::size_t i, std::size_t j) const {
+        return _matrix(_permutation_vector[i], j);
+    }
+
+    inline std::size_t size1() const { return _matrix.size2(); }
+    inline std::size_t size2() const { return _matrix.size1(); }
+
+   private:
+    /// The algorithm is based on wikipedia implemenation which
+    /// can be found in https://en.wikipedia.org/wiki/LU_decomposition
+
+    int PerformLU() {
+        constexpr double tolerance = std::numeric_limits<double>::epsilon();
+        std::size_t size1 = _matrix.size1();
+        number_of_pivoting = 0;
+
+        InitializePermutationVector();
+
+        for (std::size_t i = 0; i < size1; i++) {
+            double max_pivot = 0.0;
+            std::size_t i_max = i;
+            double abs_max_pivot = 0.0;
+
+            for (std::size_t k = i; k < size1; k++)
+                if ((abs_max_pivot = fabs(_matrix(_permutation_vector[k], i))) > max_pivot) {
+                    max_pivot = abs_max_pivot;
+                    i_max = k;
+                }
+
+            if (max_pivot < tolerance)
+                return 0; // Failed
+
+            if (i_max != i) {
+                //pivoting 
+                std::size_t j = _permutation_vector[i];
+                _permutation_vector[i] = _permutation_vector[i_max];
+                _permutation_vector[i_max] = j;
+
+                //counting pivots to be used for determinant
+                number_of_pivoting++;
+            }
+
+            for (std::size_t j = i + 1; j < size1; j++) {
+                _matrix(_permutation_vector[j], i) /=
+                    _matrix(_permutation_vector[i], i);
+
+                for (std::size_t k = i + 1; k < size1; k++)
+                    _matrix(_permutation_vector[j], k) -=
+                        _matrix(_permutation_vector[j], i) *
+                        _matrix(_permutation_vector[i], k);
+            }
+        }
+
+        return 1;  // Success
+    }
+
+    void InitializePermutationVector() {
+        std::size_t size = _matrix.size1();
+        _permutation_vector.resize(size);
+
+        for (std::size_t i = 0; i < size; i++)
+            _permutation_vector[i] = i;
+    }
+};
 
 }  // namespace AMatrix
