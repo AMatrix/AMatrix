@@ -29,7 +29,7 @@ class DenseStorage {
     explicit DenseStorage(
         MatrixExpression<TExpressionType, row_major_access> const& Other) {
         for (std::size_t i = 0; i < size(); i++)
-            _data[i] = Other[i];
+            _data[i] = Other.expression()[i];
     }
 
     template <typename TOtherMatrixType>
@@ -61,7 +61,7 @@ class DenseStorage {
     DenseStorage& operator=(
         MatrixExpression<TExpressionType, row_major_access> const& Other) {
         for (std::size_t i = 0; i < size(); i++)
-            _data[i] = Other[i];
+            _data[i] = Other.expression()[i];
         return *this;
     }
 
