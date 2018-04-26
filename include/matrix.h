@@ -62,7 +62,7 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>,
 
     friend bool operator==(Matrix const& First, Matrix const& Second) {
         for (std::size_t i = 0; i < First.size(); i++)
-            if (First._data[i] != Second._data[i])
+            if (First.data()[i] != Second.data()[i])
                 return false;
         return true;
     }
