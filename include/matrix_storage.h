@@ -66,6 +66,9 @@ class MatrixStorage : public DenseStorage<TDataType, TSize1 * TSize2> {
     static constexpr std::size_t size1() { return TSize1; }
 
     static constexpr std::size_t size2() { return TSize2; }
+
+    void resize(std::size_t NewSize) {
+    }
 };
 
 template <typename TDataType>
