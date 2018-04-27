@@ -458,6 +458,20 @@ class LUFactorization
     inline std::size_t size1() const { return _matrix.size2(); }
     inline std::size_t size2() const { return _matrix.size1(); }
 
+    double Determinant() {
+
+    const std::size_t size = size1();
+    double result = _matrix(_permutation_vector[0], 0);
+
+    for (std::size_t i = 1; i < size; i++)
+        result *= _matrix(_permutation_vector[i], i);
+
+    if ((number_of_pivoting) % 2 == 0)
+        return result; 
+    else
+        return -result;
+}
+
    private:
     /// The algorithm is based on wikipedia implemenation which
     /// can be found in https://en.wikipedia.org/wiki/LU_decomposition
