@@ -66,6 +66,9 @@ class MatrixStorage : public DenseStorage<TDataType, TSize1 * TSize2> {
     static constexpr std::size_t size1() { return TSize1; }
 
     static constexpr std::size_t size2() { return TSize2; }
+
+    void resize(std::size_t NewSize) {
+    }
 };
 
 template <typename TDataType>
@@ -126,7 +129,8 @@ class MatrixStorage<TDataType, dynamic, dynamic> {
     template <typename TExpressionType>
     explicit MatrixStorage(
         MatrixExpression<TExpressionType, row_major_access> const& Other)
-        : _size1(Other.expression().size1()), _size2(Other.expression().size2()) {
+        : _size1(Other.expression().size1()),
+          _size2(Other.expression().size2()) {
         _data = new TDataType[size()];
         for (std::size_t i = 0; i < size(); i++)
             _data[i] = Other.expression()[i];
@@ -407,7 +411,7 @@ class MatrixStorage<TDataType, dynamic, TSize2> {
    public:
     MatrixStorage() = delete;
 
-    MatrixStorage(std::size_t TheSize1, std::size_t TheSize2)
+    MatrixStorage(std::size_t TheSize1, std::size_t TheSize2 = TSize2)
         : _size1(TheSize1) {
         _data = new TDataType[size()];
     }
