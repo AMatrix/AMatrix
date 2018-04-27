@@ -409,7 +409,7 @@ class MatrixStorage<TDataType, dynamic, TSize2> {
     TDataType* _data;
 
    public:
-    MatrixStorage() = delete;
+    MatrixStorage() : _size1(0), _data(nullptr) {}
 
     MatrixStorage(std::size_t TheSize1, std::size_t TheSize2 = TSize2)
         : _size1(TheSize1) {
