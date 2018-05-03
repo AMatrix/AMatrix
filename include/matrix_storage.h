@@ -226,6 +226,12 @@ class MatrixStorage<TDataType, dynamic, dynamic> {
         _size2 = NewSize2;
     }
 
+    void swap(MatrixStorage& Other){
+        TDataType* p_temp = _data;
+        _data = Other._data;
+        Other._data = p_temp;
+    }
+
     TDataType* data() { return _data; }
 
     TDataType const* data() const { return _data; }
@@ -398,6 +404,12 @@ class MatrixStorage<TDataType, TSize1, dynamic> {
         _size2 = NewSize;
     }
 
+    void swap(MatrixStorage& Other){
+        TDataType* p_temp = _data;
+        _data = Other._data;
+        Other._data = p_temp;
+    }
+
     TDataType* data() { return _data; }
 
     TDataType const* data() const { return _data; }
@@ -568,6 +580,12 @@ class MatrixStorage<TDataType, dynamic, TSize2> {
             _data = new TDataType[NewSize * TSize2];
         }
         _size1 = NewSize;
+    }
+
+    void swap(MatrixStorage& Other){
+        TDataType* p_temp = _data;
+        _data = Other._data;
+        Other._data = p_temp;
     }
 
     TDataType* data() { return _data; }

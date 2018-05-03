@@ -130,6 +130,10 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>,
 
     void resize(std::size_t NewSize) { base_type::resize(NewSize); }
 
+    void swap(Matrix& Other){
+        base_type::swap(Other);
+    }
+
     iterator begin() { return iterator(data()); }
 
     iterator end() { return iterator(data() + size()); }
