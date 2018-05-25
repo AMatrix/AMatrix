@@ -131,6 +131,9 @@ class SubVector : public MatrixExpression<SubMatrix<TExpressionType>> {
     }
 
     inline std::size_t size() const { return _size; }
+
+    inline std::size_t size1() const { return _size; }
+    inline std::size_t size2() const { return 1; }
 };
 
 template <typename TDataType>
@@ -157,6 +160,8 @@ class ZeroMatrix
 
     inline std::size_t size1() const { return _size1; }
     inline std::size_t size2() const { return _size2; }
+
+    inline std::size_t size() const { return _size1*_size2; }
 };
 
 template <typename TDataType>
