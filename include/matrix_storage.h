@@ -508,7 +508,7 @@ class MatrixStorage<TDataType, dynamic, TSize2> {
 
     template <typename TOtherMatrixType>
     MatrixStorage& operator=(TOtherMatrixType const& Other) {
-        std::size_t new_size = Other.size1() * Other.size2();
+        std::size_t new_size = Other.size();
         if (size() != new_size) {
             delete[] _data;
             _data = new TDataType[new_size];
