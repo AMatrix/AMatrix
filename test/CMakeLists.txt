@@ -13,4 +13,4 @@ file(GLOB test_files "${PROJECT_SOURCE_DIR}/test/*.cpp")
 
 foreach(test_file ${test_files})
   add_amatrix_test(${test_file})
-endforeach(test_files)
+endforeach(test_file)
