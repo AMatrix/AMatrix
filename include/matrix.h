@@ -184,13 +184,13 @@ bool operator!=(Matrix<TDataType, TSize1, TSize2> const& First,
 template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
 inline std::ostream& operator<<(std::ostream& rOStream,
     Matrix<TDataType, TSize1, TSize2> const& TheMatrix) {
-    rOStream << "{";
+    rOStream << '{';
     for (std::size_t i = 0; i < TheMatrix.size1(); i++) {
         for (std::size_t j = 0; j < TheMatrix.size2(); j++)
-            rOStream << TheMatrix(i, j) << ",";
-        rOStream << std::endl;
+            rOStream << TheMatrix(i, j) << ',';
+        rOStream << '\n';
     }
-    rOStream << "}";
+    rOStream << '}';
 
     return rOStream;
 }
