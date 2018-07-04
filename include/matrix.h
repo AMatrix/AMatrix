@@ -184,13 +184,63 @@ bool operator!=(Matrix<TDataType, TSize1, TSize2> const& First,
 template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
 inline std::ostream& operator<<(std::ostream& rOStream,
     Matrix<TDataType, TSize1, TSize2> const& TheMatrix) {
-    rOStream << '{';
-    for (std::size_t i = 0; i < TheMatrix.size1(); i++) {
-        for (std::size_t j = 0; j < TheMatrix.size2(); j++)
-            rOStream << TheMatrix(i, j) << ',';
-        rOStream << '\n';
+    auto matrixPrefix = "{";
+    auto matrixSuffix = "}";
+    auto rowSpacer = " ";
+    auto rowPrefix = "{ ";
+    auto rowSuffix = " }";
+    auto rowSeparator = "\n";
+    auto coeffSeparator = ", ";
+    
+    std::size_t columnWidth { 0 };
+    
+    for (std::size_t j = 0; j < TheMatrix.size2(); j++) {
+        for (std::size_t i = 0; i < TheMatrix.size1(); i++) {
+            std::stringstream coeffStream;
+            coeffStream.copyfmt(rOStream);
+            coeffStream << TheMatrix(i, j);
+            columnWidth = std::max(columnWidth, coeffStream.str().length());
+        }
     }
-    rOStream << '}';
+    
+    if (TheMatrix.size() == 0) {
+        rOStream << matrixPrefix << matrixSuffix;
+        return rOStream;
+    }
+
+    rOStream << matrixPrefix;
+    
+    for (std::size_t i = 0; i < TheMatrix.size1(); i++) {
+        if (i != 0) {
+            rOStream << rowSpacer;
+        }
+
+        rOStream << rowPrefix;
+
+        if (columnWidth != 0) {
+            rOStream.width(columnWidth);
+        }
+        
+        rOStream << TheMatrix(i, 0);
+        
+        for (std::size_t j = 1; j < TheMatrix.size2(); j++) {
+            rOStream << coeffSeparator;
+            
+            if (columnWidth != 0) {
+                rOStream.width(columnWidth);
+            }
+
+            rOStream << TheMatrix(i, j);
+        }
+
+        rOStream << rowSuffix;
+
+        if (i < TheMatrix.size1() - 1) {
+            rOStream << rowSeparator;
+        }
+    }
+    
+    rOStream << matrixSuffix;
 
     return rOStream;
 }
