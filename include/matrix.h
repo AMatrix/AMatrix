@@ -2,6 +2,7 @@
 
 // A matrix Library to be simple and fast
 #include <cmath>
+#include <sstream>
 #include <limits>
 #include "matrix_storage.h"
 #include "matrix_iterator.h"
