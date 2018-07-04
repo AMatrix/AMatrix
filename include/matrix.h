@@ -1,6 +1,7 @@
 #pragma once
 
 // A matrix Library to be simple and fast
+#include <algorithm>
 #include <cmath>
 #include <sstream>
 #include <limits>
