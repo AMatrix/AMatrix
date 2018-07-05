@@ -186,12 +186,12 @@ bool operator!=(Matrix<TDataType, TSize1, TSize2> const& First,
 template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
 inline std::ostream& operator<<(std::ostream& rOStream,
     Matrix<TDataType, TSize1, TSize2> const& TheMatrix) {
-    auto matrixPrefix = "[";
-    auto matrixSuffix = "]";
-    auto rowPrefix = "[";
-    auto rowSuffix = "]";
-    auto rowSeparator = ",\n ";
-    auto colSeparator = ", ";
+    constexpr char matrixPrefix = '[';
+    constexpr char matrixSuffix = ']';
+    constexpr char rowPrefix = '[';
+    constexpr char rowSuffix = ']';
+    const std::string rowSeparator = ",\n ";
+    const std::string colSeparator = ", ";
     
     std::size_t columnWidth { 0 };
     
