@@ -192,7 +192,12 @@ inline std::ostream& operator<<(std::ostream& rOStream,
     constexpr char row_suffix = ']';
     const std::string row_separator = ",\n ";
     const std::string col_separator = ", ";
-    
+
+    if (TheMatrix.size() == 0) {
+        rOStream << matrix_prefix << matrix_suffix;
+        return rOStream;
+    }
+
     std::size_t column_width { 0 };
     
     for (std::size_t j = 0; j < TheMatrix.size2(); j++) {
@@ -202,11 +207,6 @@ inline std::ostream& operator<<(std::ostream& rOStream,
             coeffStream << TheMatrix(i, j);
             column_width = std::max(column_width, coeffStream.str().length());
         }
-    }
-    
-    if (TheMatrix.size() == 0) {
-        rOStream << matrix_prefix << matrix_suffix;
-        return rOStream;
     }
 
     rOStream << matrix_prefix;
