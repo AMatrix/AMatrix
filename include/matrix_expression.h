@@ -100,7 +100,7 @@ class SubMatrix : public MatrixExpression<SubMatrix<TExpressionType>> {
 };
 
 template <typename TExpressionType>
-class SubVector : public MatrixExpression<SubMatrix<TExpressionType>> {
+class SubVector : public MatrixExpression<SubVector<TExpressionType>> {
     TExpressionType& _original_expression;
     std::size_t _origin_index;
     std::size_t _size;
