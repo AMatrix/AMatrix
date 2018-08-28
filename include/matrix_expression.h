@@ -94,6 +94,7 @@ class SubMatrix : public MatrixExpression<SubMatrix<TExpressionType>> {
         return _original_expression(i + _origin_index1, j + _origin_index2);
     }
 
+    inline std::size_t size() const { return _size1 * _size2; }
     inline std::size_t size1() const { return _size1; }
     inline std::size_t size2() const { return _size2; }
 };

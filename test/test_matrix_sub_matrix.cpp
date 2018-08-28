@@ -17,6 +17,7 @@ std::size_t TestSubMatrixAcess() {
     AMatrix::SubMatrix<AMatrix::Matrix<double, TSize1, TSize2>> sub_matrix(
         a_matrix, sub_index1, sub_index2, sub_size1, sub_size2);
 
+    AMATRIX_CHECK_EQUAL(sub_matrix.size(), sub_size1 * sub_size2);
     AMATRIX_CHECK_EQUAL(sub_matrix.size1(), sub_size1);
     AMATRIX_CHECK_EQUAL(sub_matrix.size2(), sub_size2);
 
