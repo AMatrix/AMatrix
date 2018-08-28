@@ -43,6 +43,13 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>,
 
     explicit Matrix(std::initializer_list<TDataType> InitialValues)
         : base_type(InitialValues) {}
+	 
+    template <typename TExpressionType, std::size_t TCategory>
+    Matrix& operator=(
+        MatrixExpression<TExpressionType, TCategory> const& Other) {
+        base_type::operator=(Other);
+        return *this;
+    }
 
     template <typename TOtherMatrixType>
     Matrix& operator=(TOtherMatrixType const& Other) {
