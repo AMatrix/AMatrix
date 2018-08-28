@@ -86,9 +86,9 @@ class SubMatrix : public MatrixExpression<SubMatrix<TExpressionType>> {
           _size1(TheSize1),
           _size2(TheSize2) {}
 
-    template <typename TExpressionType, std::size_t TCategory>
+    template <typename TOtherExpressionType, std::size_t TCategory>
     SubMatrix& operator=(
-        MatrixExpression<TExpressionType, TCategory> const& Other) {
+        MatrixExpression<TOtherExpressionType, TCategory> const& Other) {
         auto& other_expression = Other.expression();
         for (std::size_t i = 0; i < size1(); i++)
             for (std::size_t j = 0; j < size2(); j++)
@@ -97,9 +97,9 @@ class SubMatrix : public MatrixExpression<SubMatrix<TExpressionType>> {
         return *this;
     }
 
-    template <typename TExpressionType>
+    template <typename TOtherExpressionType>
     SubMatrix& operator=(
-        MatrixExpression<TExpressionType, row_major_access> const& Other) {
+        MatrixExpression<TOtherExpressionType, row_major_access> const& Other) {
         auto& other_expression = Other.expression();
         std::size_t k = 0;
         for (std::size_t i = 0; i < size1(); i++)
