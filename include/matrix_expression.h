@@ -86,6 +86,29 @@ class SubMatrix : public MatrixExpression<SubMatrix<TExpressionType>> {
           _size1(TheSize1),
           _size2(TheSize2) {}
 
+    template <typename TExpressionType, std::size_t TCategory>
+    SubMatrix& operator=(
+        MatrixExpression<TExpressionType, TCategory> const& Other) {
+        auto& other_expression = Other.expression();
+        for (std::size_t i = 0; i < size1(); i++)
+            for (std::size_t j = 0; j < size2(); j++)
+                _original_expression(i + _origin_index1, j + _origin_index2) =
+                    Other.expression()(i, j);
+        return *this;
+    }
+
+    template <typename TExpressionType>
+    SubMatrix& operator=(
+        MatrixExpression<TExpressionType, row_major_access> const& Other) {
+        auto& other_expression = Other.expression();
+        std::size_t k = 0;
+        for (std::size_t i = 0; i < size1(); i++)
+            for (std::size_t j = 0; j < size2(); j++)
+                _original_expression(i + _origin_index1, j + _origin_index2) =
+                    Other.expression()[k++];
+        return *this;
+    }
+
     inline data_type const& operator()(std::size_t i, std::size_t j) const {
         return _original_expression(i + _origin_index1, j + _origin_index2);
     }
@@ -100,7 +123,7 @@ class SubMatrix : public MatrixExpression<SubMatrix<TExpressionType>> {
 };
 
 template <typename TExpressionType>
-class SubVector : public MatrixExpression<SubVector<TExpressionType>> {
+class SubVector : public MatrixExpression<SubVector<TExpressionType>, row_major_access> {
     TExpressionType& _original_expression;
     std::size_t _origin_index;
     std::size_t _size;
