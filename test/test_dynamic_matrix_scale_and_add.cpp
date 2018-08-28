@@ -10,8 +10,8 @@ std::size_t TestMatrixScaleAndAdd(std::size_t TSize1, std::size_t TSize2) {
             a_matrix(i, j) = 2.33 * i - 4.52 * j;
     double scale_factor = 0.25;
 
-    b_matrix = a_matrix;
-    c_matrix = scale_factor * a_matrix + b_matrix;
+    b_matrix = a_matrix.transpose();
+    c_matrix = scale_factor * a_matrix + b_matrix.transpose();
 
     for (std::size_t i = 0; i < a_matrix.size1(); i++)
         for (std::size_t j = 0; j < a_matrix.size2(); j++)
