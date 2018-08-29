@@ -35,8 +35,6 @@ std::size_t TestMatrixRowAssign() {
     }
 
     for (std::size_t i = 0; i < a_matrix.size1(); i++) {
-        AMatrix::MatrixRow<AMatrix::Matrix<double, TSize1, TSize2>> a_row_i(
-            a_matrix, i);
         for (std::size_t j = 0; j < a_matrix.size2(); j++) {
             AMATRIX_CHECK_EQUAL(a_matrix(i, j), 2.33 * i - 4.52 * j);
         }
@@ -53,8 +51,6 @@ std::size_t TestMatrixRowAssign() {
     }
 
     for (std::size_t i = 0; i < a_matrix.size1(); i++) {
-        AMatrix::MatrixRow<AMatrix::Matrix<double, TSize1, TSize2>> a_row_i(
-            a_matrix, i);
         for (std::size_t j = 0; j < a_matrix.size2(); j++) {
             AMATRIX_CHECK_EQUAL(a_matrix(i, j), 1.33 * i - 2.52 * j);
         }
@@ -76,8 +72,6 @@ std::size_t TestMatrixRowExpressionAssign() {
     }
 
     for (std::size_t i = 0; i < a_matrix.size1(); i++) {
-        AMatrix::MatrixRow<AMatrix::Matrix<double, TSize1, TSize2>> a_row_i(
-            a_matrix, i);
         for (std::size_t j = 0; j < a_matrix.size2(); j++) {
             AMATRIX_CHECK_EQUAL(a_matrix(i, j), 2.5 * ( 2.33 * i - 4.52 * j));
         }
