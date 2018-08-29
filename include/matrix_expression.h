@@ -91,17 +91,18 @@ class MatrixRow : public MatrixExpression<MatrixRow<TExpressionType>> {
     MatrixRow& operator=(
         MatrixExpression<TOtherExpressionType, row_major_access> const& Other) {
         auto& other_expression = Other.expression();
-        std::size_t k = 0;
         for (std::size_t j = 0; j < size2(); j++)
             _original_expression(_row_index, j) = Other.expression()[j];
         return *this;
     }
 
     inline data_type const& operator()(std::size_t i, std::size_t j) const {
+        //assert(i == 0)
         return _original_expression(_row_index, j);
     }
 
     inline data_type& operator()(std::size_t i, std::size_t j) {
+        //assert(i == 0)
         return _original_expression(_row_index, j);
     }
 
@@ -116,6 +117,59 @@ class MatrixRow : public MatrixExpression<MatrixRow<TExpressionType>> {
     inline std::size_t size() const { return _original_expression.size2(); }
     inline std::size_t size1() const { return 1; }
     inline std::size_t size2() const { return _original_expression.size2(); }
+};
+
+template <typename TExpressionType>
+class MatrixColumn : public MatrixExpression<MatrixColumn<TExpressionType>> {
+    TExpressionType& _original_expression;
+    std::size_t _column_index;
+
+   public:
+    using data_type = typename TExpressionType::data_type;
+    MatrixColumn() = delete;
+
+    MatrixColumn(TExpressionType& Original, std::size_t ColumnIndex)
+        : _original_expression(Original), _column_index(ColumnIndex) {}
+
+    template <typename TOtherExpressionType, std::size_t TCategory>
+    MatrixColumn& operator=(
+        MatrixExpression<TOtherExpressionType, TCategory> const& Other) {
+        auto& other_expression = Other.expression();
+        for (std::size_t i = 0; i < size1(); i++)
+            _original_expression(i, _column_index) = Other.expression()(i, 0);
+        return *this;
+    }
+
+    template <typename TOtherExpressionType>
+    MatrixColumn& operator=(
+        MatrixExpression<TOtherExpressionType, row_major_access> const& Other) {
+        auto& other_expression = Other.expression();
+        for (std::size_t i = 0; i < size1(); i++)
+            _original_expression(i, _column_index) = Other.expression()[i];
+        return *this;
+    }
+
+    inline data_type const& operator()(std::size_t i, std::size_t j) const {
+        return _original_expression(i, _column_index);
+    }
+
+    inline data_type& operator()(std::size_t i, std::size_t j) {
+		//assert(j == 0)
+        return _original_expression(i, _column_index);
+    }
+
+    inline data_type const& operator[](std::size_t i) const {
+        //assert(j == 0)
+        return _original_expression(i, _column_index);
+    }
+
+    inline data_type& operator[](std::size_t i) {
+        return _original_expression(i, _column_index);
+    }
+
+    inline std::size_t size() const { return _original_expression.size1(); }
+    inline std::size_t size1() const { return _original_expression.size1(); }
+    inline std::size_t size2() const { return 1; }
 };
 
 template <typename TExpressionType>
