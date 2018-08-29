@@ -18,6 +18,9 @@ std::size_t TestSubVectorAcess() {
     for (std::size_t i = 0; i < sub_vector.size(); i++)
         AMATRIX_CHECK_EQUAL(sub_vector[i], a_vector[i + sub_index]);
 
+    for (std::size_t i = 0; i < sub_vector.size(); i++)
+        AMATRIX_CHECK_EQUAL(sub_vector(0,i), a_vector[i + sub_index]);
+
     return 0;  // not failed
 }
 
@@ -39,6 +42,12 @@ std::size_t TestSubVectorMemberwiseAssign() {
 
     for (std::size_t i = sub_index; i < a_vector.size(); i++)
         AMATRIX_CHECK_EQUAL(a_vector[i], 2.33 * (i - sub_index));
+
+    for (std::size_t i = 0; i < sub_vector.size(); i++)
+        sub_vector(0,i) = 1.33 * i;
+
+    for (std::size_t i = sub_index; i < a_vector.size(); i++)
+        AMATRIX_CHECK_EQUAL(a_vector[i], 1.33 * (i - sub_index));
 
     return 0;  // not failed
 }

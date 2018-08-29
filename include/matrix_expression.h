@@ -253,6 +253,16 @@ class SubVector
         return *this;
     }
 
+    inline data_type const& operator()(std::size_t i, std::size_t j) const {
+		//assert(i == 0)
+        return _original_expression(0, j + _origin_index);
+    }
+
+    inline data_type& operator()(std::size_t i, std::size_t j) {
+        //assert(i == 0)
+        return _original_expression(0, j + _origin_index);
+    }
+
     inline data_type const& operator[](std::size_t i) const {
         return _original_expression[i + _origin_index];
     }
