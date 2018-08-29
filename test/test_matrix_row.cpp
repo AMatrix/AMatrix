@@ -58,9 +58,9 @@ std::size_t TestMatrixRowAssign() {
         for (std::size_t j = 0; j < a_matrix.size2(); j++) {
             AMATRIX_CHECK_EQUAL(a_matrix(i, j), 1.33 * i - 2.52 * j);
         }
-
-        return 0;  // not failed
     }
+
+    return 0;  // not failed
 }
 
 template <std::size_t TSize1, std::size_t TSize2>
