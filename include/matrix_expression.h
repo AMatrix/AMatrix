@@ -67,6 +67,58 @@ class TransposeMatrix
 };
 
 template <typename TExpressionType>
+class MatrixRow : public MatrixExpression<MatrixRow<TExpressionType>> {
+    TExpressionType& _original_expression;
+    std::size_t _row_index;
+
+   public:
+    using data_type = typename TExpressionType::data_type;
+    MatrixRow() = delete;
+
+    MatrixRow(TExpressionType& Original, std::size_t RowIndex)
+        : _original_expression(Original), _row_index(RowIndex) {}
+
+    template <typename TOtherExpressionType, std::size_t TCategory>
+    MatrixRow& operator=(
+        MatrixExpression<TOtherExpressionType, TCategory> const& Other) {
+        auto& other_expression = Other.expression();
+        for (std::size_t j = 0; j < size2(); j++)
+            _original_expression(_row_index, j) = Other.expression()(0, j);
+        return *this;
+    }
+
+    template <typename TOtherExpressionType>
+    MatrixRow& operator=(
+        MatrixExpression<TOtherExpressionType, row_major_access> const& Other) {
+        auto& other_expression = Other.expression();
+        std::size_t k = 0;
+        for (std::size_t j = 0; j < size2(); j++)
+            _original_expression(_row_index, j) = Other.expression()[j];
+        return *this;
+    }
+
+    inline data_type const& operator()(std::size_t i, std::size_t j) const {
+        return _original_expression(i + _origin_index1, j + _origin_index2);
+    }
+
+    inline data_type& operator()(std::size_t i, std::size_t j) {
+        return _original_expression(_row_index, j);
+    }
+
+    inline data_type const& operator[](std::size_t i) const {
+        return _original_expression(_row_index, i);
+    }
+
+    inline data_type& operator[](std::size_t i) {
+        return _original_expression(_row_index, i);
+    }
+
+    inline std::size_t size() const { return _original_expression.size2(); }
+    inline std::size_t size1() const { return 1; }
+    inline std::size_t size2() const { return _original_expression.size2(); }
+};
+
+template <typename TExpressionType>
 class SubMatrix : public MatrixExpression<SubMatrix<TExpressionType>> {
     TExpressionType& _original_expression;
     std::size_t _origin_index1;
@@ -123,7 +175,8 @@ class SubMatrix : public MatrixExpression<SubMatrix<TExpressionType>> {
 };
 
 template <typename TExpressionType>
-class SubVector : public MatrixExpression<SubVector<TExpressionType>, row_major_access> {
+class SubVector
+    : public MatrixExpression<SubVector<TExpressionType>, row_major_access> {
     TExpressionType& _original_expression;
     std::size_t _origin_index;
     std::size_t _size;
@@ -185,7 +238,7 @@ class ZeroMatrix
     inline std::size_t size1() const { return _size1; }
     inline std::size_t size2() const { return _size2; }
 
-    inline std::size_t size() const { return _size1*_size2; }
+    inline std::size_t size() const { return _size1 * _size2; }
 };
 
 template <typename TDataType>
@@ -511,19 +564,21 @@ class LUFactorization
         for (std::size_t j = 0; j < size; j++) {
             for (std::size_t i = 0; i < size; i++) {
                 if (_permutation_vector[i] == j)
-                    Result(i,j) = 1.0;
+                    Result(i, j) = 1.0;
                 else
-                    Result(i,j) = 0.0;
+                    Result(i, j) = 0.0;
 
                 for (std::size_t k = 0; k < i; k++)
-                    Result(i,j) -=  _matrix(_permutation_vector[i],k) * Result(k,j);
+                    Result(i, j) -=
+                        _matrix(_permutation_vector[i], k) * Result(k, j);
             }
 
             for (int i = size - 1; i >= 0; i--) {
                 for (std::size_t k = i + 1; k < size; k++)
-                    Result(i,j) -= _matrix(_permutation_vector[i],k) * Result(k,j);
+                    Result(i, j) -=
+                        _matrix(_permutation_vector[i], k) * Result(k, j);
 
-                Result(i,j) /= _matrix(_permutation_vector[i],i);
+                Result(i, j) /= _matrix(_permutation_vector[i], i);
             }
         }
     }
