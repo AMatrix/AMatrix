@@ -291,6 +291,10 @@ class SubVector
 
     inline std::size_t size1() const { return _size; }
     inline std::size_t size2() const { return 1; }
+
+    data_type* data() { return &_original_expression[_origin_index]; }
+
+    data_type const* data() const { return &_original_expression[_origin_index]; }
 };
 
 template <typename TDataType>

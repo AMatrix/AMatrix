@@ -21,6 +21,8 @@ std::size_t TestSubVectorAcess() {
     for (std::size_t i = 0; i < sub_vector.size(); i++)
         AMATRIX_CHECK_EQUAL(sub_vector(0, i), a_vector[i + sub_index]);
 
+	AMATRIX_CHECK_EQUAL(sub_vector.data(), &a_vector[sub_index]);
+
     return 0;  // not failed
 }
 
