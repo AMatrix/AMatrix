@@ -253,6 +253,22 @@ class SubVector
         return *this;
     }
 
+    template <typename TOtherExpressionType>
+    SubVector& operator+=(TOtherExpressionType const& Other) {
+        for (std::size_t i = 0; i < _size; i++)
+            _original_expression[i + _origin_index] += Other[i];
+
+        return *this;
+    }
+
+    template <typename TOtherExpressionType>
+    SubVector& operator-=(TOtherExpressionType const& Other) {
+        for (std::size_t i = 0; i < _size; i++)
+            _original_expression[i + _origin_index] -= Other[i];
+
+        return *this;
+    }
+
     inline data_type const& operator()(std::size_t i, std::size_t j) const {
 		//assert(i == 0)
         return _original_expression(0, j + _origin_index);
