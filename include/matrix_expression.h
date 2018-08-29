@@ -58,7 +58,7 @@ class TransposeMatrix
     TransposeMatrix(TExpressionType const& Original)
         : _original_expression(Original) {}
 
-    inline data_type const& operator()(std::size_t i, std::size_t j) const {
+    inline data_type operator()(std::size_t i, std::size_t j) const {
         return _original_expression(j, i);
     }
 
@@ -307,7 +307,7 @@ class ZeroMatrix
 
 template <typename TDataType>
 class IdentityMatrix
-    : public MatrixExpression<IdentityMatrix<TDataType>, row_major_access> {
+    : public MatrixExpression<IdentityMatrix<TDataType>, unordered_access> {
     std::size_t _size;
 
    public:
