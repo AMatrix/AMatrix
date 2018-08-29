@@ -98,7 +98,7 @@ class MatrixRow : public MatrixExpression<MatrixRow<TExpressionType>> {
     }
 
     inline data_type const& operator()(std::size_t i, std::size_t j) const {
-        return _original_expression(i + _origin_index1, j + _origin_index2);
+        return _original_expression(_row_index, j);
     }
 
     inline data_type& operator()(std::size_t i, std::size_t j) {
