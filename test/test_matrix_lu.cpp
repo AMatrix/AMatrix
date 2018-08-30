@@ -13,7 +13,7 @@ std::size_t TestMatrixLUDeterminant3() {
 
    AMatrix::LUFactorization< AMatrix::Matrix<double, 3, 3>, AMatrix::Vector<std::size_t, AMatrix::dynamic> > lu_factorization(a_matrix);
 
-    AMATRIX_CHECK_EQUAL(lu_factorization.Determinant(), 24);
+    AMATRIX_CHECK_EQUAL(lu_factorization.determinant(), 24);
     
     return 0;  // not failed
 }
@@ -32,7 +32,7 @@ std::size_t TestMatrixLUInvert3() {
     a_matrix(2,2) = 0.00;
 
     AMatrix::LUFactorization< AMatrix::Matrix<double, 3, 3>, AMatrix::Vector<std::size_t, AMatrix::dynamic> > lu_factorization(a_matrix);
-    lu_factorization.Invert(a_inverse);
+    lu_factorization.invert(a_inverse);
 
     std::cout << a_inverse << std::endl;
     std::cout << correct_result << std::endl;

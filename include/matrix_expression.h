@@ -614,7 +614,7 @@ class LUFactorization
     LUFactorization() = delete;
 
     LUFactorization(TExpressionType& Original) : _matrix(Original) {
-        PerformLU();
+        perform_lu();
     }
 
     inline data_type const& operator()(std::size_t i, std::size_t j) const {
@@ -626,7 +626,7 @@ class LUFactorization
 
     /// The algorithm is based on wikipedia implemenation which
     /// can be found in https://en.wikipedia.org/wiki/LU_decomposition
-    double Determinant() {
+    double determinant() {
         const std::size_t size = size1();
         double result = _matrix(_permutation_vector[0], 0);
 
@@ -642,7 +642,7 @@ class LUFactorization
     /// The algorithm is based on wikipedia implemenation which
     /// can be found in https://en.wikipedia.org/wiki/LU_decomposition
     template <typename TMatrixType>
-    void Invert(TMatrixType& Result) {
+    void invert(TMatrixType& Result) {
         const std::size_t size = size1();
 
         for (std::size_t j = 0; j < size; j++) {
@@ -670,12 +670,12 @@ class LUFactorization
    private:
     /// The algorithm is based on wikipedia implemenation which
     /// can be found in https://en.wikipedia.org/wiki/LU_decomposition
-    int PerformLU() {
+    int perform_lu() {
         constexpr double tolerance = std::numeric_limits<double>::epsilon();
         std::size_t size1 = _matrix.size1();
         number_of_pivoting = 0;
 
-        InitializePermutationVector();
+        initialize_permutation_vector();
 
         for (std::size_t i = 0; i < size1; i++) {
             double max_pivot = 0.0;
@@ -716,7 +716,7 @@ class LUFactorization
         return 1;  // Success
     }
 
-    void InitializePermutationVector() {
+    void initialize_permutation_vector() {
         std::size_t size = _matrix.size1();
         _permutation_vector.resize(size);
 
