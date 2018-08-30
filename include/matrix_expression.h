@@ -601,19 +601,19 @@ VectorOuterProductExpression<TExpression1Type, TExpression2Type> OuterProduct(
         First.expression(), Second.expression());
 }
 
-template <typename TExpressionType, typename TPermutationVectorType>
+template <typename TMatrixType, typename TPermutationVectorType>
 class LUFactorization
     : public MatrixExpression<
-          LUFactorization<TExpressionType, TPermutationVectorType>> {
-    TExpressionType& _matrix;
+          LUFactorization<TMatrixType, TPermutationVectorType>> {
+    TMatrixType& _matrix;
     TPermutationVectorType _permutation_vector;
     std::size_t number_of_pivoting;
 
    public:
-    using data_type = typename TExpressionType::data_type;
+    using data_type = typename TMatrixType::data_type;
     LUFactorization() = delete;
 
-    LUFactorization(TExpressionType& Original) : _matrix(Original) {
+    LUFactorization(TMatrixType& Original) : _matrix(Original) {
         perform_lu();
     }
 
@@ -621,8 +621,8 @@ class LUFactorization
         return _matrix(_permutation_vector[i], j);
     }
 
-    inline std::size_t size1() const { return _matrix.size2(); }
-    inline std::size_t size2() const { return _matrix.size1(); }
+    inline std::size_t size1() const { return _matrix.size1(); }
+    inline std::size_t size2() const { return _matrix.size2(); }
 
     /// The algorithm is based on wikipedia implemenation which
     /// can be found in https://en.wikipedia.org/wiki/LU_decomposition
@@ -641,31 +641,58 @@ class LUFactorization
 
     /// The algorithm is based on wikipedia implemenation which
     /// can be found in https://en.wikipedia.org/wiki/LU_decomposition
-    template <typename TMatrixType>
-    void invert(TMatrixType& Result) {
+    TMatrixType inverse() {
         const std::size_t size = size1();
+        TMatrixType result(size, size);
 
         for (std::size_t j = 0; j < size; j++) {
             for (std::size_t i = 0; i < size; i++) {
                 if (_permutation_vector[i] == j)
-                    Result(i, j) = 1.0;
+                    result(i, j) = 1.0;
                 else
-                    Result(i, j) = 0.0;
+                    result(i, j) = 0.0;
 
                 for (std::size_t k = 0; k < i; k++)
-                    Result(i, j) -=
-                        _matrix(_permutation_vector[i], k) * Result(k, j);
+                    result(i, j) -=
+                        _matrix(_permutation_vector[i], k) * result(k, j);
             }
 
             for (int i = size - 1; i >= 0; i--) {
                 for (std::size_t k = i + 1; k < size; k++)
-                    Result(i, j) -=
-                        _matrix(_permutation_vector[i], k) * Result(k, j);
+                    result(i, j) -=
+                        _matrix(_permutation_vector[i], k) * result(k, j);
 
-                Result(i, j) /= _matrix(_permutation_vector[i], i);
+                result(i, j) /= _matrix(_permutation_vector[i], i);
             }
         }
+
+		return result;
     }
+
+    /// The algorithm is based on wikipedia implemenation which
+    /// can be found in https://en.wikipedia.org/wiki/LU_decomposition
+    template <typename TVectorType>
+    TVectorType solve(TVectorType const& RHS) {
+        const std::size_t size = size1();
+        TVectorType result(size);
+
+        for (std::size_t i = 0; i < size; i++) {
+            result[i] = RHS[_permutation_vector[i]];
+
+            for (std::size_t k = 0; k < i; k++)
+                result[i] -= _matrix(_permutation_vector[i], k) * result[k];
+        }
+
+         for (int i = size - 1; i >= 0; i--) {
+            for (std::size_t k = i + 1; k < size; k++)
+                 result[i] -= _matrix(_permutation_vector[i], k) * result[k];
+
+            result[i] /= _matrix(_permutation_vector[i], i);
+        }
+
+        return result;
+    }
+
 
    private:
     /// The algorithm is based on wikipedia implemenation which
