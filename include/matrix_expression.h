@@ -58,12 +58,118 @@ class TransposeMatrix
     TransposeMatrix(TExpressionType const& Original)
         : _original_expression(Original) {}
 
-    inline data_type const& operator()(std::size_t i, std::size_t j) const {
+    inline data_type operator()(std::size_t i, std::size_t j) const {
         return _original_expression(j, i);
     }
 
     inline std::size_t size1() const { return _original_expression.size2(); }
     inline std::size_t size2() const { return _original_expression.size1(); }
+};
+
+template <typename TExpressionType>
+class MatrixRow : public MatrixExpression<MatrixRow<TExpressionType>> {
+    TExpressionType& _original_expression;
+    std::size_t _row_index;
+
+   public:
+    using data_type = typename TExpressionType::data_type;
+    MatrixRow() = delete;
+
+    MatrixRow(TExpressionType& Original, std::size_t RowIndex)
+        : _original_expression(Original), _row_index(RowIndex) {}
+
+    template <typename TOtherExpressionType, std::size_t TCategory>
+    MatrixRow& operator=(
+        MatrixExpression<TOtherExpressionType, TCategory> const& Other) {
+        auto& other_expression = Other.expression();
+        for (std::size_t j = 0; j < size2(); j++)
+            _original_expression(_row_index, j) = Other.expression()(0, j);
+        return *this;
+    }
+
+    template <typename TOtherExpressionType>
+    MatrixRow& operator=(
+        MatrixExpression<TOtherExpressionType, row_major_access> const& Other) {
+        auto& other_expression = Other.expression();
+        for (std::size_t j = 0; j < size2(); j++)
+            _original_expression(_row_index, j) = Other.expression()[j];
+        return *this;
+    }
+
+    inline data_type const& operator()(std::size_t i, std::size_t j) const {
+        //assert(i == 0)
+        return _original_expression(_row_index, j);
+    }
+
+    inline data_type& operator()(std::size_t i, std::size_t j) {
+        //assert(i == 0)
+        return _original_expression(_row_index, j);
+    }
+
+    inline data_type const& operator[](std::size_t i) const {
+        return _original_expression(_row_index, i);
+    }
+
+    inline data_type& operator[](std::size_t i) {
+        return _original_expression(_row_index, i);
+    }
+
+    inline std::size_t size() const { return _original_expression.size2(); }
+    inline std::size_t size1() const { return 1; }
+    inline std::size_t size2() const { return _original_expression.size2(); }
+};
+
+template <typename TExpressionType>
+class MatrixColumn : public MatrixExpression<MatrixColumn<TExpressionType>> {
+    TExpressionType& _original_expression;
+    std::size_t _column_index;
+
+   public:
+    using data_type = typename TExpressionType::data_type;
+    MatrixColumn() = delete;
+
+    MatrixColumn(TExpressionType& Original, std::size_t ColumnIndex)
+        : _original_expression(Original), _column_index(ColumnIndex) {}
+
+    template <typename TOtherExpressionType, std::size_t TCategory>
+    MatrixColumn& operator=(
+        MatrixExpression<TOtherExpressionType, TCategory> const& Other) {
+        auto& other_expression = Other.expression();
+        for (std::size_t i = 0; i < size1(); i++)
+            _original_expression(i, _column_index) = Other.expression()(i, 0);
+        return *this;
+    }
+
+    template <typename TOtherExpressionType>
+    MatrixColumn& operator=(
+        MatrixExpression<TOtherExpressionType, row_major_access> const& Other) {
+        auto& other_expression = Other.expression();
+        for (std::size_t i = 0; i < size1(); i++)
+            _original_expression(i, _column_index) = Other.expression()[i];
+        return *this;
+    }
+
+    inline data_type const& operator()(std::size_t i, std::size_t j) const {
+        return _original_expression(i, _column_index);
+    }
+
+    inline data_type& operator()(std::size_t i, std::size_t j) {
+		//assert(j == 0)
+        return _original_expression(i, _column_index);
+    }
+
+    inline data_type const& operator[](std::size_t i) const {
+        //assert(j == 0)
+        return _original_expression(i, _column_index);
+    }
+
+    inline data_type& operator[](std::size_t i) {
+        return _original_expression(i, _column_index);
+    }
+
+    inline std::size_t size() const { return _original_expression.size1(); }
+    inline std::size_t size1() const { return _original_expression.size1(); }
+    inline std::size_t size2() const { return 1; }
 };
 
 template <typename TExpressionType>
@@ -86,6 +192,29 @@ class SubMatrix : public MatrixExpression<SubMatrix<TExpressionType>> {
           _size1(TheSize1),
           _size2(TheSize2) {}
 
+    template <typename TOtherExpressionType, std::size_t TCategory>
+    SubMatrix& operator=(
+        MatrixExpression<TOtherExpressionType, TCategory> const& Other) {
+        auto& other_expression = Other.expression();
+        for (std::size_t i = 0; i < size1(); i++)
+            for (std::size_t j = 0; j < size2(); j++)
+                _original_expression(i + _origin_index1, j + _origin_index2) =
+                    Other.expression()(i, j);
+        return *this;
+    }
+
+    template <typename TOtherExpressionType>
+    SubMatrix& operator=(
+        MatrixExpression<TOtherExpressionType, row_major_access> const& Other) {
+        auto& other_expression = Other.expression();
+        std::size_t k = 0;
+        for (std::size_t i = 0; i < size1(); i++)
+            for (std::size_t j = 0; j < size2(); j++)
+                _original_expression(i + _origin_index1, j + _origin_index2) =
+                    Other.expression()[k++];
+        return *this;
+    }
+
     inline data_type const& operator()(std::size_t i, std::size_t j) const {
         return _original_expression(i + _origin_index1, j + _origin_index2);
     }
@@ -94,12 +223,14 @@ class SubMatrix : public MatrixExpression<SubMatrix<TExpressionType>> {
         return _original_expression(i + _origin_index1, j + _origin_index2);
     }
 
+    inline std::size_t size() const { return _size1 * _size2; }
     inline std::size_t size1() const { return _size1; }
     inline std::size_t size2() const { return _size2; }
 };
 
 template <typename TExpressionType>
-class SubVector : public MatrixExpression<SubMatrix<TExpressionType>> {
+class SubVector
+    : public MatrixExpression<SubVector<TExpressionType>, row_major_access> {
     TExpressionType& _original_expression;
     std::size_t _origin_index;
     std::size_t _size;
@@ -122,6 +253,32 @@ class SubVector : public MatrixExpression<SubMatrix<TExpressionType>> {
         return *this;
     }
 
+    template <typename TOtherExpressionType>
+    SubVector& operator+=(TOtherExpressionType const& Other) {
+        for (std::size_t i = 0; i < _size; i++)
+            _original_expression[i + _origin_index] += Other[i];
+
+        return *this;
+    }
+
+    template <typename TOtherExpressionType>
+    SubVector& operator-=(TOtherExpressionType const& Other) {
+        for (std::size_t i = 0; i < _size; i++)
+            _original_expression[i + _origin_index] -= Other[i];
+
+        return *this;
+    }
+
+    inline data_type operator()(std::size_t i, std::size_t j) const {
+		//assert(i == 0)
+        return _original_expression(0, j + _origin_index);
+    }
+
+    inline data_type& operator()(std::size_t i, std::size_t j) {
+        //assert(i == 0)
+        return _original_expression(0, j + _origin_index);
+    }
+
     inline data_type const& operator[](std::size_t i) const {
         return _original_expression[i + _origin_index];
     }
@@ -134,6 +291,10 @@ class SubVector : public MatrixExpression<SubMatrix<TExpressionType>> {
 
     inline std::size_t size1() const { return _size; }
     inline std::size_t size2() const { return 1; }
+
+    data_type* data() { return &_original_expression[_origin_index]; }
+
+    data_type const* data() const { return &_original_expression[_origin_index]; }
 };
 
 template <typename TDataType>
@@ -161,12 +322,12 @@ class ZeroMatrix
     inline std::size_t size1() const { return _size1; }
     inline std::size_t size2() const { return _size2; }
 
-    inline std::size_t size() const { return _size1*_size2; }
+    inline std::size_t size() const { return _size1 * _size2; }
 };
 
 template <typename TDataType>
 class IdentityMatrix
-    : public MatrixExpression<IdentityMatrix<TDataType>, row_major_access> {
+    : public MatrixExpression<IdentityMatrix<TDataType>, unordered_access> {
     std::size_t _size;
 
    public:
@@ -440,32 +601,32 @@ VectorOuterProductExpression<TExpression1Type, TExpression2Type> OuterProduct(
         First.expression(), Second.expression());
 }
 
-template <typename TExpressionType, typename TPermutationVectorType>
+template <typename TMatrixType, typename TPermutationVectorType>
 class LUFactorization
     : public MatrixExpression<
-          LUFactorization<TExpressionType, TPermutationVectorType>> {
-    TExpressionType& _matrix;
+          LUFactorization<TMatrixType, TPermutationVectorType>> {
+    TMatrixType& _matrix;
     TPermutationVectorType _permutation_vector;
     std::size_t number_of_pivoting;
 
    public:
-    using data_type = typename TExpressionType::data_type;
+    using data_type = typename TMatrixType::data_type;
     LUFactorization() = delete;
 
-    LUFactorization(TExpressionType& Original) : _matrix(Original) {
-        PerformLU();
+    LUFactorization(TMatrixType& Original) : _matrix(Original) {
+        perform_lu();
     }
 
     inline data_type const& operator()(std::size_t i, std::size_t j) const {
         return _matrix(_permutation_vector[i], j);
     }
 
-    inline std::size_t size1() const { return _matrix.size2(); }
-    inline std::size_t size2() const { return _matrix.size1(); }
+    inline std::size_t size1() const { return _matrix.size1(); }
+    inline std::size_t size2() const { return _matrix.size2(); }
 
     /// The algorithm is based on wikipedia implemenation which
     /// can be found in https://en.wikipedia.org/wiki/LU_decomposition
-    double Determinant() {
+    double determinant() {
         const std::size_t size = size1();
         double result = _matrix(_permutation_vector[0], 0);
 
@@ -480,39 +641,68 @@ class LUFactorization
 
     /// The algorithm is based on wikipedia implemenation which
     /// can be found in https://en.wikipedia.org/wiki/LU_decomposition
-    template <typename TMatrixType>
-    void Invert(TMatrixType& Result) {
+    TMatrixType inverse() {
         const std::size_t size = size1();
+        TMatrixType result(size, size);
 
         for (std::size_t j = 0; j < size; j++) {
             for (std::size_t i = 0; i < size; i++) {
                 if (_permutation_vector[i] == j)
-                    Result(i,j) = 1.0;
+                    result(i, j) = 1.0;
                 else
-                    Result(i,j) = 0.0;
+                    result(i, j) = 0.0;
 
                 for (std::size_t k = 0; k < i; k++)
-                    Result(i,j) -=  _matrix(_permutation_vector[i],k) * Result(k,j);
+                    result(i, j) -=
+                        _matrix(_permutation_vector[i], k) * result(k, j);
             }
 
             for (int i = size - 1; i >= 0; i--) {
                 for (std::size_t k = i + 1; k < size; k++)
-                    Result(i,j) -= _matrix(_permutation_vector[i],k) * Result(k,j);
+                    result(i, j) -=
+                        _matrix(_permutation_vector[i], k) * result(k, j);
 
-                Result(i,j) /= _matrix(_permutation_vector[i],i);
+                result(i, j) /= _matrix(_permutation_vector[i], i);
             }
         }
+
+		return result;
     }
+
+    /// The algorithm is based on wikipedia implemenation which
+    /// can be found in https://en.wikipedia.org/wiki/LU_decomposition
+    template <typename TVectorType>
+    TVectorType solve(TVectorType const& RHS) {
+        const std::size_t size = size1();
+        TVectorType result(size);
+
+        for (std::size_t i = 0; i < size; i++) {
+            result[i] = RHS[_permutation_vector[i]];
+
+            for (std::size_t k = 0; k < i; k++)
+                result[i] -= _matrix(_permutation_vector[i], k) * result[k];
+        }
+
+         for (int i = size - 1; i >= 0; i--) {
+            for (std::size_t k = i + 1; k < size; k++)
+                 result[i] -= _matrix(_permutation_vector[i], k) * result[k];
+
+            result[i] /= _matrix(_permutation_vector[i], i);
+        }
+
+        return result;
+    }
+
 
    private:
     /// The algorithm is based on wikipedia implemenation which
     /// can be found in https://en.wikipedia.org/wiki/LU_decomposition
-    int PerformLU() {
+    int perform_lu() {
         constexpr double tolerance = std::numeric_limits<double>::epsilon();
         std::size_t size1 = _matrix.size1();
         number_of_pivoting = 0;
 
-        InitializePermutationVector();
+        initialize_permutation_vector();
 
         for (std::size_t i = 0; i < size1; i++) {
             double max_pivot = 0.0;
@@ -553,7 +743,7 @@ class LUFactorization
         return 1;  // Success
     }
 
-    void InitializePermutationVector() {
+    void initialize_permutation_vector() {
         std::size_t size = _matrix.size1();
         _permutation_vector.resize(size);
 
