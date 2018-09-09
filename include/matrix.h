@@ -179,6 +179,14 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>,
     TransposeMatrix<Matrix<TDataType, TSize1, TSize2>> transpose() {
         return TransposeMatrix<Matrix<TDataType, TSize1, TSize2>>(*this);
     }
+
+    MatrixRow<Matrix<TDataType, TSize1, TSize2>> row(std::size_t i) {
+        return MatrixRow<Matrix<TDataType, TSize1, TSize2>>(*this, i);
+    }
+
+    MatrixColumn<Matrix<TDataType, TSize1, TSize2>> col(std::size_t i) {
+        return MatrixColumn<Matrix<TDataType, TSize1, TSize2>>(*this, i);
+    }
 };
 
 template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
@@ -195,6 +203,22 @@ inline std::ostream& operator<<(std::ostream& rOStream,
     for (std::size_t i = 0; i < TheMatrix.size1(); i++) {
         for (std::size_t j = 0; j < TheMatrix.size2(); j++)
             rOStream << TheMatrix(i, j) << ',';
+        rOStream << '\n';
+    }
+    rOStream << '}';
+
+    return rOStream;
+}
+
+template <typename TExpressionType, std::size_t TCategory>
+inline std::ostream& operator<<(std::ostream& rOStream,
+    MatrixExpression<TExpressionType, TCategory> const& TheMatrixExpression) {
+    auto& expression = TheMatrixExpression.expression();
+
+    rOStream << '{';
+    for (std::size_t i = 0; i < expression.size1(); i++) {
+        for (std::size_t j = 0; j < expression.size2(); j++)
+            rOStream << expression(i, j) << ',';
         rOStream << '\n';
     }
     rOStream << '}';

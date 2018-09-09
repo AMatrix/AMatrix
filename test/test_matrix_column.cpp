@@ -10,8 +10,8 @@ std::size_t TestMatrixColumnAcess() {
     }
 
     for (std::size_t j = 0; j < a_matrix.size2(); j++) {
-        const AMatrix::MatrixColumn<AMatrix::Matrix<double, TSize1, TSize2>> a_column_j(
-            a_matrix, j);
+        const AMatrix::MatrixColumn<AMatrix::Matrix<double, TSize1, TSize2>> a_column_j =
+            a_matrix.col(j);
 
         for (std::size_t i = 0; i < a_matrix.size1(); i++) {
             AMATRIX_CHECK_EQUAL(a_column_j(i, 0), a_matrix(i, j));
@@ -26,8 +26,8 @@ template <std::size_t TSize1, std::size_t TSize2>
 std::size_t TestMatrixColumnAssign() {
     AMatrix::Matrix<double, TSize1, TSize2> a_matrix;
     for (std::size_t j = 0; j < a_matrix.size2(); j++) {
-        AMatrix::MatrixColumn<AMatrix::Matrix<double, TSize1, TSize2>> a_column_j(
-            a_matrix, j);
+        AMatrix::MatrixColumn<AMatrix::Matrix<double, TSize1, TSize2>> a_column_j =
+            a_matrix.col(j);
         AMATRIX_CHECK_EQUAL(a_column_j.size(), TSize1);
         AMATRIX_CHECK_EQUAL(a_column_j.size1(), TSize1);
         AMATRIX_CHECK_EQUAL(a_column_j.size2(), 1);
@@ -43,7 +43,7 @@ std::size_t TestMatrixColumnAssign() {
 
     for (std::size_t j = 0; j < a_matrix.size2(); j++) {
         AMatrix::MatrixColumn<AMatrix::Matrix<double, TSize1, TSize2>>
-            a_column_j(a_matrix, j);
+            a_column_j = a_matrix.col(j);
         AMATRIX_CHECK_EQUAL(a_column_j.size(), TSize1);
         AMATRIX_CHECK_EQUAL(a_column_j.size1(), TSize1);
         AMATRIX_CHECK_EQUAL(a_column_j.size2(), 1);
@@ -64,8 +64,8 @@ template <std::size_t TSize1, std::size_t TSize2>
 std::size_t TestMatrixColumnExpressionAssign() {
     AMatrix::Matrix<double, TSize1, TSize2> a_matrix;
     for (std::size_t j = 0; j < a_matrix.size2(); j++) {
-        AMatrix::MatrixColumn<AMatrix::Matrix<double, TSize1, TSize2>> a_column_j(
-            a_matrix, j);
+        AMatrix::MatrixColumn<AMatrix::Matrix<double, TSize1, TSize2>> a_column_j =
+            a_matrix.col(j);
         AMatrix::Matrix<double, 1, TSize1> b_vector;
         for (std::size_t i = 0; i < a_matrix.size1(); i++)
             b_vector[i] = 2.33 * i - 4.52 * j;
