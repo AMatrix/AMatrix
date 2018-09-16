@@ -1,7 +1,9 @@
 #pragma once
 
 // A matrix Library to be simple and fast
+#include <algorithm>
 #include <cmath>
+#include <sstream>
 #include <limits>
 #include "matrix_storage.h"
 #include "matrix_iterator.h"
@@ -191,13 +193,58 @@ bool operator!=(Matrix<TDataType, TSize1, TSize2> const& First,
 template <typename TDataType, std::size_t TSize1, std::size_t TSize2>
 inline std::ostream& operator<<(std::ostream& rOStream,
     Matrix<TDataType, TSize1, TSize2> const& TheMatrix) {
-    rOStream << '{';
-    for (std::size_t i = 0; i < TheMatrix.size1(); i++) {
-        for (std::size_t j = 0; j < TheMatrix.size2(); j++)
-            rOStream << TheMatrix(i, j) << ',';
-        rOStream << '\n';
+    constexpr char matrix_prefix = '[';
+    constexpr char matrix_suffix = ']';
+    constexpr char row_prefix = '[';
+    constexpr char row_suffix = ']';
+    const std::string row_separator = ",\n ";
+    const std::string col_separator = ", ";
+
+    if (TheMatrix.size() == 0) {
+        rOStream << matrix_prefix << matrix_suffix;
+        return rOStream;
     }
-    rOStream << '}';
+
+    std::size_t column_width { 0 };
+    
+    for (std::size_t j = 0; j < TheMatrix.size2(); j++) {
+        for (std::size_t i = 0; i < TheMatrix.size1(); i++) {
+            std::stringstream coeffStream;
+            coeffStream.copyfmt(rOStream);
+            coeffStream << TheMatrix(i, j);
+            column_width = std::max(column_width, coeffStream.str().length());
+        }
+    }
+
+    rOStream << matrix_prefix;
+    
+    for (std::size_t i = 0; i < TheMatrix.size1(); i++) {
+        rOStream << row_prefix;
+
+        if (column_width != 0) {
+            rOStream.width(column_width);
+        }
+        
+        rOStream << TheMatrix(i, 0);
+        
+        for (std::size_t j = 1; j < TheMatrix.size2(); j++) {
+            rOStream << col_separator;
+            
+            if (column_width != 0) {
+                rOStream.width(column_width);
+            }
+
+            rOStream << TheMatrix(i, j);
+        }
+
+        rOStream << row_suffix;
+
+        if (i < TheMatrix.size1() - 1) {
+            rOStream << row_separator;
+        }
+    }
+    
+    rOStream << matrix_suffix;
 
     return rOStream;
 }
