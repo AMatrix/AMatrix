@@ -175,10 +175,12 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>,
 
     Matrix& noalias() { return *this; }
 
-	bool check_aliasing(data_type* From, data_type* To){
-        return ((From >= begin()) && (begin() > To)) ||
-               ((From >= end()) && (end() > To));
-	}
+    bool check_aliasing(const data_type* From, const data_type* To) const {
+        const data_type* const end_pointer = data() + size();
+        return ((From <= data()) && (data() < To)) ||
+               ((From <= end_pointer) && (end_pointer < To)) ||
+               ((From > data() && (To <= end_pointer)));
+    }
 
         TransposeMatrix<Matrix<TDataType, TSize1, TSize2>> transpose() {
         return TransposeMatrix<Matrix<TDataType, TSize1, TSize2>>(*this);
