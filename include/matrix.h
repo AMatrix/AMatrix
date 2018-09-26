@@ -22,10 +22,9 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>,
     using base_type::size;
     using base_type::size1;
     using base_type::size2;
-    
+
     using iterator = RandomAccessIterator<TDataType>;
     using const_iterator = RandomAccessIterator<const TDataType>;
-
 
     Matrix() {}
 
@@ -45,7 +44,7 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>,
 
     explicit Matrix(std::initializer_list<TDataType> InitialValues)
         : base_type(InitialValues) {}
-	 
+
     template <typename TExpressionType, std::size_t TCategory>
     Matrix& operator=(
         MatrixExpression<TExpressionType, TCategory> const& Other) {
@@ -139,9 +138,7 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>,
 
     void resize(std::size_t NewSize) { base_type::resize(NewSize); }
 
-    void swap(Matrix& Other){
-        base_type::swap(Other);
-    }
+    void swap(Matrix& Other) { base_type::swap(Other); }
 
     iterator begin() { return iterator(data()); }
 
@@ -178,7 +175,12 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>,
 
     Matrix& noalias() { return *this; }
 
-    TransposeMatrix<Matrix<TDataType, TSize1, TSize2>> transpose() {
+	bool check_aliasing(data_type* From, data_type* To){
+        return ((From >= begin()) && (begin() > To)) ||
+               ((From >= end()) && (end() > To));
+	}
+
+        TransposeMatrix<Matrix<TDataType, TSize1, TSize2>> transpose() {
         return TransposeMatrix<Matrix<TDataType, TSize1, TSize2>>(*this);
     }
 
@@ -213,8 +215,8 @@ inline std::ostream& operator<<(std::ostream& rOStream,
         return rOStream;
     }
 
-    std::size_t column_width { 0 };
-    
+    std::size_t column_width{0};
+
     for (std::size_t j = 0; j < TheMatrix.size2(); j++) {
         for (std::size_t i = 0; i < TheMatrix.size1(); i++) {
             std::stringstream coeffStream;
@@ -225,19 +227,19 @@ inline std::ostream& operator<<(std::ostream& rOStream,
     }
 
     rOStream << matrix_prefix;
-    
+
     for (std::size_t i = 0; i < TheMatrix.size1(); i++) {
         rOStream << row_prefix;
 
         if (column_width != 0) {
             rOStream.width(column_width);
         }
-        
+
         rOStream << TheMatrix(i, 0);
-        
+
         for (std::size_t j = 1; j < TheMatrix.size2(); j++) {
             rOStream << col_separator;
-            
+
             if (column_width != 0) {
                 rOStream.width(column_width);
             }
@@ -251,7 +253,7 @@ inline std::ostream& operator<<(std::ostream& rOStream,
             rOStream << row_separator;
         }
     }
-    
+
     rOStream << matrix_suffix;
 
     return rOStream;
