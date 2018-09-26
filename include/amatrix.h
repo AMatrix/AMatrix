@@ -1,4 +1,5 @@
 #include "matrix.h"
+#include "sparse_matrix.h"
 
 namespace AMatrix {
 
