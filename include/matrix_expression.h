@@ -64,6 +64,10 @@ class TransposeMatrix
 
     inline std::size_t size1() const { return _original_expression.size2(); }
     inline std::size_t size2() const { return _original_expression.size1(); }
+
+	bool check_aliasing(const data_type* From, const data_type* To) const {
+        return _original_expression.check_aliasing(From, To);
+	}
 };
 
 template <typename TExpressionType>
