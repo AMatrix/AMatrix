@@ -2,7 +2,7 @@
 #include "checks.h"
 
 template <std::size_t TSize1, std::size_t TSize2>
-std::size_t TestMatrixCheckAliasing() {
+int TestMatrixCheckAliasing() {
     AMatrix::Matrix<double, TSize1, TSize2> a_matrix;
     a_matrix = AMatrix::ZeroMatrix<double>(TSize1, TSize2);
 
@@ -35,7 +35,7 @@ std::size_t TestMatrixCheckAliasing() {
 }
 
 template <std::size_t TSize1, std::size_t TSize2>
-std::size_t TestTransposeCheckAliasing() {
+int TestTransposeCheckAliasing() {
     AMatrix::Matrix<double, TSize1, TSize2> a_matrix;
     a_matrix = AMatrix::ZeroMatrix<double>(TSize1, TSize2);
 
@@ -68,7 +68,7 @@ std::size_t TestTransposeCheckAliasing() {
 }
 
 int main() {
-    std::size_t number_of_failed_tests = 0;
+    int number_of_failed_tests = 0;
     number_of_failed_tests += TestMatrixCheckAliasing<1, 1>();
 
     number_of_failed_tests += TestMatrixCheckAliasing<1, 2>();

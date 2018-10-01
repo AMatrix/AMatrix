@@ -2,7 +2,7 @@
 #include "checks.h"
 
 template <std::size_t TSize>
-std::size_t TestVectorNorm() {
+int TestVectorNorm() {
     AMatrix::Vector<double, TSize> a_vector;
     double results[] = {0, 1, 5, 14, 30, 55, 91, 140, 204, 285};
 
@@ -17,7 +17,7 @@ std::size_t TestVectorNorm() {
 }
 
 template <std::size_t TSize>
-std::size_t TestVectorNormalize() {
+int TestVectorNormalize() {
     AMatrix::Vector<double, TSize> a_vector;
 
     for (std::size_t i = 0; i < a_vector.size(); i++)
@@ -33,7 +33,7 @@ std::size_t TestVectorNormalize() {
 }
 
 int main() {
-    std::size_t number_of_failed_tests = 0;
+    int number_of_failed_tests = 0;
 
     // norm test
     number_of_failed_tests += TestVectorNorm<1>();

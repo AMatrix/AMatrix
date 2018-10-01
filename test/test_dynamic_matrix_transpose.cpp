@@ -2,7 +2,7 @@
 #include "checks.h"
 
 template<std::size_t TSize1, std::size_t TSize2>
-std::size_t TestMatrixTranspose() {
+int TestMatrixTranspose() {
 	AMatrix::Matrix<double, AMatrix::dynamic,AMatrix::dynamic> a_matrix(TSize1,TSize2);
 	double b = 0;
 	for (std::size_t i = 0; i < a_matrix.size1(); i++)
@@ -21,7 +21,7 @@ std::size_t TestMatrixTranspose() {
 
 template <std::size_t TSize1, std::size_t TSize2,
     std::size_t NumberOfSecondRows>
-std::size_t TestMatrixTransposeProduct() {
+int TestMatrixTransposeProduct() {
     std::cout << "Testing A(" << TSize1 << "," << TSize2
               << ") X B(" << TSize2 << "," << NumberOfSecondRows
               << ") ";
@@ -53,7 +53,7 @@ std::size_t TestMatrixTransposeProduct() {
 
 int main()
 {
-	std::size_t number_of_failed_tests = 0;
+	int number_of_failed_tests = 0;
 	number_of_failed_tests += TestMatrixTranspose<1,1>();
 
 	number_of_failed_tests += TestMatrixTranspose<1,2>();

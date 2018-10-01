@@ -3,7 +3,7 @@
 #include "amatrix.h"
 #include "checks.h"
 
-std::size_t TestMatrixPrint() {
+int TestMatrixPrint() {
     AMatrix::Matrix<double, 3, 3> a_matrix;
 
     for (size_t i = 0; i < 9; i++) {
@@ -23,7 +23,7 @@ std::size_t TestMatrixPrint() {
 }
 
 int main() {
-    std::size_t number_of_failed_tests = 0;
+    int number_of_failed_tests = 0;
     number_of_failed_tests += TestMatrixPrint();
 
     std::cout << number_of_failed_tests << "tests failed" << std::endl;

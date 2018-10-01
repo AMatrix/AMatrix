@@ -2,7 +2,7 @@
 #include "checks.h"
 #include <limits>
 
-std::size_t TestMatrixLUDeterminant3() {
+int TestMatrixLUDeterminant3() {
     AMatrix::Matrix<double, 3, 3> a_matrix;
 
     double value = 0.00;
@@ -18,7 +18,7 @@ std::size_t TestMatrixLUDeterminant3() {
     return 0;  // not failed
 }
 
-std::size_t TestMatrixLUInverse3() {
+int TestMatrixLUInverse3() {
     AMatrix::Matrix<double, 3, 3> a_matrix;
     AMatrix::Matrix<double, 3, 3> correct_result{
         -1. / 3., -5. / 3., 1., -1., 4., -2., 1., -2., 1.};
@@ -42,7 +42,7 @@ std::size_t TestMatrixLUInverse3() {
 }
 
 
-std::size_t TestMatrixLUISolve3() {
+int TestMatrixLUISolve3() {
     AMatrix::Matrix<double, 3, 3> a_matrix;
     AMatrix::Matrix<double, 3, 1> b{3., -6., 0.};
     AMatrix::Matrix<double, 3, 1> correct_result{9., -27., 15.};
@@ -65,7 +65,7 @@ std::size_t TestMatrixLUISolve3() {
     return 0;  // not failed
 }
 
-std::size_t TestMatrixLUISolveNoPermutation3() {
+int TestMatrixLUISolveNoPermutation3() {
     AMatrix::Matrix<double, 3, 3> a_matrix{6.,7.,9.
 										  ,0.,1.,2.
 										  ,3.,4.,5.};
@@ -85,7 +85,7 @@ std::size_t TestMatrixLUISolveNoPermutation3() {
 }
 
 int main() {
-    std::size_t number_of_failed_tests = 0;
+    int number_of_failed_tests = 0;
     number_of_failed_tests += TestMatrixLUDeterminant3();
     number_of_failed_tests += TestMatrixLUInverse3();
     number_of_failed_tests += TestMatrixLUISolveNoPermutation3();

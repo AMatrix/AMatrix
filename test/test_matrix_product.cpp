@@ -2,7 +2,7 @@
 #include "checks.h"
 
 template <std::size_t TSize1, std::size_t TSize2>
-std::size_t TestMatrixScalarProduct() {
+int TestMatrixScalarProduct() {
     AMatrix::Matrix<double, TSize1, TSize2> a_matrix;
     AMatrix::Matrix<double, TSize1, TSize2> b_matrix;
     for (std::size_t i = 0; i < a_matrix.size1(); i++)
@@ -21,7 +21,7 @@ std::size_t TestMatrixScalarProduct() {
 }
 
 template <std::size_t TSize1, std::size_t TSize2>
-std::size_t TestMatrixScalarSelfProduct() {
+int TestMatrixScalarSelfProduct() {
     AMatrix::Matrix<double, TSize1, TSize2> a_matrix;
     for (std::size_t i = 0; i < a_matrix.size1(); i++)
         for (std::size_t j = 0; j < a_matrix.size2(); j++)
@@ -38,7 +38,7 @@ std::size_t TestMatrixScalarSelfProduct() {
 
 template <std::size_t TSize1, std::size_t TSize2,
     std::size_t NumberOfSecondRows>
-std::size_t TestMatrixProduct() {
+int TestMatrixProduct() {
     std::cout << "Testing A(" << TSize1 << "," << TSize2
               << ") X B(" << TSize2 << "," << NumberOfSecondRows
               << ") ";
@@ -69,7 +69,7 @@ std::size_t TestMatrixProduct() {
 }
 
 int main() {
-    std::size_t number_of_failed_tests = 0;
+    int number_of_failed_tests = 0;
 
     // scalar product test
     number_of_failed_tests += TestMatrixScalarProduct<1, 1>();

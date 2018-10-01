@@ -1,7 +1,7 @@
 #include "amatrix.h"
 #include "checks.h"
 
-std::size_t TestMatrixSwap(std::size_t Size1, std::size_t Size2) {
+int TestMatrixSwap(std::size_t Size1, std::size_t Size2) {
     AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> a_matrix(Size1, Size2);
     AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> b_matrix(Size1, Size2);
     for (std::size_t i = 0; i < a_matrix.size1(); i++)
@@ -22,7 +22,7 @@ std::size_t TestMatrixSwap(std::size_t Size1, std::size_t Size2) {
 }
 
 int main() {
-    std::size_t number_of_failed_tests = 0;
+    int number_of_failed_tests = 0;
 	number_of_failed_tests += TestMatrixSwap(1,1);
 
 	number_of_failed_tests += TestMatrixSwap(1,2);

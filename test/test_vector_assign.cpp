@@ -2,7 +2,7 @@
 #include "checks.h"
 
 template<std::size_t TSize>
-std::size_t TestZeroVectorAssign() {
+int TestZeroVectorAssign() {
 	AMatrix::Vector<double, TSize> a_vector;
 	a_vector = AMatrix::ZeroVector<double>(TSize);
 	
@@ -13,7 +13,7 @@ std::size_t TestZeroVectorAssign() {
 }
 
 template<std::size_t TSize>
-std::size_t TestVectorAssign() {
+int TestVectorAssign() {
 	AMatrix::Vector<double, TSize> a_vector;
 	AMatrix::Vector<double, TSize> b_vector;
 	for (std::size_t i = 0; i < a_vector.size(); i++)
@@ -30,7 +30,7 @@ std::size_t TestVectorAssign() {
 
 int main()
 {
-	std::size_t number_of_failed_tests = 0;
+	int number_of_failed_tests = 0;
 	number_of_failed_tests += TestZeroVectorAssign<1>();
 	number_of_failed_tests += TestZeroVectorAssign<2>();
 	number_of_failed_tests += TestZeroVectorAssign<3>();

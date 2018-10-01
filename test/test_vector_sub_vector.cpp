@@ -2,7 +2,7 @@
 #include "checks.h"
 
 template <std::size_t TSize>
-std::size_t TestSubVectorAcess() {
+int TestSubVectorAcess() {
     AMatrix::Vector<double, TSize> a_vector;
     for (std::size_t i = 0; i < a_vector.size(); i++)
         a_vector[i] = 2.33 * i;
@@ -27,7 +27,7 @@ std::size_t TestSubVectorAcess() {
 }
 
 template <std::size_t TSize>
-std::size_t TestSubVectorMemberwiseAssign() {
+int TestSubVectorMemberwiseAssign() {
     AMatrix::Vector<double, TSize> a_vector(
         AMatrix::ZeroMatrix<double>(TSize, 1));
 
@@ -55,7 +55,7 @@ std::size_t TestSubVectorMemberwiseAssign() {
 }
 
 template <std::size_t TSize>
-std::size_t TestSubVectorAssign() {
+int TestSubVectorAssign() {
     AMatrix::Vector<double, TSize> a_vector;
     for (std::size_t i = 0; i < a_vector.size(); i++)
         a_vector[i] = 1.23;
@@ -77,7 +77,7 @@ std::size_t TestSubVectorAssign() {
 }
 
 template <std::size_t TSize>
-std::size_t TestSubVectorPlusEqual() {
+int TestSubVectorPlusEqual() {
     AMatrix::Vector<double, TSize> a_vector;
     for (std::size_t i = 0; i < a_vector.size(); i++)
         a_vector[i] = 1.23;
@@ -103,7 +103,7 @@ std::size_t TestSubVectorPlusEqual() {
 }
 
 template <std::size_t TSize>
-std::size_t TestSubVectorMinusEqual() {
+int TestSubVectorMinusEqual() {
     AMatrix::Vector<double, TSize> a_vector;
     for (std::size_t i = 0; i < a_vector.size(); i++)
         a_vector[i] = 1.23;
@@ -129,7 +129,7 @@ std::size_t TestSubVectorMinusEqual() {
 }
 
 int main() {
-    std::size_t number_of_failed_tests = 0;
+    int number_of_failed_tests = 0;
 
     number_of_failed_tests += TestSubVectorAcess<1>();
     number_of_failed_tests += TestSubVectorAcess<2>();

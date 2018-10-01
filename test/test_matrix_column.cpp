@@ -2,7 +2,7 @@
 #include "checks.h"
 
 template <std::size_t TSize1, std::size_t TSize2>
-std::size_t TestMatrixColumnAcess() {
+int TestMatrixColumnAcess() {
     AMatrix::Matrix<double, TSize1, TSize2> a_matrix;
     for (std::size_t i = 0; i < a_matrix.size1(); i++) {
         for (std::size_t j = 0; j < a_matrix.size2(); j++)
@@ -23,7 +23,7 @@ std::size_t TestMatrixColumnAcess() {
 }
 
 template <std::size_t TSize1, std::size_t TSize2>
-std::size_t TestMatrixColumnAssign() {
+int TestMatrixColumnAssign() {
     AMatrix::Matrix<double, TSize1, TSize2> a_matrix;
     for (std::size_t j = 0; j < a_matrix.size2(); j++) {
         AMatrix::MatrixColumn<AMatrix::Matrix<double, TSize1, TSize2>> a_column_j =
@@ -61,7 +61,7 @@ std::size_t TestMatrixColumnAssign() {
 }
 
 template <std::size_t TSize1, std::size_t TSize2>
-std::size_t TestMatrixColumnExpressionAssign() {
+int TestMatrixColumnExpressionAssign() {
     AMatrix::Matrix<double, TSize1, TSize2> a_matrix;
     for (std::size_t j = 0; j < a_matrix.size2(); j++) {
         AMatrix::MatrixColumn<AMatrix::Matrix<double, TSize1, TSize2>> a_column_j =
@@ -82,7 +82,7 @@ std::size_t TestMatrixColumnExpressionAssign() {
 }
 
 int main() {
-    std::size_t number_of_failed_tests = 0;
+    int number_of_failed_tests = 0;
 
     number_of_failed_tests += TestMatrixColumnAcess<1, 1>();
     number_of_failed_tests += TestMatrixColumnAcess<1, 2>();

@@ -2,7 +2,7 @@
 #include "checks.h"
 
 template <std::size_t TSize1, std::size_t TSize2>
-std::size_t TestMatrixIteratorAssign() {
+int TestMatrixIteratorAssign() {
     AMatrix::Matrix<double, TSize1, TSize2> a_matrix;
     double memberwise_coeficient = 0.00;
     for (auto i = a_matrix.begin(); i != a_matrix.end(); i++)
@@ -19,7 +19,7 @@ std::size_t TestMatrixIteratorAssign() {
 }
 
 template <std::size_t TSize1, std::size_t TSize2>
-std::size_t TestMatrixIteratorForwardBackward() {
+int TestMatrixIteratorForwardBackward() {
     AMatrix::Matrix<double, TSize1, TSize2> a_matrix;
     double memberwise_coeficient = 0.00;
 
@@ -46,7 +46,7 @@ std::size_t TestMatrixIteratorForwardBackward() {
 }
 
 template <std::size_t TSize1, std::size_t TSize2>
-std::size_t TestMatrixIteratorArithmetic() {
+int TestMatrixIteratorArithmetic() {
     AMatrix::Matrix<double, TSize1, TSize2> a_matrix;
     double memberwise_coeficient = 0.00;
 
@@ -96,7 +96,7 @@ std::size_t TestMatrixIteratorArithmetic() {
 }
 
 template <std::size_t TSize1, std::size_t TSize2>
-std::size_t TestMatrixForEachIteratorAssign() {
+int TestMatrixForEachIteratorAssign() {
     AMatrix::Matrix<double, TSize1, TSize2> a_matrix;
     double memberwise_coeficient = 0.00;
 
@@ -113,7 +113,7 @@ std::size_t TestMatrixForEachIteratorAssign() {
 }
 
 template <std::size_t TSize1, std::size_t TSize2>
-std::size_t TestMatrixInequality() {
+int TestMatrixInequality() {
     AMatrix::Matrix<double, TSize1, TSize2> a_matrix(AMatrix::ZeroMatrix<double>(TSize1, TSize2));
 
     for(auto i = a_matrix.begin() ; i != a_matrix.end() ; i++){
@@ -133,7 +133,7 @@ std::size_t TestMatrixInequality() {
 }
 
 template <std::size_t TSize1, std::size_t TSize2>
-std::size_t TestMatrixConstIterator() {
+int TestMatrixConstIterator() {
     AMatrix::Matrix<double, TSize1, TSize2> a_matrix;
     double memberwise_coeficient = 0.00;
 
@@ -151,7 +151,7 @@ std::size_t TestMatrixConstIterator() {
 }
 
 int main() {
-    std::size_t number_of_failed_tests = 0;
+    int number_of_failed_tests = 0;
     number_of_failed_tests += TestMatrixIteratorAssign<1, 1>();
 
     number_of_failed_tests += TestMatrixIteratorAssign<1, 2>();
