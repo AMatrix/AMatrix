@@ -154,6 +154,35 @@ int TestSubMatrixCheckAliasing() {
     return 0;  // not failed
 }
 
+template <std::size_t TSize>
+int TestSubVectorCheckAliasing() {
+    AMatrix::Vector<double, TSize> a_vector(
+        AMatrix::ZeroMatrix<double>(TSize, 1));
+    AMatrix::Vector<double, TSize> b_vector(
+        AMatrix::ZeroMatrix<double>(TSize, 1));
+
+    std::size_t sub_size = (TSize > 1) ? TSize - 1 : 1;
+    std::size_t sub_index = (TSize > 1) ? 1 : 0;
+
+    AMatrix::SubVector<AMatrix::Vector<double, TSize>> sub_vector(
+        a_vector, sub_index, sub_size);
+
+    // Note: without this print the optimizer will take out a_matrix and b_matrix allocation resuting in test failure
+    std::cout << "Check overlapping of a_vector.data() " << a_vector.data()
+              << " and b_vector.data() " << b_vector.data() << std::endl;
+
+    for (std::size_t i = 1; i < a_vector.size(); i++) {
+        AMATRIX_CHECK(sub_vector.check_aliasing(
+            a_vector.data(), a_vector.data() + a_vector.size()));
+
+        AMATRIX_CHECK_EQUAL(sub_vector.check_aliasing(b_vector.data(),
+                                b_vector.data() + b_vector.size()),
+            false);
+    }
+
+    return 0;  // not failed
+}
+
 int main() {
     int number_of_failed_tests = 0;
     number_of_failed_tests += TestMatrixCheckAliasing<1, 1>();

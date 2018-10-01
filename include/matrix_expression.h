@@ -311,6 +311,10 @@ class SubVector
     data_type* data() { return &_original_expression[_origin_index]; }
 
     data_type const* data() const { return &_original_expression[_origin_index]; }
+
+    bool check_aliasing(const data_type* From, const data_type* To) const {
+        return _original_expression.check_aliasing(From, To);
+    }
 };
 
 template <typename TDataType>
