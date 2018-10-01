@@ -2,15 +2,20 @@
 #include "checks.h"
 
 template <std::size_t TSize1, std::size_t TSize2>
-std::size_t TestTransposeCheckAliasing() {
+std::size_t TestMatrixCheckAliasing() {
     AMatrix::Matrix<double, TSize1, TSize2> a_matrix;
     a_matrix = AMatrix::ZeroMatrix<double>(TSize1, TSize2);
 
     AMatrix::Matrix<double, TSize1, TSize2> b_matrix;
-    b_matrix = AMatrix::ZeroMatrix<double>(TSize1, TSize2);
+    b_matrix = a_matrix;
+
+	// Note: without this print the optimizer will take out a_matrix and b_matrix allocation resuting in test failure
+    std::cout << "Check overlapping of a_matrix.data() " << a_matrix.data()
+              << " and b_matrix.data() " << b_matrix.data() << std::endl;
 
     AMATRIX_CHECK(a_matrix.check_aliasing(
         a_matrix.data(), a_matrix.data() + a_matrix.size()));
+
 
     AMATRIX_CHECK_EQUAL(b_matrix.check_aliasing(
                             a_matrix.data(), a_matrix.data() + a_matrix.size()),
@@ -30,12 +35,16 @@ std::size_t TestTransposeCheckAliasing() {
 }
 
 template <std::size_t TSize1, std::size_t TSize2>
-std::size_t TestMatrixCheckAliasing() {
+std::size_t TestTransposeCheckAliasing() {
     AMatrix::Matrix<double, TSize1, TSize2> a_matrix;
     a_matrix = AMatrix::ZeroMatrix<double>(TSize1, TSize2);
 
     AMatrix::Matrix<double, TSize1, TSize2> b_matrix;
-    b_matrix = AMatrix::ZeroMatrix<double>(TSize1, TSize2);
+    b_matrix = a_matrix;
+
+	// Note: without this print the optimizer will take out a_matrix and b_matrix allocation resuting in test failure
+    std::cout << "Check overlapping of a_matrix.data() " << a_matrix.data()
+              << " and b_matrix.data() " << b_matrix.data() << std::endl;
 
     AMATRIX_CHECK(a_matrix.transpose().check_aliasing(
         a_matrix.data(), a_matrix.data() + a_matrix.size()));
