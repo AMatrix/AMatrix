@@ -368,6 +368,10 @@ class IdentityMatrix
     inline std::size_t size1() const { return _size; }
     inline std::size_t size2() const { return _size; }
     inline std::size_t size() const { return _size * _size; }
+
+    bool check_aliasing(const data_type* From, const data_type* To) const {
+        return false;
+    }
 };
 
 template <typename TExpression1Type, typename TExpression2Type>
