@@ -121,6 +121,39 @@ int TestMatrixColumnCheckAliasing() {
     return 0;  // not failed
 }
 
+template <std::size_t TSize1, std::size_t TSize2>
+int TestSubMatrixCheckAliasing() {
+    AMatrix::Matrix<double, TSize1, TSize2> a_matrix;
+    a_matrix = AMatrix::ZeroMatrix<double>(TSize1, TSize2);
+    AMatrix::Matrix<double, TSize1, TSize2> b_matrix;
+    b_matrix = a_matrix;
+
+
+    std::size_t sub_size1 = (TSize1 > 1) ? TSize1 - 1 : 1;
+    std::size_t sub_size2 = (TSize2 > 1) ? TSize2 - 1 : 1;
+
+    std::size_t sub_index1 = (TSize1 > 1) ? 1 : 0;
+    std::size_t sub_index2 = (TSize2 > 1) ? 1 : 0;
+
+    AMatrix::SubMatrix<AMatrix::Matrix<double, TSize1, TSize2>> sub_matrix(
+        a_matrix, sub_index1, sub_index2, sub_size1, sub_size2);
+
+    // Note: without this print the optimizer will take out a_matrix and b_matrix allocation resuting in test failure
+    std::cout << "Check overlapping of a_matrix.data() " << a_matrix.data()
+              << " and b_matrix.data() " << b_matrix.data() << std::endl;
+
+	for (std::size_t i = 1; i < a_matrix.size(); i++) {
+        AMATRIX_CHECK(sub_matrix.check_aliasing(
+            a_matrix.data(), a_matrix.data() + a_matrix.size()));
+
+        AMATRIX_CHECK_EQUAL(sub_matrix.check_aliasing(b_matrix.data(),
+                                b_matrix.data() + b_matrix.size()),
+            false);
+    }
+
+    return 0;  // not failed
+}
+
 int main() {
     int number_of_failed_tests = 0;
     number_of_failed_tests += TestMatrixCheckAliasing<1, 1>();
@@ -157,6 +190,17 @@ int main() {
     number_of_failed_tests += TestMatrixColumnCheckAliasing<1, 3>();
     number_of_failed_tests += TestMatrixColumnCheckAliasing<2, 3>();
     number_of_failed_tests += TestMatrixColumnCheckAliasing<3, 3>();
+
+    number_of_failed_tests += TestSubMatrixCheckAliasing<1, 1>();
+    number_of_failed_tests += TestSubMatrixCheckAliasing<1, 2>();
+    number_of_failed_tests += TestSubMatrixCheckAliasing<2, 1>();
+    number_of_failed_tests += TestSubMatrixCheckAliasing<2, 2>();
+    number_of_failed_tests += TestSubMatrixCheckAliasing<3, 1>();
+    number_of_failed_tests += TestSubMatrixCheckAliasing<3, 2>();
+    number_of_failed_tests += TestSubMatrixCheckAliasing<3, 3>();
+    number_of_failed_tests += TestSubMatrixCheckAliasing<1, 3>();
+    number_of_failed_tests += TestSubMatrixCheckAliasing<2, 3>();
+    number_of_failed_tests += TestSubMatrixCheckAliasing<3, 3>();
 
     std::cout << number_of_failed_tests << "tests failed" << std::endl;
 
