@@ -27,8 +27,8 @@ int TestMatrixIteratorForwardBackward() {
     for (; i_value != a_matrix.end(); i_value++)
         *i_value = 2.33 * (++memberwise_coeficient);
 
-    for (int i = a_matrix.size1() - 1; i >= 0; i--)
-        for (int j = a_matrix.size2() - 1; j >= 0; j--) {
+    for (int i = static_cast<int>(a_matrix.size1() - 1); i >= 0; i--)
+        for (int j = static_cast<int>(a_matrix.size2() - 1); j >= 0; j--) {
             i_value--;
 
             AMATRIX_CHECK_EQUAL(a_matrix(i, j), *i_value);
@@ -37,8 +37,8 @@ int TestMatrixIteratorForwardBackward() {
     for (; i_value != a_matrix.end(); ++i_value)
         *i_value = 1.34 * (++memberwise_coeficient);
 
-    for (int i = a_matrix.size1() - 1; i >= 0; i--)
-        for (int j = a_matrix.size2() - 1; j >= 0; j--) {
+    for (int i = static_cast<int>(a_matrix.size1() - 1); i >= 0; i--)
+        for (int j = static_cast<int>(a_matrix.size2() - 1); j >= 0; j--) {
             AMATRIX_CHECK_EQUAL(a_matrix(i, j), *(--i_value));
         }
 
@@ -61,8 +61,8 @@ int TestMatrixIteratorArithmetic() {
             i_value += 1;
         }
 
-    for (int i = a_matrix.size1() - 1; i >= 0; i--)
-        for (int j = a_matrix.size2() - 1; j >= 0; j--) {
+    for (int i = static_cast<int>(a_matrix.size1() - 1); i >= 0; i--)
+        for (int j = static_cast<int>(a_matrix.size2() - 1); j >= 0; j--) {
             i_value -= 1;
             AMATRIX_CHECK_EQUAL(a_matrix(i, j), *i_value);
         }

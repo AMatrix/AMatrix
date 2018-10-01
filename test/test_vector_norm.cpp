@@ -7,7 +7,7 @@ int TestVectorNorm() {
     double results[] = {0, 1, 5, 14, 30, 55, 91, 140, 204, 285};
 
     for (std::size_t i = 0; i < a_vector.size(); i++)
-        a_vector[i] = i + 1;
+        a_vector[i] = i + 1.00;
 
     AMATRIX_CHECK_EQUAL(a_vector.norm(), std::sqrt(results[TSize]));
     AMATRIX_CHECK_EQUAL(a_vector.squared_norm(), results[TSize]);

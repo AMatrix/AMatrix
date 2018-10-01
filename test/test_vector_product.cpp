@@ -38,7 +38,7 @@ int TestVectorProduct() {
     AMatrix::Vector<double, TSize> b_vector;
 
     for (std::size_t i = 0; i < a_vector.size(); i++)
-        a_vector[i] = i+1;
+        a_vector[i] = i+1.00;
 
     for (std::size_t i = 0; i < b_vector.size1(); i++)
             b_vector[i] = 5.1;
@@ -59,7 +59,7 @@ int TestVectorOuterProduct() {
     AMatrix::Vector<double, TSize2> b_vector;
 
     for (std::size_t i = 0; i < a_vector.size(); i++)
-        a_vector[i] = i+1;
+        a_vector[i] = i+1.00;
 
     for (std::size_t i = 0; i < b_vector.size(); i++)
             b_vector[i] = 5.1 * i;

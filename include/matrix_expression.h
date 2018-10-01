@@ -646,7 +646,7 @@ class LUFactorization
     /// The algorithm is based on wikipedia implemenation which
     /// can be found in https://en.wikipedia.org/wiki/LU_decomposition
     TMatrixType inverse() {
-        const std::size_t size = size1();
+        const int size = static_cast<int>(size1());
         TMatrixType result(size, size);
 
         for (std::size_t j = 0; j < size; j++) {
@@ -662,7 +662,7 @@ class LUFactorization
             }
 
             for (int i = size - 1; i >= 0; i--) {
-                for (std::size_t k = i + 1; k < size; k++)
+                for (int k = i + 1; k < size; k++)
                     result(i, j) -=
                         _matrix(_permutation_vector[i], k) * result(k, j);
 
@@ -687,8 +687,8 @@ class LUFactorization
                 result[i] -= _matrix(_permutation_vector[i], k) * result[k];
         }
 
-         for (int i = size - 1; i >= 0; i--) {
-            for (std::size_t k = i + 1; k < size; k++)
+         for (int i = static_cast<int>(size - 1); i >= 0; i--) {
+            for (int k = i + 1; k < static_cast<int>(size); k++)
                  result[i] -= _matrix(_permutation_vector[i], k) * result[k];
 
             result[i] /= _matrix(_permutation_vector[i], i);

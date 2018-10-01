@@ -37,7 +37,7 @@ int TestMatrixTransposeProduct() {
 
     for (std::size_t i = 0; i < b_matrix.size1(); i++)
         for (std::size_t j = 0; j < b_matrix.size2(); j++)
-            b_matrix(i, j) = i + j + 1;
+            b_matrix(i, j) = i + j + 1.00;
 
     c_matrix = a_matrix * b_matrix.transpose();
 
