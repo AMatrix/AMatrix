@@ -183,6 +183,17 @@ int TestSubVectorCheckAliasing() {
     return 0;  // not failed
 }
 
+template <std::size_t TSize1, std::size_t TSize2>
+int TestZeroCheckAliasing() {
+    AMatrix::ZeroMatrix<double> zero_matrix(TSize1, TSize2);
+    AMatrix::Matrix<double, TSize1, TSize2> a_matrix;
+    double* a_pointer = a_matrix.data();
+    AMATRIX_CHECK_EQUAL(zero_matrix.check_aliasing(a_pointer - 1024, a_pointer + 1024),
+            false);
+
+    return 0;  // not failed
+}
+
 int main() {
     int number_of_failed_tests = 0;
     number_of_failed_tests += TestMatrixCheckAliasing<1, 1>();
@@ -230,6 +241,21 @@ int main() {
     number_of_failed_tests += TestSubMatrixCheckAliasing<1, 3>();
     number_of_failed_tests += TestSubMatrixCheckAliasing<2, 3>();
     number_of_failed_tests += TestSubMatrixCheckAliasing<3, 3>();
+
+    number_of_failed_tests += TestSubVectorCheckAliasing<1>();
+    number_of_failed_tests += TestSubVectorCheckAliasing<2>();
+    number_of_failed_tests += TestSubVectorCheckAliasing<3>();
+
+    number_of_failed_tests += TestZeroCheckAliasing<1, 1>();
+    number_of_failed_tests += TestZeroCheckAliasing<1, 2>();
+    number_of_failed_tests += TestZeroCheckAliasing<2, 1>();
+    number_of_failed_tests += TestZeroCheckAliasing<2, 2>();
+    number_of_failed_tests += TestZeroCheckAliasing<3, 1>();
+    number_of_failed_tests += TestZeroCheckAliasing<3, 2>();
+    number_of_failed_tests += TestZeroCheckAliasing<3, 3>();
+    number_of_failed_tests += TestZeroCheckAliasing<1, 3>();
+    number_of_failed_tests += TestZeroCheckAliasing<2, 3>();
+    number_of_failed_tests += TestZeroCheckAliasing<3, 3>();
 
     std::cout << number_of_failed_tests << "tests failed" << std::endl;
 

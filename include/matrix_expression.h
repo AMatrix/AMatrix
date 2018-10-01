@@ -343,6 +343,10 @@ class ZeroMatrix
     inline std::size_t size2() const { return _size2; }
 
     inline std::size_t size() const { return _size1 * _size2; }
+
+    bool check_aliasing(const data_type* From, const data_type* To) const {
+        return false;
+    }
 };
 
 template <typename TDataType>
