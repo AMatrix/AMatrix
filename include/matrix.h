@@ -178,9 +178,10 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>,
     bool check_aliasing(const data_type* From, const data_type* To) const {
         const data_type* const end_pointer = data() + size();
         bool check1 = ((From <= data()) && (data() < To));
-        bool check2 = ((From < end_pointer) && (end_pointer < To));
+        bool check2 = ((From < end_pointer) && (end_pointer < To));  // I'm not sure if should be =< To. Pooyan.
         bool check3 = ((From > data()) && (To <= end_pointer));
-        return ( check1 || check2 || check3 );
+
+        return (check1 || check2 || check3);
     }
 
         TransposeMatrix<Matrix<TDataType, TSize1, TSize2>> transpose() {
