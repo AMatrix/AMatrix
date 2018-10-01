@@ -192,7 +192,7 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>,
         return MatrixRow<Matrix<TDataType, TSize1, TSize2>>(*this, i);
     }
 
-    MatrixColumn<Matrix<TDataType, TSize1, TSize2>> col(std::size_t i) {
+    MatrixColumn<Matrix<TDataType, TSize1, TSize2>> column(std::size_t i) {
         return MatrixColumn<Matrix<TDataType, TSize1, TSize2>>(*this, i);
     }
 };

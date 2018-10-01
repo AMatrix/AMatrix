@@ -107,13 +107,13 @@ int TestMatrixColumnCheckAliasing() {
               << " and b_matrix.data() " << b_matrix.data() << std::endl;
 
     for (std::size_t i = 1; i < a_matrix.size(); i++) {
-        AMATRIX_CHECK(a_matrix.col(i).check_aliasing(
+        AMATRIX_CHECK(a_matrix.column(i).check_aliasing(
             a_matrix.data(), a_matrix.data() + a_matrix.size()));
 
-        AMATRIX_CHECK_EQUAL(b_matrix.col(i).check_aliasing(a_matrix.data(),
+        AMATRIX_CHECK_EQUAL(b_matrix.column(i).check_aliasing(a_matrix.data(),
                                 a_matrix.data() + a_matrix.size()),
             false);
-        AMATRIX_CHECK_EQUAL(a_matrix.col(i).check_aliasing(b_matrix.data(),
+        AMATRIX_CHECK_EQUAL(a_matrix.column(i).check_aliasing(b_matrix.data(),
                                 b_matrix.data() + b_matrix.size()),
             false);
     }
