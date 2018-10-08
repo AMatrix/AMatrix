@@ -2,7 +2,7 @@
 #include "checks.h"
 
 template <std::size_t TSize1, std::size_t TSize2>
-std::size_t TestMatrixInitializeToZero() {
+int TestMatrixInitializeToZero() {
     AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> a_matrix(
         AMatrix::ZeroMatrix<double>(TSize1, TSize2));
 
@@ -13,7 +13,7 @@ std::size_t TestMatrixInitializeToZero() {
     return 0;  // not failed
 }
 
-std::size_t TestMatrixInitialize1() {
+int TestMatrixInitialize1() {
     AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> a_matrix{1.2};
 
     AMATRIX_CHECK_EQUAL(a_matrix.size1(), 1);
@@ -23,7 +23,7 @@ std::size_t TestMatrixInitialize1() {
     return 0;  // not failed
 }
 
-std::size_t TestMatrixInitialize2() {
+int TestMatrixInitialize2() {
     AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> a_matrix{1.2, 2.3};
 
     AMATRIX_CHECK_EQUAL(a_matrix.size1(), 1);
@@ -34,7 +34,7 @@ std::size_t TestMatrixInitialize2() {
     return 0;  // not failed
 }
 
-std::size_t TestMatrixInitialize3() {
+int TestMatrixInitialize3() {
     AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> a_matrix{ 1.2, 2.3, 3.4 };
 
     AMATRIX_CHECK_EQUAL(a_matrix.size1(), 1);
@@ -47,7 +47,7 @@ std::size_t TestMatrixInitialize3() {
 }
 
 int main() {
-    std::size_t number_of_failed_tests = 0;
+    int number_of_failed_tests = 0;
     number_of_failed_tests += TestMatrixInitializeToZero<1, 1>();
 
     number_of_failed_tests += TestMatrixInitializeToZero<1, 2>();

@@ -1,7 +1,7 @@
 #include "amatrix.h"
 #include "checks.h"
 
-std::size_t TestDynamicMatrixResize(std::size_t Size1, std::size_t Size2) {
+int TestDynamicMatrixResize(std::size_t Size1, std::size_t Size2) {
     AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> a_matrix(0,0);
     a_matrix.resize(Size1, Size2);
     for (std::size_t i = 0; i < a_matrix.size1(); i++)
@@ -16,7 +16,7 @@ std::size_t TestDynamicMatrixResize(std::size_t Size1, std::size_t Size2) {
 }
 
 int main() {
-    std::size_t number_of_failed_tests = 0;
+    int number_of_failed_tests = 0;
     number_of_failed_tests += TestDynamicMatrixResize(1, 1);
 
     number_of_failed_tests += TestDynamicMatrixResize(1, 2);

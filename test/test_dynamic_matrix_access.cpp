@@ -1,7 +1,7 @@
 #include "amatrix.h"
 #include "checks.h"
 
-std::size_t TestDynamicMatrixAcess(std::size_t Size1, std::size_t Size2) {
+int TestDynamicMatrixAcess(std::size_t Size1, std::size_t Size2) {
     AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> a_matrix(Size1, Size2);
     for (std::size_t i = 0; i < a_matrix.size1(); i++)
         for (std::size_t j = 0; j < a_matrix.size2(); j++)
@@ -15,7 +15,7 @@ std::size_t TestDynamicMatrixAcess(std::size_t Size1, std::size_t Size2) {
 }
 
 int main() {
-    std::size_t number_of_failed_tests = 0;
+    int number_of_failed_tests = 0;
     number_of_failed_tests += TestDynamicMatrixAcess(1, 1);
 
     number_of_failed_tests += TestDynamicMatrixAcess(1, 2);
