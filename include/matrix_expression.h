@@ -486,6 +486,10 @@ class MatrixUnaryMinusExpression
     inline data_type operator[](std::size_t i) const {
         return -_original_expression[i];
     }
+
+    bool check_aliasing(const data_type* From, const data_type* To) const {
+        return _original_expression.check_aliasing(From, To);
+    }
 };
 
 template <typename TExpressionType>
