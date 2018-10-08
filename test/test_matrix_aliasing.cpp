@@ -206,6 +206,33 @@ int TestIdentityMatrixCheckAliasing() {
     return 0;  // not failed
 }
 
+
+template <std::size_t TSize1, std::size_t TSize2>
+int TestSumExpressionCheckAliasing() {
+    AMatrix::Matrix<double, TSize1, TSize2> a_matrix;
+    a_matrix = AMatrix::ZeroMatrix<double>(TSize1, TSize2);
+
+    AMatrix::Matrix<double, TSize1, TSize2> b_matrix;
+ 
+    b_matrix = a_matrix;
+
+	auto a_plus_b = a_matrix + b_matrix;
+    auto b_plus_b = b_matrix + b_matrix;
+
+    // Note: without this print the optimizer will take out a_matrix and b_matrix allocation resuting in test failure
+    std::cout << "Check overlapping of a_matrix.data() " << a_matrix.data()
+              << " and b_matrix.data() " << b_matrix.data() << std::endl;
+
+    AMATRIX_CHECK(a_plus_b.check_aliasing(
+        a_matrix.data(), a_matrix.data() + a_matrix.size()));
+
+    AMATRIX_CHECK_EQUAL(b_plus_b.check_aliasing(
+                            a_matrix.data(), a_matrix.data() + a_matrix.size()),
+        false);
+
+    return 0;  // not failed
+}
+
 int main() {
     int number_of_failed_tests = 0;
     number_of_failed_tests += TestMatrixCheckAliasing<1, 1>();
@@ -272,6 +299,17 @@ int main() {
     number_of_failed_tests += TestIdentityMatrixCheckAliasing<1>();
     number_of_failed_tests += TestIdentityMatrixCheckAliasing<2>();
     number_of_failed_tests += TestIdentityMatrixCheckAliasing<3>();
+
+    number_of_failed_tests += TestSumExpressionCheckAliasing<1, 1>();
+    number_of_failed_tests += TestSumExpressionCheckAliasing<1, 2>();
+    number_of_failed_tests += TestSumExpressionCheckAliasing<2, 1>();
+    number_of_failed_tests += TestSumExpressionCheckAliasing<2, 2>();
+    number_of_failed_tests += TestSumExpressionCheckAliasing<3, 1>();
+    number_of_failed_tests += TestSumExpressionCheckAliasing<3, 2>();
+    number_of_failed_tests += TestSumExpressionCheckAliasing<3, 3>();
+    number_of_failed_tests += TestSumExpressionCheckAliasing<1, 3>();
+    number_of_failed_tests += TestSumExpressionCheckAliasing<2, 3>();
+    number_of_failed_tests += TestSumExpressionCheckAliasing<3, 3>();
 
     std::cout << number_of_failed_tests << "tests failed" << std::endl;
 
