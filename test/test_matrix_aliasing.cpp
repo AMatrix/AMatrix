@@ -167,7 +167,7 @@ int TestSubVectorCheckAliasing() {
     AMatrix::SubVector<AMatrix::Vector<double, TSize>> sub_vector(
         a_vector, sub_index, sub_size);
 
-    // Note: without this print the optimizer will take out a_matrix and b_matrix allocation resuting in test failure
+    // Note: without this print the optimizer will take out a_vector and b_vector allocation resuting in test failure
     std::cout << "Check overlapping of a_vector.data() " << a_vector.data()
               << " and b_vector.data() " << b_vector.data() << std::endl;
 
@@ -334,6 +334,30 @@ int TestScalarProductExpressionCheckAliasing() {
     return 0;  // not failed
 }
 
+template <std::size_t TSize>
+int TestOuterProductExpressionCheckAliasing() {
+    AMatrix::Vector<double, TSize> a_vector(
+        AMatrix::ZeroMatrix<double>(TSize, 1));
+    AMatrix::Vector<double, TSize> b_vector(
+        AMatrix::ZeroMatrix<double>(TSize, 1));
+
+    auto a_prod_b = OuterProduct(a_vector, b_vector);
+    auto b_prod_b = OuterProduct(b_vector, b_vector);
+
+    // Note: without this print the optimizer will take out a_vector and b_vector allocation resuting in test failure
+    std::cout << "Check overlapping of a_vector.data() " << a_vector.data()
+              << " and b_vector.data() " << b_vector.data() << std::endl;
+
+    AMATRIX_CHECK(a_prod_b.check_aliasing(
+        a_vector.data(), a_vector.data() + a_vector.size()));
+
+    AMATRIX_CHECK_EQUAL(b_prod_b.check_aliasing(
+                            a_vector.data(), a_vector.data() + a_vector.size()),
+        false);
+
+    return 0;  // not failed
+}
+
 int main() {
     int number_of_failed_tests = 0;
     number_of_failed_tests += TestMatrixCheckAliasing<1, 1>();
@@ -455,6 +479,10 @@ int main() {
     number_of_failed_tests += TestScalarDivisionExpressionCheckAliasing<1, 3>();
     number_of_failed_tests += TestScalarDivisionExpressionCheckAliasing<2, 3>();
     number_of_failed_tests += TestScalarDivisionExpressionCheckAliasing<3, 3>();
+
+    number_of_failed_tests += TestOuterProductExpressionCheckAliasing<1>();
+    number_of_failed_tests += TestOuterProductExpressionCheckAliasing<2>();
+    number_of_failed_tests += TestOuterProductExpressionCheckAliasing<3>();
 
 	std::cout << number_of_failed_tests << "tests failed" << std::endl;
 
