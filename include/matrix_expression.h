@@ -566,6 +566,10 @@ class MatrixScalarDivisionExpression
     inline data_type operator[](std::size_t i) const {
         return _first[i] * _inverse_of_second;
     }
+
+    bool check_aliasing(const data_type* From, const data_type* To) const {
+        return _first.check_aliasing(From, To);
+    }
 };
 
 template <typename TExpressionType, std::size_t TCategory>
