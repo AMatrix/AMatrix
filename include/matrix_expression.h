@@ -556,6 +556,11 @@ class MatrixProductExpression
             result += _first(i, k) * _second(k, j);
         return result;
     }
+
+    bool check_aliasing(const data_type* From, const data_type* To) const {
+        return _first.check_aliasing(From, To) ||
+               _second.check_aliasing(From, To);
+    }
 };
 
 template <typename TExpression1Type, typename TExpression2Type,
