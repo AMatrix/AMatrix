@@ -353,7 +353,7 @@ int TestMatrixProductExpressionCheckAliasing() {
     AMATRIX_CHECK(a_prod_b.check_aliasing(
         a_matrix.data(), a_matrix.data() + a_matrix.size()));
 
-    AMATRIX_CHECK_EQUAL(b_rod_b.check_aliasing(
+    AMATRIX_CHECK_EQUAL(b_prod_b.check_aliasing(
                             a_matrix.data(), a_matrix.data() + a_matrix.size()),
         false);
 
