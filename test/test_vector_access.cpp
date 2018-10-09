@@ -2,7 +2,7 @@
 #include "checks.h"
 
 template <std::size_t TSize>
-std::size_t TestVectorAcess() {
+int TestVectorAcess() {
     AMatrix::Vector<double, TSize> a_vector;
     for (std::size_t i = 0; i < a_vector.size(); i++)
             a_vector[i] = 2.33 * i;
@@ -14,7 +14,7 @@ std::size_t TestVectorAcess() {
 }
 
 int main() {
-    std::size_t number_of_failed_tests = 0;
+    int number_of_failed_tests = 0;
     number_of_failed_tests += TestVectorAcess<1>();
     number_of_failed_tests += TestVectorAcess<2>();
     number_of_failed_tests += TestVectorAcess<3>();

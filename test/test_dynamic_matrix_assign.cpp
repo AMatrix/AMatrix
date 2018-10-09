@@ -2,7 +2,7 @@
 #include "checks.h"
 
 template <std::size_t TSize1, std::size_t TSize2>
-std::size_t TestZeroMatrixAssign() {
+int TestZeroMatrixAssign() {
     AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> a_matrix(1,1);
     a_matrix = AMatrix::ZeroMatrix<double>(TSize1, TSize2);
 
@@ -15,7 +15,7 @@ std::size_t TestZeroMatrixAssign() {
     return 0;  // not failed
 }
 
-std::size_t TestMatrixAssign(std::size_t Size1, std::size_t Size2) {
+int TestMatrixAssign(std::size_t Size1, std::size_t Size2) {
     AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> a_matrix(Size1, Size2);
     AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> b_matrix(Size1, Size2);
     for (std::size_t i = 0; i < a_matrix.size1(); i++)
@@ -34,7 +34,7 @@ std::size_t TestMatrixAssign(std::size_t Size1, std::size_t Size2) {
 }
 
 int main() {
-    std::size_t number_of_failed_tests = 0;
+    int number_of_failed_tests = 0;
     number_of_failed_tests += TestZeroMatrixAssign<1, 1>();
 
     number_of_failed_tests += TestZeroMatrixAssign<1, 2>();

@@ -2,7 +2,7 @@
 #include "checks.h"
 
 template <std::size_t TSize>
-std::size_t TestVectorPlus() {
+int TestVectorPlus() {
     AMatrix::Vector<double, TSize> a_vector;
     AMatrix::Vector<double, TSize> b_vector;
     AMatrix::Vector<double, TSize> c_vector;
@@ -19,7 +19,7 @@ std::size_t TestVectorPlus() {
 }
 
 template <std::size_t TSize>
-std::size_t TestMatrixPlusEqual() {
+int TestMatrixPlusEqual() {
     AMatrix::Vector<double, TSize> a_vector;
     AMatrix::Vector<double, TSize> b_vector;
     for (std::size_t i = 0; i < a_vector.size(); i++)
@@ -35,7 +35,7 @@ std::size_t TestMatrixPlusEqual() {
 }
 
 int main() {
-    std::size_t number_of_failed_tests = 0;
+    int number_of_failed_tests = 0;
     number_of_failed_tests += TestVectorPlus<1>();
     number_of_failed_tests += TestVectorPlus<2>();
     number_of_failed_tests += TestVectorPlus<3>();

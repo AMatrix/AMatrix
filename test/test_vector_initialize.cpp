@@ -2,7 +2,7 @@
 #include "checks.h"
 
 template <std::size_t TSize>
-std::size_t TestVectorInitializeToZero() {
+int TestVectorInitializeToZero() {
     const AMatrix::ZeroVector<double> zero_vector(TSize);
     AMatrix::Vector<double, TSize> a_vector(zero_vector);
 
@@ -12,7 +12,7 @@ std::size_t TestVectorInitializeToZero() {
     return 0;  // not failed
 }
 
-std::size_t TestVectorInitialize1() {
+int TestVectorInitialize1() {
     AMatrix::Vector<double, 1> a_vector{1.2};
 
     AMATRIX_CHECK_EQUAL(a_vector[0], 1.2);
@@ -20,7 +20,7 @@ std::size_t TestVectorInitialize1() {
     return 0;  // not failed
 }
 
-std::size_t TestVectorInitialize2() {
+int TestVectorInitialize2() {
     AMatrix::Vector<double, 2> a_vector{1.2, 2.3};
 
     AMATRIX_CHECK_EQUAL(a_vector[0], 1.2);
@@ -29,7 +29,7 @@ std::size_t TestVectorInitialize2() {
     return 0;  // not failed
 }
 
-std::size_t TestVectorInitialize3() {
+int TestVectorInitialize3() {
     AMatrix::Vector<double, 3> a_vector{1.2, 2.3, 3.4};
 
     AMATRIX_CHECK_EQUAL(a_vector[0], 1.2);
@@ -40,7 +40,7 @@ std::size_t TestVectorInitialize3() {
 }
 
 int main() {
-    std::size_t number_of_failed_tests = 0;
+    int number_of_failed_tests = 0;
     number_of_failed_tests += TestVectorInitializeToZero<1>();
     number_of_failed_tests += TestVectorInitializeToZero<2>();
     number_of_failed_tests += TestVectorInitializeToZero<3>();

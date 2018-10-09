@@ -1,7 +1,7 @@
 #include "amatrix.h"
 #include "checks.h"
 
-std::size_t TestMatrixScalarProduct(std::size_t TSize1, std::size_t TSize2) {
+int TestMatrixScalarProduct(std::size_t TSize1, std::size_t TSize2) {
     AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> a_matrix(TSize1, TSize2);
     AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> b_matrix(TSize1, TSize2);
     for (std::size_t i = 0; i < a_matrix.size1(); i++)
@@ -20,7 +20,7 @@ std::size_t TestMatrixScalarProduct(std::size_t TSize1, std::size_t TSize2) {
 }
 
 template <std::size_t TSize1, std::size_t TSize2>
-std::size_t TestMatrixScalarSelfProduct() {
+int TestMatrixScalarSelfProduct() {
     AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> a_matrix(TSize1, TSize2);
     for (std::size_t i = 0; i < a_matrix.size1(); i++)
         for (std::size_t j = 0; j < a_matrix.size2(); j++)
@@ -35,7 +35,7 @@ std::size_t TestMatrixScalarSelfProduct() {
     return 0;  // not failed
 }
 
-std::size_t TestMatrixProduct(std::size_t TSize1, std::size_t TSize2,
+int TestMatrixProduct(std::size_t TSize1, std::size_t TSize2,
     std::size_t TSecondSize1) {
     std::cout << "Testing A(" << TSize1 << "," << TSize2
               << ") X B(" << TSize2 << "," << TSecondSize1
@@ -52,7 +52,7 @@ std::size_t TestMatrixProduct(std::size_t TSize1, std::size_t TSize2,
 
     for (std::size_t i = 0; i < b_matrix.size1(); i++)
         for (std::size_t j = 0; j < b_matrix.size2(); j++)
-            b_matrix(i, j) = i + j + 1;
+            b_matrix(i, j) = i + j + 1.00;
 
     c_matrix = a_matrix * b_matrix;
 
@@ -67,7 +67,7 @@ std::size_t TestMatrixProduct(std::size_t TSize1, std::size_t TSize2,
 }
 
 int main() {
-    std::size_t number_of_failed_tests = 0;
+    int number_of_failed_tests = 0;
 
     // scalar product test
     number_of_failed_tests += TestMatrixScalarProduct(1,1);

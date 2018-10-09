@@ -1,7 +1,7 @@
 #include "amatrix.h"
 #include "checks.h"
 
-std::size_t TestMatrixScaleAndAdd(std::size_t TSize1, std::size_t TSize2) {
+int TestMatrixScaleAndAdd(std::size_t TSize1, std::size_t TSize2) {
     AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> a_matrix(TSize1, TSize2);
     AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> b_matrix(TSize1, TSize2);
     AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> c_matrix(TSize1, TSize2);
@@ -20,7 +20,7 @@ std::size_t TestMatrixScaleAndAdd(std::size_t TSize1, std::size_t TSize2) {
     return 0;  // not failed
 }
 
-std::size_t TestMatrixScaleAndAddEqual(std::size_t TSize1, std::size_t TSize2) {
+int TestMatrixScaleAndAddEqual(std::size_t TSize1, std::size_t TSize2) {
     AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> a_matrix(TSize1, TSize2);
     AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> b_matrix(TSize1, TSize2);
     AMatrix::Matrix<double, AMatrix::dynamic, AMatrix::dynamic> c_matrix(TSize1, TSize2);
@@ -40,7 +40,7 @@ std::size_t TestMatrixScaleAndAddEqual(std::size_t TSize1, std::size_t TSize2) {
 }
 
 int main() {
-    std::size_t number_of_failed_tests = 0;
+    int number_of_failed_tests = 0;
 	number_of_failed_tests += TestMatrixScaleAndAdd(1,1);
 
 	number_of_failed_tests += TestMatrixScaleAndAdd(1,2);
