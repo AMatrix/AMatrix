@@ -492,6 +492,12 @@ class MatrixUnaryMinusExpression
     }
 };
 
+template <typename TExpressionType, std::size_t TCategory>
+MatrixUnaryMinusExpression<TExpressionType> operator-(
+    MatrixExpression<TExpressionType, TCategory> const& TheExpression) {
+    return MatrixUnaryMinusExpression<TExpressionType>(TheExpression.expression());
+}
+
 template <typename TExpressionType>
 class MatrixScalarProductExpression
     : public MatrixExpression<MatrixScalarProductExpression<TExpressionType>,
