@@ -66,8 +66,6 @@ int TestVectorOuterProduct() {
 
     auto result = OuterProduct(a_vector, b_vector);
 
-    auto n = b_vector.size();
-
     AMATRIX_CHECK_EQUAL(result.size1(), TSize1);
     AMATRIX_CHECK_EQUAL(result.size2(), TSize2);
 
