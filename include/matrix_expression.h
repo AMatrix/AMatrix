@@ -113,11 +113,11 @@ class MatrixRow : public MatrixExpression<MatrixRow<TExpressionType>> {
     }
 
     iterator end() {
-        return iterator(_original_expression,_row_index,0,0,1);
+        return iterator(_original_expression,_row_index,_original_expression.size2(),0,1);
     }
 
     const_iterator begin() const {
-        return const_iterator(_original_expression,_row_index,_original_expression.size2(),0,1);
+        return const_iterator(_original_expression,_row_index,0,0,1);
     }
 
     const_iterator end() const {
