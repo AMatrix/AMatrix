@@ -129,7 +129,7 @@ class Matrix : public MatrixExpression<Matrix<TDataType, TSize1, TSize2>,
     }
 
     void resize(std::size_t NewSize1, std::size_t NewSize2) {
-        base_type::resize(NewSize1, NewSize2);
+        //base_type::resize(NewSize1, NewSize2);
     }
 
     void resize(std::size_t NewSize) { base_type::resize(NewSize); }
