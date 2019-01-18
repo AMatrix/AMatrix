@@ -11,4 +11,5 @@ BinPackParameters: true
 AlignAfterOpenBracket: DontAlign
 AllowShortLoopsOnASingleLine: false
 AllowShortIfStatementsOnASingleLine: false
+ColumnLimit: 120
 ...
