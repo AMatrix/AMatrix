@@ -2,7 +2,7 @@
 #include "checks.h"
 
 template <std::size_t TSize>
-std::size_t TestVectorScalarProduct() {
+int TestVectorScalarProduct() {
     AMatrix::Vector<double, TSize> a_vector;
     AMatrix::Vector<double, TSize> b_vector;
     for (std::size_t i = 0; i < a_vector.size(); i++)
@@ -19,7 +19,7 @@ std::size_t TestVectorScalarProduct() {
 }
 
 template <std::size_t TSize>
-std::size_t TestVectorScalarSelfProduct() {
+int TestVectorScalarSelfProduct() {
     AMatrix::Vector<double, TSize> a_vector;
     for (std::size_t i = 0; i < a_vector.size(); i++)
             a_vector[i] = 2.33 * i - 4.52;
@@ -33,12 +33,12 @@ std::size_t TestVectorScalarSelfProduct() {
 }
 
 template <std::size_t TSize>
-std::size_t TestVectorProduct() {
+int TestVectorProduct() {
     AMatrix::Vector<double, TSize> a_vector;
     AMatrix::Vector<double, TSize> b_vector;
 
     for (std::size_t i = 0; i < a_vector.size(); i++)
-        a_vector[i] = i+1;
+        a_vector[i] = i+1.00;
 
     for (std::size_t i = 0; i < b_vector.size1(); i++)
             b_vector[i] = 5.1;
@@ -54,19 +54,17 @@ std::size_t TestVectorProduct() {
 }
 
 template <std::size_t TSize1, std::size_t TSize2>
-std::size_t TestVectorOuterProduct() {
+int TestVectorOuterProduct() {
     AMatrix::Vector<double, TSize1> a_vector;
     AMatrix::Vector<double, TSize2> b_vector;
 
     for (std::size_t i = 0; i < a_vector.size(); i++)
-        a_vector[i] = i+1;
+        a_vector[i] = i+1.00;
 
     for (std::size_t i = 0; i < b_vector.size(); i++)
             b_vector[i] = 5.1 * i;
 
     auto result = OuterProduct(a_vector, b_vector);
-
-    auto n = b_vector.size();
 
     AMATRIX_CHECK_EQUAL(result.size1(), TSize1);
     AMATRIX_CHECK_EQUAL(result.size2(), TSize2);
@@ -81,7 +79,7 @@ std::size_t TestVectorOuterProduct() {
 }
 
 int main() {
-    std::size_t number_of_failed_tests = 0;
+    int number_of_failed_tests = 0;
 
     // scalar product test
     number_of_failed_tests += TestVectorScalarProduct<1>();

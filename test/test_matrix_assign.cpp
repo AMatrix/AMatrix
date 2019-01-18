@@ -2,7 +2,7 @@
 #include "checks.h"
 
 template <std::size_t TSize1, std::size_t TSize2>
-std::size_t TestZeroMatrixAssign() {
+int TestZeroMatrixAssign() {
     AMatrix::Matrix<double, TSize1, TSize2> a_matrix;
     a_matrix = AMatrix::ZeroMatrix<double>(TSize1, TSize2);
 
@@ -14,7 +14,7 @@ std::size_t TestZeroMatrixAssign() {
 }
 
 template <std::size_t TSize>
-std::size_t TestIdentityMatrixAssign() {
+int TestIdentityMatrixAssign() {
     AMatrix::Matrix<double, TSize, TSize> a_matrix;
     a_matrix = AMatrix::IdentityMatrix<double>(TSize);
 
@@ -31,7 +31,7 @@ std::size_t TestIdentityMatrixAssign() {
 }
 
 template <std::size_t TSize1, std::size_t TSize2>
-std::size_t TestMatrixAssign() {
+int TestMatrixAssign() {
     AMatrix::Matrix<double, TSize1, TSize2> a_matrix;
     AMatrix::Matrix<double, TSize1, TSize2> b_matrix;
     for (std::size_t i = 0; i < a_matrix.size1(); i++)
@@ -48,7 +48,7 @@ std::size_t TestMatrixAssign() {
 }
 
 template <std::size_t TSize1, std::size_t TSize2>
-std::size_t TestMatrixExpressionAssign() {
+int TestMatrixExpressionAssign() {
     AMatrix::Matrix<double, TSize1, TSize2> a_matrix;
     AMatrix::Matrix<double, TSize1, TSize2> b_matrix;
     for (std::size_t i = 0; i < a_matrix.size1(); i++)
@@ -65,7 +65,7 @@ std::size_t TestMatrixExpressionAssign() {
 }
 
 int main() {
-    std::size_t number_of_failed_tests = 0;
+    int number_of_failed_tests = 0;
     number_of_failed_tests += TestZeroMatrixAssign<1, 1>();
 
     number_of_failed_tests += TestZeroMatrixAssign<1, 2>();

@@ -2,7 +2,7 @@
 #include "checks.h"
 
 template <std::size_t TSize1, std::size_t TSize2>
-std::size_t TestMatrixRowAcess() {
+int TestMatrixRowAcess() {
     AMatrix::Matrix<double, TSize1, TSize2> a_matrix;
     for (std::size_t i = 0; i < a_matrix.size1(); i++) {
         for (std::size_t j = 0; j < a_matrix.size2(); j++)
@@ -10,8 +10,8 @@ std::size_t TestMatrixRowAcess() {
     }
 
     for (std::size_t i = 0; i < a_matrix.size1(); i++) {
-        const AMatrix::MatrixRow<AMatrix::Matrix<double, TSize1, TSize2>> a_row_i(
-            a_matrix, i);
+        const AMatrix::MatrixRow<AMatrix::Matrix<double, TSize1, TSize2>>a_row_i =
+            a_matrix.row(i);
         for (std::size_t j = 0; j < a_matrix.size2(); j++) {
             AMATRIX_CHECK_EQUAL(a_row_i(0, j), a_matrix(i, j));
             AMATRIX_CHECK_EQUAL(a_row_i[j], a_matrix(i, j));
@@ -22,11 +22,11 @@ std::size_t TestMatrixRowAcess() {
 }
 
 template <std::size_t TSize1, std::size_t TSize2>
-std::size_t TestMatrixRowAssign() {
+int TestMatrixRowAssign() {
     AMatrix::Matrix<double, TSize1, TSize2> a_matrix;
     for (std::size_t i = 0; i < a_matrix.size1(); i++) {
-        AMatrix::MatrixRow<AMatrix::Matrix<double, TSize1, TSize2>> a_row_i(
-            a_matrix, i);
+        AMatrix::MatrixRow<AMatrix::Matrix<double, TSize1, TSize2>> a_row_i =
+            a_matrix.row(i);
         AMATRIX_CHECK_EQUAL(a_row_i.size(), TSize2);
         AMATRIX_CHECK_EQUAL(a_row_i.size1(), 1);
         AMATRIX_CHECK_EQUAL(a_row_i.size2(), TSize2);
@@ -41,8 +41,8 @@ std::size_t TestMatrixRowAssign() {
     }
 
     for (std::size_t i = 0; i < a_matrix.size1(); i++) {
-        AMatrix::MatrixRow<AMatrix::Matrix<double, TSize1, TSize2>> a_row_i(
-            a_matrix, i);
+        AMatrix::MatrixRow<AMatrix::Matrix<double, TSize1, TSize2>> a_row_i =
+            a_matrix.row(i);
         AMATRIX_CHECK_EQUAL(a_row_i.size(), TSize2);
         AMATRIX_CHECK_EQUAL(a_row_i.size1(), 1);
         AMATRIX_CHECK_EQUAL(a_row_i.size2(), TSize2);
@@ -60,11 +60,11 @@ std::size_t TestMatrixRowAssign() {
 }
 
 template <std::size_t TSize1, std::size_t TSize2>
-std::size_t TestMatrixRowExpressionAssign() {
+int TestMatrixRowExpressionAssign() {
     AMatrix::Matrix<double, TSize1, TSize2> a_matrix;
     for (std::size_t i = 0; i < a_matrix.size1(); i++) {
-        AMatrix::MatrixRow<AMatrix::Matrix<double, TSize1, TSize2>> a_row_i(
-            a_matrix, i);
+        AMatrix::MatrixRow<AMatrix::Matrix<double, TSize1, TSize2>> a_row_i =
+            a_matrix.row(i);
         AMatrix::Matrix<double, 1, TSize2> b_vector;
         for (std::size_t j = 0; j < a_matrix.size2(); j++)
             b_vector[j] = 2.33 * i - 4.52 * j;
@@ -81,7 +81,7 @@ std::size_t TestMatrixRowExpressionAssign() {
 }
 
 int main() {
-    std::size_t number_of_failed_tests = 0;
+    int number_of_failed_tests = 0;
 
     number_of_failed_tests += TestMatrixRowAcess<1, 1>();
     number_of_failed_tests += TestMatrixRowAcess<1, 2>();

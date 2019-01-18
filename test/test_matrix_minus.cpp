@@ -2,7 +2,7 @@
 #include "checks.h"
 
 template <std::size_t TSize1, std::size_t TSize2>
-std::size_t TestMatrixMinus() {
+int TestMatrixMinus() {
     AMatrix::Matrix<double, TSize1, TSize2> a_matrix;
     AMatrix::Matrix<double, TSize1, TSize2> b_matrix;
     AMatrix::Matrix<double, TSize1, TSize2> c_matrix;
@@ -21,7 +21,7 @@ std::size_t TestMatrixMinus() {
 }
 
 template <std::size_t TSize1, std::size_t TSize2>
-std::size_t TestMatrixMinusEqual() {
+int TestMatrixMinusEqual() {
     AMatrix::Matrix<double, TSize1, TSize2> a_matrix;
     AMatrix::Matrix<double, TSize1, TSize2> b_matrix;
     for (std::size_t i = 0; i < a_matrix.size1(); i++)
@@ -38,8 +38,24 @@ std::size_t TestMatrixMinusEqual() {
     return 0;  // not failed
 }
 
+template <std::size_t TSize1, std::size_t TSize2>
+int TestMatrixUnaryMinus() {
+    AMatrix::Matrix<double, TSize1, TSize2> a_matrix;
+    for (std::size_t i = 0; i < a_matrix.size1(); i++)
+        for (std::size_t j = 0; j < a_matrix.size2(); j++)
+            a_matrix(i, j) = 2.33 * i - 4.52 * j;
+
+	auto b = -a_matrix;
+
+    for (std::size_t i = 0; i < a_matrix.size1(); i++)
+        for (std::size_t j = 0; j < a_matrix.size2(); j++)
+            AMATRIX_CHECK_EQUAL(a_matrix(i, j), -b(i,j));
+
+    return 0;  // not failed
+}
+
 int main() {
-    std::size_t number_of_failed_tests = 0;
+    int number_of_failed_tests = 0;
     number_of_failed_tests += TestMatrixMinus<1, 1>();
 
     number_of_failed_tests += TestMatrixMinus<1, 2>();
@@ -65,6 +81,19 @@ int main() {
     number_of_failed_tests += TestMatrixMinusEqual<1, 3>();
     number_of_failed_tests += TestMatrixMinusEqual<2, 3>();
     number_of_failed_tests += TestMatrixMinusEqual<3, 3>();
+
+    number_of_failed_tests += TestMatrixUnaryMinus<1, 1>();
+							  
+    number_of_failed_tests += TestMatrixUnaryMinus<1, 2>();
+    number_of_failed_tests += TestMatrixUnaryMinus<2, 1>();
+    number_of_failed_tests += TestMatrixUnaryMinus<2, 2>();
+							  
+    number_of_failed_tests += TestMatrixUnaryMinus<3, 1>();
+    number_of_failed_tests += TestMatrixUnaryMinus<3, 2>();
+    number_of_failed_tests += TestMatrixUnaryMinus<3, 3>();
+    number_of_failed_tests += TestMatrixUnaryMinus<1, 3>();
+    number_of_failed_tests += TestMatrixUnaryMinus<2, 3>();
+    number_of_failed_tests += TestMatrixUnaryMinus<3, 3>();
 
     std::cout << number_of_failed_tests << "tests failed" << std::endl;
 
