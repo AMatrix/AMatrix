@@ -48,7 +48,7 @@ class CSRMatrixStorage {
         std::size_t next_row_index = _row_indices[i + 1];
         for (std::size_t index = _row_indices[i]; index < next_row_index; index++)
             if (_column_indices[index] == j)
-                return _values[row_index];
+                return _values[index];
 
         return _zero;
     }
@@ -73,7 +73,7 @@ class CSRMatrixStorage {
         return _values[_row_indices[I + 1] - 1];
     }
 
-	template <typename TVectorType, typename TDataType>
+	template <typename TVectorType>
     void insert_in_position(TVectorType& TheVector, std::size_t Position, TDataType const& Value) {
         std::size_t new_size = _row_indices[_size1];
 
