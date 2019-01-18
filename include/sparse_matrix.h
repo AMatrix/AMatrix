@@ -17,6 +17,6 @@ class SparseMatrix : public TStorageType {
 
     SparseMatrix(std::size_t TheSize1, std::size_t TheSize2,
         std::size_t TheNumberOfNonZeros)
-        : base_type(TheSize1, TheSize2, TheNonZeros) {}
+        : base_type(TheSize1, TheSize2, TheNumberOfNonZeros) {}
 };
 }
