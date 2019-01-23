@@ -1,24 +1,10 @@
 #pragma once
 
 #include <iostream>
+#include "access_category.h"
+#include "matrix_expression_iterator.h"
 
 namespace AMatrix {
-constexpr std::size_t dynamic = 0;
-constexpr std::size_t row_major_access = 1;
-constexpr std::size_t column_major_access = 2;
-constexpr std::size_t unordered_access = 3;
-
-template <std::size_t TCategory1, std::size_t TCategory2>
-class AccessTrait {
-   public:
-    static constexpr std::size_t category = unordered_access;
-};
-
-template <>
-class AccessTrait<row_major_access, row_major_access> {
-   public:
-    static constexpr std::size_t category = row_major_access;
-};
 
 template <typename TExpressionType, std::size_t TCategory = unordered_access>
 class MatrixExpression {
@@ -77,6 +63,8 @@ class MatrixRow : public MatrixExpression<MatrixRow<TExpressionType>> {
 
    public:
     using data_type = typename TExpressionType::data_type;
+    using iterator = ExpressionRandomAccessIterator<data_type, MatrixRow<TExpressionType>,TExpressionType::category>;
+    using const_iterator = ExpressionRandomAccessIterator<const data_type, MatrixRow<TExpressionType>,TExpressionType::category>;
     MatrixRow() = delete;
 
     MatrixRow(TExpressionType& Original, std::size_t RowIndex)
@@ -120,6 +108,22 @@ class MatrixRow : public MatrixExpression<MatrixRow<TExpressionType>> {
     inline std::size_t size1() const { return 1; }
     inline std::size_t size2() const { return _original_expression.size2(); }
 
+    iterator begin() {
+        return iterator(_original_expression,_row_index,0,0,1);
+    }
+
+    iterator end() {
+        return iterator(_original_expression,_row_index,_original_expression.size2(),0,1);
+    }
+
+    const_iterator begin() const {
+        return const_iterator(_original_expression,_row_index,0,0,1);
+    }
+
+    const_iterator end() const {
+        return const_iterator(_original_expression,_row_index,_original_expression.size2(),0,1);
+    }
+
     bool check_aliasing(const data_type* From, const data_type* To) const {
         return _original_expression.check_aliasing(From, To);
     }
@@ -132,6 +136,8 @@ class MatrixColumn : public MatrixExpression<MatrixColumn<TExpressionType>> {
 
    public:
     using data_type = typename TExpressionType::data_type;
+    using iterator = ExpressionRandomAccessIterator<data_type, MatrixColumn<TExpressionType>,TExpressionType::category>;
+    using const_iterator = ExpressionRandomAccessIterator<const data_type, MatrixColumn<TExpressionType>,TExpressionType::category>;
     MatrixColumn() = delete;
 
     MatrixColumn(TExpressionType& Original, std::size_t ColumnIndex)
@@ -174,6 +180,22 @@ class MatrixColumn : public MatrixExpression<MatrixColumn<TExpressionType>> {
     inline std::size_t size() const { return _original_expression.size1(); }
     inline std::size_t size1() const { return _original_expression.size1(); }
     inline std::size_t size2() const { return 1; }
+
+    iterator begin() {
+        return iterator(_original_expression,0,_column_index,1,0);
+    }
+
+    iterator end() {
+        return iterator(_original_expression,_original_expression.size1(),_column_index,1,0);
+    }
+
+    const_iterator begin() const {
+        return const_iterator(_original_expression,0,_column_index,1,0);
+    }
+
+    const_iterator end() const {
+        return const_iterator(_original_expression,_original_expression.size1(),_column_index,1,0);
+    }
 
     bool check_aliasing(const data_type* From, const data_type* To) const {
         return _original_expression.check_aliasing(From, To);
