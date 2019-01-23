@@ -59,6 +59,34 @@ class CSRMatrixStorage {
 
     std::size_t size() const { return _size1 * _size2; }
 
+    class non_zero_iterator {
+        CSRMatrixStorage& _storage;
+        std::size_t _index;
+        std::size_t _row_index;
+		void step_front() {
+            _index++;
+            while ((_storage._row_indices[_row_index + 1]) < _index && (_row_index < _storage.size1()))
+                _row_index++;
+            return *this;
+        }
+       public:
+        using iterator_category = std::forward_iterator_tag;
+        using value_type = TDataType;
+        using difference_type = std::size_t;
+        using pointer = TDataType*;
+        using reference = TDataType&;
+
+		non_zero_iterator(CSRMatrixStorage& TheStorage, std::size_t TheRowIndex, std::size_t TheIndex)
+            : _storage(TheStorage), _index(TheIndex), _row_index(TheRowIndex) {}
+
+        non_zero_iterator& operator++() { step_front(); }
+        non_zero_iterator operator++(int) { step_front(); }
+        bool operator==(non_zero_iterator const& other) const { return _index == other._index; }
+        bool operator!=(non_zero_iterator other) const { return !(*this == other); }
+        reference operator*() const { return _storage[_index]; }
+	
+    };
+
    private:
     TDataType& insert_new_item(std::size_t I, std::size_t J, TDataType const& Value) {
 
