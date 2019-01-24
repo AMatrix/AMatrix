@@ -43,6 +43,33 @@
         std::cout << "\t\t" << elapsed;                                   \
     }
 
+template <typename TMatrixType>
+void 
+RowMajorProd(TMatrixType& A, TMatrixType& B, TMatrixType& C, TMatrixType& D) {
+    C.noalias() = AMatrix::ZeroMatrix<double>(C.size1(), C.size2());
+    for (std::size_t k = 0; k < D.size2(); ++k) {
+        for (std::size_t i = 0; i < D.size1(); ++i) {
+            const double Dik = D(i, k);
+            for (std::size_t j = 0; j < C.size2(); ++j) {
+                C(i, j) += Dik * A(k, j);
+            }
+        }
+    }
+    D.noalias() = std::numeric_limits<double>::epsilon() * C + B;
+}
+
+template <typename TMatrixType>
+void
+PrintResult(TMatrixType& C) {
+    double sum = 0;
+    for (std::size_t i = 0; i < C.size1(); ++i) {
+        for (std::size_t j = 0; j < C.size2(); ++j) {
+            sum += C(i, j);
+        }
+    }
+    std::cout << " (" << static_cast<int>(sum / 1e10) << ") ";
+}
+
 template <typename TMatrixType, std::size_t TSize1, std::size_t TSize2>
 class ComparisonColumn {
    protected:
@@ -91,12 +118,13 @@ class ComparisonColumn {
 
     AMATRIX_MEASURE_ABC_OPERATION(MeasureSumTime,C.noalias() = A + B; B.noalias() = C;)
 
-    AMATRIX_MEASURE_ABCD_OPERATION(MeasureMultTime,C.noalias() = D * A; D.noalias() = B;)
+    AMATRIX_MEASURE_ABCD_OPERATION(MeasureMultTime,C.noalias() = D * A; D.noalias() = std::numeric_limits<double>::epsilon() * C + B;)
 
-    AMATRIX_MEASURE_ABCD_OPERATION(MeasureABAMultTime, C.noalias() = A * TMatrixType(D * A); D.noalias() = B;)
+    AMATRIX_MEASURE_ABCD_OPERATION(MeasureABAMultTime, C.noalias() = A * TMatrixType(D * A); D.noalias() = std::numeric_limits<double>::epsilon() * C + B;)
 
-    AMATRIX_MEASURE_ABCD_OPERATION(MeasureATransposeBAMultTime,C.noalias() = A.transpose() * TMatrixType(D * A); D.noalias() = B;)
+    AMATRIX_MEASURE_ABCD_OPERATION(MeasureATransposeBAMultTime,C.noalias() = A.transpose() * TMatrixType(D * A); D.noalias() = std::numeric_limits<double>::epsilon() * C + B;)
 
+    AMATRIX_MEASURE_ABCD_OPERATION(MeasureRowMajorProdTime, RowMajorProd(A,B,C,D);)
 };
 
 
@@ -134,9 +162,10 @@ class UblasComparisonColumn
 
 
     AMATRIX_MEASURE_ABC_OPERATION(MeasureSumTime, noalias(BaseType::C) =  A + B; noalias(B) = BaseType::C;)
-    AMATRIX_MEASURE_ABCD_OPERATION(MeasureMultTime,noalias(BaseType::C) = prod(BaseType::D, A); noalias(BaseType::D) = B;)
-    AMATRIX_MEASURE_ABCD_OPERATION(MeasureABAMultTime, noalias(BaseType::C) = prod(A, TMatrixType(prod(BaseType::D, A))); noalias(BaseType::D) = B;)
-    AMATRIX_MEASURE_ABCD_OPERATION(MeasureATransposeBAMultTime, noalias(BaseType::C) = prod(trans(A), TMatrixType(prod(BaseType::D, A)));noalias(BaseType::D) = B;)
+    AMATRIX_MEASURE_ABCD_OPERATION(MeasureMultTime,noalias(BaseType::C) = prod(BaseType::D, A); noalias(BaseType::D) = std::numeric_limits<double>::epsilon() * C + B;)
+    AMATRIX_MEASURE_ABCD_OPERATION(MeasureABAMultTime, noalias(BaseType::C) = prod(A, TMatrixType(prod(BaseType::D, A))); noalias(BaseType::D) = std::numeric_limits<double>::epsilon() * C + B;)
+    AMATRIX_MEASURE_ABCD_OPERATION(MeasureATransposeBAMultTime, noalias(BaseType::C) = prod(trans(A), TMatrixType(prod(BaseType::D, A)));noalias(BaseType::D) = std::numeric_limits<double>::epsilon() * C + B;)
+    AMATRIX_MEASURE_ABCD_OPERATION(MeasureRowMajorProdTime,noalias(BaseType::C) = prod(BaseType::D, A); noalias(BaseType::D) = std::numeric_limits<double>::epsilon() * C + B;)
 
 };
 #endif
@@ -152,6 +181,7 @@ class EmptyComparisonColumn
     void MeasureMultTime() { std::cout << "\t\t"; }
     void MeasureABAMultTime() { std::cout << "\t\t"; }
     void MeasureATransposeBAMultTime() { std::cout << "\t\t"; }
+    void MeasureRowMajorProdTime() { std::cout << "\t\t"; }
 
     template <typename TMatrixType2>
     bool CheckResult(TMatrixType2 const& Reference) {
@@ -162,9 +192,20 @@ class EmptyComparisonColumn
 #define RUN_BENCHMARK(name, function)                          \
     std::cout << name;                                         \
     mAMatrixColumn.function();                                 \
+    PrintResult(mAMatrixColumn.GetResult());                   \
     mEigenColumn.function();                                   \
     if (!mEigenColumn.CheckResult(mAMatrixColumn.GetResult())) \
         std::cout << "(Failed!)";                              \
+    mUblasColumn.function();                                   \
+    if (!mUblasColumn.CheckResult(mAMatrixColumn.GetResult())) \
+        std::cout << "(Failed!)";                              \
+    std::cout << std::endl;
+
+#define RUN_BENCHMARK_WITHOUT_EIGEN(name, function)            \
+    std::cout << name;                                         \
+    mAMatrixColumn.function();                                 \
+    PrintResult(mAMatrixColumn.GetResult());                   \
+    std::cout << "\t\t";                                       \
     mUblasColumn.function();                                   \
     if (!mUblasColumn.CheckResult(mAMatrixColumn.GetResult())) \
         std::cout << "(Failed!)";                              \
@@ -215,7 +256,7 @@ class BenchmarkMatrix {
         RUN_BENCHMARK("C = A * B", MeasureMultTime)
         RUN_BENCHMARK("C = A * B * A", MeasureABAMultTime)
         RUN_BENCHMARK("C = A^T * B * A", MeasureATransposeBAMultTime)
-
+        RUN_BENCHMARK_WITHOUT_EIGEN("RowMajorProd", MeasureRowMajorProdTime)
         std::cout << std::endl;
     }
 };
@@ -265,6 +306,7 @@ class BenchmarkDynamicMatrix {
         RUN_BENCHMARK("C = A * B", MeasureMultTime)
         RUN_BENCHMARK("C = A * B * A", MeasureABAMultTime)
         RUN_BENCHMARK("C = A^T * B * A", MeasureATransposeBAMultTime)
+        RUN_BENCHMARK_WITHOUT_EIGEN("RowMajorProd", MeasureRowMajorProdTime)
 
         std::cout << std::endl;
     }
@@ -286,6 +328,12 @@ int main() {
     BenchmarkMatrix<16, 16> benchmark_16_16;
     benchmark_16_16.Run();
 
+    BenchmarkMatrix<32, 32> benchmark_32_32;
+    benchmark_32_32.Run();
+
+    BenchmarkMatrix<64, 64> benchmark_64_64;
+    benchmark_64_64.Run();
+
     BenchmarkDynamicMatrix<3, 3> dynamic_bechmark_3_3;
     dynamic_bechmark_3_3.Run();
 
@@ -301,5 +349,14 @@ int main() {
     BenchmarkDynamicMatrix<16, 16> dynamic_benchmark_16_16;
     dynamic_benchmark_16_16.Run();
 
+    BenchmarkDynamicMatrix<32, 32> dynamic_benchmark_32_32;
+    dynamic_benchmark_32_32.Run();
+
+    BenchmarkDynamicMatrix<64, 64> dynamic_benchmark_64_64;
+    dynamic_benchmark_64_64.Run();
+
     return 0;
 }
+
+//using MatrixType=AMatrix::Matrix<double,6,6>;
+//template void RowMajorProd<MatrixType, 6>(MatrixType& A, MatrixType& B, MatrixType& C, MatrixType& D);
