@@ -31,17 +31,17 @@ class CSRMatrixStorage {
         _row_indices.fill(std::size_t());
 	}
 
-    TDataType& operator()(std::size_t i, std::size_t j) { return at(i, j); }
-
     TDataType const& operator()(std::size_t i, std::size_t j) const { return at(i, j); }
 
-    TDataType& at(std::size_t i, std::size_t j) {
+    TDataType& insert(std::size_t i, std::size_t j, TDataType Value) {
         std::size_t next_row_index = _row_indices[i + 1];
         for (std::size_t index = _row_indices[i]; index < next_row_index; index++)
-            if (_column_indices[index] == j)
+            if (_column_indices[index] == j) {
+                _values[index] = Value;
                 return _values[index];
+            }
 
-        return insert_new_item(i, j, TDataType());
+        return insert_new_item(i, j, Value);
     }
 
     TDataType const& at(std::size_t i, std::size_t j) const {
@@ -63,12 +63,6 @@ class CSRMatrixStorage {
         CSRMatrixStorage& _storage;
         std::size_t _index;
         std::size_t _row_index;
-		void step_front() {
-            _index++;
-            while ((_storage._row_indices[_row_index + 1]) < _index && (_row_index < _storage.size1()))
-                _row_index++;
-            return *this;
-        }
        public:
         using iterator_category = std::forward_iterator_tag;
         using value_type = TDataType;
@@ -77,15 +71,39 @@ class CSRMatrixStorage {
         using reference = TDataType&;
 
 		non_zero_iterator(CSRMatrixStorage& TheStorage, std::size_t TheRowIndex, std::size_t TheIndex)
-            : _storage(TheStorage), _index(TheIndex), _row_index(TheRowIndex) {}
+            : _storage(TheStorage), _index(TheIndex), _row_index(TheRowIndex) {
+            while ((_storage._row_indices[_row_index + 1]) <= _index && (_row_index < _storage.size1()))
+                _row_index++;
+        }
 
-        non_zero_iterator& operator++() { step_front(); }
-        non_zero_iterator operator++(int) { step_front(); }
+
+        non_zero_iterator& operator++() {
+                    _index++;
+            while ((_storage._row_indices[_row_index + 1]) <= _index && (_row_index < _storage.size1()))
+                        _row_index++;
+                    return *this;
+                }
+        non_zero_iterator operator++(int) {
+            non_zero_iterator old = *this;
+            ++(*this);
+            return old;
+        }
         bool operator==(non_zero_iterator const& other) const { return _index == other._index; }
         bool operator!=(non_zero_iterator other) const { return !(*this == other); }
-        reference operator*() const { return _storage[_index]; }
+        reference operator*() const { return _storage._values[_index]; }
+
+		std::size_t index1() {
+            return _row_index;
+        }
+        std::size_t index2() { return _storage._column_indices[_index]; }
 	
     };
+
+	non_zero_iterator begin() {
+        return non_zero_iterator(*this, 0, 0);
+    }
+    non_zero_iterator end() { return non_zero_iterator(*this, size1(), _non_zeros_size); }
+
 
    private:
     TDataType& insert_new_item(std::size_t I, std::size_t J, TDataType const& Value) {
@@ -98,11 +116,13 @@ class CSRMatrixStorage {
 		insert_in_position(_column_indices, position, J);
         insert_in_position(_values, position, Value);
 
+		_non_zeros_size++;
+
         return _values[_row_indices[I + 1] - 1];
     }
 
-	template <typename TVectorType>
-    void insert_in_position(TVectorType& TheVector, std::size_t Position, TDataType const& Value) {
+	template <typename TVectorType, typename TValueType>
+    void insert_in_position(TVectorType& TheVector, std::size_t Position, TValueType const& Value) {
         std::size_t new_size = _row_indices[_size1];
 
         if (new_size > TheVector.size()) {
