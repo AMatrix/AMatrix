@@ -5,7 +5,7 @@ std::size_t TestCSRMatrixAcess(std::size_t Size1, std::size_t Size2) {
     AMatrix::SparseMatrix<AMatrix::CSRMatrixStorage<double>> a_matrix(Size1, Size2);
     for (std::size_t i = 0; i < a_matrix.size1(); i++)
         for (std::size_t j = 0; j < a_matrix.size2(); j++)
-            a_matrix(i, j) = 2.33 * i - 4.52 * j;
+            a_matrix.insert(i, j, 2.33 * i - 4.52 * j);
 
     for (std::size_t i = 0; i < a_matrix.size1(); i++)
         for (std::size_t j = 0; j < a_matrix.size2(); j++) {
