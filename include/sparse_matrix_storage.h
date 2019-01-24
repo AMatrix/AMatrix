@@ -72,15 +72,11 @@ class CSRMatrixStorage {
 
 		non_zero_iterator(CSRMatrixStorage& TheStorage, std::size_t TheRowIndex, std::size_t TheIndex)
             : _storage(TheStorage), _index(TheIndex), _row_index(TheRowIndex) {
-            while ((_storage._row_indices[_row_index + 1]) <= _index && (_row_index < _storage.size1()))
-                _row_index++;
         }
 
 
         non_zero_iterator& operator++() {
                     _index++;
-            while ((_storage._row_indices[_row_index + 1]) <= _index && (_row_index < _storage.size1()))
-                        _row_index++;
                     return *this;
                 }
         non_zero_iterator operator++(int) {
@@ -93,6 +89,8 @@ class CSRMatrixStorage {
         reference operator*() const { return _storage._values[_index]; }
 
 		std::size_t index1() {
+            while ((_storage._row_indices[_row_index + 1]) <= _index && (_row_index < _storage.size1()))
+                _row_index++;
             return _row_index;
         }
         std::size_t index2() { return _storage._column_indices[_index]; }
