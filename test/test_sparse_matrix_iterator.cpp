@@ -27,6 +27,14 @@ std::size_t TestCSRMatrixIterator(std::size_t Size1, std::size_t Size2) {
                 i_non_zero++;
             }
 
+	for (auto& non_zero_value : a_matrix) {
+        non_zero_value = 1.21;
+    }
+    
+	for (auto i_non_zero = a_matrix.begin(); i_non_zero != a_matrix.end(); ++i_non_zero) {
+            AMATRIX_CHECK_EQUAL(*i_non_zero, 1.21);
+    }
+
     return 0;  // not failed
 }
 
