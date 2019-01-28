@@ -1,6 +1,7 @@
 #pragma once
 
 #include "matrix.h"
+#include "sparse_graph.h"
 
 namespace AMatrix {
 
@@ -13,7 +14,6 @@ class CSRMatrixStorage {
     Matrix<std::size_t, dynamic, 1> _column_indices;
     Matrix<TDataType, dynamic, 1> _values;
     TDataType _zero;
-    static constexpr std::size_t _reserve_size = 1024;
 
    public:
     using data_type = TDataType;
@@ -31,7 +31,41 @@ class CSRMatrixStorage {
         _row_indices.fill(std::size_t());
     }
 
+    CSRMatrixStorage(SparseGraph const& TheGraph)
+        : _size1(TheGraph.size1()),
+          _size2(TheGraph.size2()),
+          _non_zeros_size(TheGraph.non_zeros_size()),
+          _row_indices(_size1 + 1),
+          _column_indices(_non_zeros_size),
+          _values(_non_zeros_size),
+          _zero() {
+
+        _row_indices[0] = 0;
+        if (_size1 == 0)
+            return;
+        _values.fill(TDataType());
+        std::size_t index = 0;
+
+        for (std::size_t i = 0; i < _size1; i++) {
+            _row_indices[i + 1] = _row_indices[i] + TheGraph.row_size(i);
+            for (auto& j : TheGraph.row_connectivities(i)) {
+                _column_indices[index++] = j;
+            }
+        }
+    }
+
     TDataType const& operator()(std::size_t i, std::size_t j) const { return at(i, j); }
+
+    TDataType& set(std::size_t i, std::size_t j, TDataType Value) {
+        std::size_t next_row_index = _row_indices[i + 1];
+        for (std::size_t index = _row_indices[i]; index < next_row_index; index++)
+            if (_column_indices[index] == j) {
+                _values[index] = Value;
+                return _values[index];
+            }
+
+        return _zero;
+    }
 
     TDataType& insert(std::size_t i, std::size_t j, TDataType Value) {
         std::size_t next_row_index = _row_indices[i + 1];
