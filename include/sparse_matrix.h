@@ -1,6 +1,7 @@
 #pragma once
 
 #include "sparse_matrix_storage.h"
+#include "sparse_graph.h"
 
 namespace AMatrix {
 
@@ -17,6 +18,7 @@ class SparseMatrix : public TStorageType {
     SparseMatrix(std::size_t TheSize1, std::size_t TheSize2, std::size_t TheNumberOfNonZeros)
         : base_type(TheSize1, TheSize2, TheNumberOfNonZeros) {}
 };
+
 template <typename TDataType>
 void Product(SparseMatrix<CSRMatrixStorage<TDataType>> const& A, Matrix<TDataType, dynamic, 1> const& X,
     Matrix<TDataType, dynamic, 1>& Result) {
