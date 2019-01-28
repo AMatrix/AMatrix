@@ -4,10 +4,10 @@
 std::size_t TestSparseGraphRowSize(std::size_t Size1, std::size_t Size2) {
     AMatrix::SparseGraph a_graph(Size1, Size2);
 
-	AMATRIX_CHECK_EQUAL(a_graph.size1(), Size1);
+    AMATRIX_CHECK_EQUAL(a_graph.size1(), Size1);
     AMATRIX_CHECK_EQUAL(a_graph.size2(), Size2);
 
-	// Filling upper triangle
+    // Filling upper triangle
     for (std::size_t i = 0; i < Size1; i++)
         for (std::size_t j = i; j < Size2; j++)
             a_graph.insert(i, j);
@@ -20,14 +20,16 @@ std::size_t TestSparseGraphRowSize(std::size_t Size1, std::size_t Size2) {
         }
     }
 
-	// Now filling all columns
-	for (std::size_t i = 0; i < Size1; i++)
+    // Now filling all columns
+    for (std::size_t i = 0; i < Size1; i++)
         for (std::size_t j = 0; j < Size2; j++)
             a_graph.insert(i, j);
 
     for (std::size_t i = 0; i < Size1; i++) {
-            AMATRIX_CHECK_EQUAL(a_graph.row_size(i), Size2);
+        AMATRIX_CHECK_EQUAL(a_graph.row_size(i), Size2);
     }
+
+    AMATRIX_CHECK_EQUAL(a_graph.non_zeros_size(), Size1 * Size2);
 
     return 0;  // not failed
 }
