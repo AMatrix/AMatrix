@@ -4,6 +4,9 @@
 std::size_t TestSparseGraphRowSize(std::size_t Size1, std::size_t Size2) {
     AMatrix::SparseGraph a_graph(Size1, Size2);
 
+	AMATRIX_CHECK_EQUAL(a_graph.size1(), Size1);
+    AMATRIX_CHECK_EQUAL(a_graph.size2(), Size2);
+
 	// Filling upper triangle
     for (std::size_t i = 0; i < Size1; i++)
         for (std::size_t j = i; j < Size2; j++)
